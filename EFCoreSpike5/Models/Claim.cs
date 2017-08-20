@@ -8,9 +8,9 @@ namespace EFCoreSpike5.Models
     public class Claim
     {
         public int Id { get; set; }
-        [Required]
+        [Required, StringLength(50)]
         public string Name { get; set; }
-        [Required]
+        [Required, StringLength(50)]
         public string Value { get; set; }
         public ICollection<UserClaim> UserClaims { get; set; }
     }
