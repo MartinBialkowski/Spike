@@ -11,7 +11,6 @@ namespace SpikeWebAPI.DTOs
     {
         public int CourseId { get; set; }
         public string Name { get; set; }
-        public Course Course { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
