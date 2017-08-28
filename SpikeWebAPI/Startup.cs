@@ -73,6 +73,7 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
+            SpikeDbInitializer.Initialize(app.ApplicationServices);
         }
     }
 }
