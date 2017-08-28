@@ -39,6 +39,9 @@ namespace SpikeWebAPI
             services.AddCors();
 
             services.AddMvc();
+
+            var serviceProvider = services.BuildServiceProvider();
+            SpikeDbInitializer.Initialize(serviceProvider);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,7 +76,7 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
-            SpikeDbInitializer.Initialize(app.ApplicationServices);
+            
         }
     }
 }
