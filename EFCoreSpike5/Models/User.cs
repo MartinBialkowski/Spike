@@ -7,11 +7,6 @@ namespace EFCoreSpike5.Models
 {
     public class User: IEntityBase
     {
-        public User()
-        {
-            UserClaims = new HashSet<UserClaim>();
-        }
-
         public int Id { get; set; }
         [Required, StringLength(50)]
         public string Username { get; set; }
@@ -22,6 +17,6 @@ namespace EFCoreSpike5.Models
         public int UnsuccessfulLoginAttempts { get; set; }
         [DataType(DataType.Time)]
         public DateTime LockEnd { get; set; }
-        public ICollection<UserClaim> UserClaims { get; set; }
+        public ICollection<UserClaim> UserClaims { get; set; } = new HashSet<UserClaim>();
     }
 }
