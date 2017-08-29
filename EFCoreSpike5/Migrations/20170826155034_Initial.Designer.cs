@@ -11,8 +11,8 @@ using System;
 namespace EFCoreSpike5.Migrations
 {
     [DbContext(typeof(EFCoreSpikeContext))]
-    [Migration("20170820065903_AdvancedScheme")]
-    partial class AdvancedScheme
+    [Migration("20170826155034_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

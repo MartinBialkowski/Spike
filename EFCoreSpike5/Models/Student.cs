@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EFCoreSpike5.Models
 {
-    public class Student
+    public class Student: IEntityBase
     {
         public int Id { get; set; }
         public int CourseId { get; set; }

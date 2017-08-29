@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EFCoreSpike5.Models
 {
-    public class Claim
+    public class Claim: IEntityBase
     {
         public int Id { get; set; }
         [Required, StringLength(50)]
