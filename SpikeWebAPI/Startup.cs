@@ -33,6 +33,7 @@ namespace SpikeWebAPI
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             // Repositories
+            services.AddScoped<IPagingRepository, PagingRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             // Enable Cors

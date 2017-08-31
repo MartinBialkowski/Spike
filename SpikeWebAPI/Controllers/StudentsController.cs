@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EFCoreSpike5.Models;
+using SpikeRepo.Abstract;
+using EFCoreSpike5.ConstraintsModels;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -14,17 +16,20 @@ namespace SpikeWebAPI.Controllers
     public class StudentsController : Controller
     {
         private readonly EFCoreSpikeContext _context;
+        private readonly IStudentRepository studentRepository;
 
-        public StudentsController(EFCoreSpikeContext context)
+        public StudentsController(EFCoreSpikeContext context, IStudentRepository studentRepository)
         {
             _context = context;
+            this.studentRepository = studentRepository;
         }
 
         // GET: api/Students
         [HttpGet]
-        public IEnumerable<Student> GetStudents()
+        public async Task<ICollection<Student>> GetStudents()
         {
-            return _context.Students;
+            var paging = new PagingModel(1, 1);
+            return await studentRepository.GetAsync(paging).ToList();
         }
 
         // GET: api/Students/5
