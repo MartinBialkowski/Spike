@@ -20,11 +20,6 @@ namespace SpikeRepo.Repositories
             this.context = context;
         }
 
-        public virtual void Add(T entity)
-        {
-            context.Set<T>().Add(entity);
-        }
-
         public void AddMany(T[] entities)
         {
             context.Set<T>().AddRange(entities);
@@ -40,19 +35,9 @@ namespace SpikeRepo.Repositories
             return query;
         }
 
-        public virtual async Task CommitAsync()
-        {
-            await context.SaveChangesAsync();
-        }
-
         public virtual async Task<int> CountAsync()
         {
             return await context.Set<T>().CountAsync();
-        }
-
-        public virtual void Delete(T entity)
-        {
-            context.Set<T>().Remove(entity);
         }
 
         public void DeleteMany(T[] entities)
@@ -70,17 +55,7 @@ namespace SpikeRepo.Repositories
         {
             return context.Set<T>().Where(predicate).ToAsyncEnumerable();
         }
-
-        public virtual IAsyncEnumerable<T> GetAllAsync()
-        {
-            return context.Set<T>().ToAsyncEnumerable();
-        }
-
-        public virtual async Task<T> GetSingleAsync(int id)
-        {
-            return await context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
-        }
-
+        
         public virtual async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate)
         {
             return await context.Set<T>().FirstOrDefaultAsync(predicate);
@@ -95,33 +70,7 @@ namespace SpikeRepo.Repositories
             }
             return await query.Where(predicate).FirstOrDefaultAsync();
         }
-
-        public IQueryable<T> PagingByOffset(int offset, int limit, IQueryable<T> query = null)
-        {
-            var queryData = query;
-            if (queryData == null)
-            {
-                queryData = context.Set<T>();
-            }
-            return query.Skip(offset).Take(limit);
-        }
-
-        public IQueryable<T> PagingByPage(int page, int pageSize, IQueryable<T> query = null)
-        {
-            var queryData = query;
-            if (queryData == null)
-            {
-                queryData = context.Set<T>();
-            }
-            int offset = (page - 1) * pageSize;
-            return PagingByOffset(offset, pageSize, query);
-        }
-
-        public virtual void Update(T entity)
-        {
-            context.Set<T>().Update(entity);
-        }
-
+                
         public void UpdateMany(T[] entities)
         {
             context.Set<T>().UpdateRange(entities);
