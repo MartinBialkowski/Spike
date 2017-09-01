@@ -10,7 +10,6 @@ namespace SpikeRepo.Abstract
 {
     public interface IEntityBaseRepository<T> where T: class, IEntityBase, new()
     {
-        //IEnumerable<T> Get(int page, int pageSize, params Expression<Func<T, object>>[] includeProperties, params Expression<Func<T, object>>[] sortFields, params Expression<Func<T, object>>[] filters);
         IQueryable<T> AllIncluding( Expression<Func<T, object>>[] includeProperties);
         Task<int> CountAsync();
         Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate);
