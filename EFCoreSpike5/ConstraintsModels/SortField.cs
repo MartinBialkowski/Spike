@@ -5,7 +5,7 @@ using EFCoreSpike5.CommonModels;
 
 namespace EFCoreSpike5.ConstraintsModels
 {
-    public class SortFieldModel<T> : ISortFieldModel<T> where T : class
+    public class SortField<T> where T : class
     {
         public SortOrder SortOrder { get; set; }
         public string PropertyName
@@ -26,7 +26,7 @@ namespace EFCoreSpike5.ConstraintsModels
         protected Type ModelType { get; private set; }
         private string propertyName;
 
-        public SortFieldModel()
+        public SortField()
         {
             ModelType = typeof(T);
         }
