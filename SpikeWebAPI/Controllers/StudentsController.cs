@@ -12,7 +12,7 @@ using EFCoreSpike5.ConstraintsModels;
 namespace SpikeWebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Students")]
+    [Route("api/students")]
     public class StudentsController : Controller
     {
         private readonly EFCoreSpikeContext _context;
@@ -28,7 +28,7 @@ namespace SpikeWebAPI.Controllers
         [HttpGet]
         public async Task<ICollection<Student>> GetStudents()
         {
-            var paging = new PagingModel(1, 1);
+            var paging = new Paging(1, 1);
             return await studentRepository.GetAsync(paging).ToList();
         }
 
