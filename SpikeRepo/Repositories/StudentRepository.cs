@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SpikeRepo.Extension;
 
 namespace SpikeRepo.Repositories
 {
     public class StudentRepository : BaseRepository<Student>, IStudentRepository
     {
-        private IPagingRepository pagingRepository;
-        public StudentRepository(EFCoreSpikeContext context, IPagingRepository pagingRepository) : base(context)
+        public StudentRepository(EFCoreSpikeContext context) : base(context)
         {
-            this.pagingRepository = pagingRepository;
         }
 
         public async Task<Student> GetByNameAsync(string searchText)
@@ -24,7 +23,7 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
-        public IAsyncEnumerable<Student> GetAsync(IPagingModel paging, string searchText = null)
+        public IAsyncEnumerable<Student> GetAsync(Paging paging, string searchText = null)
         {
             IQueryable<Student> query = context.Students;
             if (!string.IsNullOrWhiteSpace(searchText))
@@ -32,7 +31,7 @@ namespace SpikeRepo.Repositories
                 query = query.Where(s => s.Name == searchText);
             }
             query = query.OrderBy(s => s.Name);
-            return pagingRepository.Page(paging, query).Cast<Student>();
+            return paging.Page(query);
         }
     }
 }
