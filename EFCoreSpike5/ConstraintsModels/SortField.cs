@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using EFCoreSpike5.CommonModels;
 
 namespace EFCoreSpike5.ConstraintsModels

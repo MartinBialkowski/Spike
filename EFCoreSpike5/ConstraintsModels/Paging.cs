@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EFCoreSpike5.ConstraintsModels
+﻿namespace EFCoreSpike5.ConstraintsModels
 {
     public class Paging
     {
