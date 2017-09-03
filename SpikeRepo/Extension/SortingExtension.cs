@@ -6,7 +6,7 @@ namespace SpikeRepo.Extension
 {
     public static class SortingExtension
     {
-        public static IQueryable<T> SortBy<T>(this SortField<T> sortField, IQueryable<T> query) where T : class
+        public static IOrderedQueryable<T> SortBy<T>(this SortField<T> sortField, IQueryable<T> query) where T : class
         {
             if (sortField.SortOrder == SortOrder.Ascending)
             {
@@ -16,12 +16,31 @@ namespace SpikeRepo.Extension
             {
                 return query.OrderByDescending(sortField.PropertyName.ToExpression<T>());
             }
-            
+
         }
 
-        //public static IQueryable<T> SortBy<T>(this SortField<T>[] sortField, IQueryable<T> query) where T : class
-        //{
-        //    return query.OrderByDescending(sortField.PropertyName.ToExpression<T>());
-        //}
+        public static IOrderedQueryable<T> SortBy<T>(this SortField<T>[] sortFields, IQueryable<T> query) where T : class
+        {
+            IOrderedQueryable<T> sortedData = null;
+            foreach (var sortField in sortFields)
+            {
+                if (sortedData == null)
+                {
+                    sortedData = sortField.SortBy(query);
+                }
+                else
+                {
+                    if (sortField.SortOrder == SortOrder.Ascending)
+                    {
+                        sortedData = sortedData.ThenBy(sortField.PropertyName.ToExpression<T>());
+                    }
+                    else
+                    {
+                        sortedData = sortedData.ThenByDescending(sortField.PropertyName.ToExpression<T>());
+                    }
+                }
+            }
+            return sortedData;
+        }
     }
 }

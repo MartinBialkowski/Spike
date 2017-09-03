@@ -41,5 +41,28 @@ namespace ExtensionTests
             // assert
             Assert.Equal(exptectedData, result);
         }
+
+        [Fact]
+        public void ShouldReturnSortedDataWhenArraySortFiledsProvided()
+        {
+            // arrange
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            var exptectedData = testData.OrderBy(x => x.IsEven).ThenByDescending(x => x.Name);
+            var sortFields = new SortField<TestModel>[2];
+            sortFields[0] = new SortField<TestModel>()
+            {
+                PropertyName = "IsEven",
+                SortOrder = SortOrder.Ascending
+            };
+            sortFields[1] = new SortField<TestModel>()
+            {
+                PropertyName = "Name",
+                SortOrder = SortOrder.Descending
+            };
+            // act
+            var result = sortFields.SortBy(testData);
+            // assert
+            Assert.Equal(exptectedData, result);
+        }
     }
 }
