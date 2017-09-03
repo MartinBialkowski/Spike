@@ -31,7 +31,7 @@ namespace SpikeWebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EFCoreSpikeContext>(options =>
-                options.UseSqlServer(Configuration["Data:SpikeConnection:ConnectionString"]));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             // Repositories
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
@@ -39,6 +39,9 @@ namespace SpikeWebAPI
             services.AddCors();
 
             services.AddMvc();
+
+            var serviceProvider = services.BuildServiceProvider();
+            SpikeDbInitializer.Initialize(serviceProvider);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +76,7 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
+            
         }
     }
 }
