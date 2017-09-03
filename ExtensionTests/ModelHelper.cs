@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ExtensionTests
+﻿namespace ExtensionTests
 {
     public static class ModelHelper
     {
@@ -26,8 +22,8 @@ namespace ExtensionTests
 
     public class TestModel
     {
-        public int Id;
-        public string Name;
-        public bool IsEven;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsEven { get; set; }
     }
 }
