@@ -23,14 +23,15 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
-        public IAsyncEnumerable<Student> GetAsync(Paging paging, string searchText = null)
+        public IAsyncEnumerable<Student> GetAsync(Paging paging, SortField<Student>[] sortField, string searchText = null)
         {
             IQueryable<Student> query = context.Students;
+
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 query = query.Where(s => s.Name == searchText);
             }
-            query = query.OrderBy(s => s.Name);
+            query = sortField.SortBy(query);
             return paging.Page(query);
         }
     }

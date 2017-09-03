@@ -28,8 +28,19 @@ namespace SpikeWebAPI.Controllers
         [HttpGet]
         public async Task<ICollection<Student>> GetStudents()
         {
-            var paging = new Paging(1, 1);
-            return await studentRepository.GetAsync(paging).ToList();
+            var paging = new Paging(1, 3);
+            var sortFields = new SortField<Student>[2];
+            sortFields[0] = new SortField<Student>
+            {
+                PropertyName = "CourseId",
+                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Ascending
+            };
+            sortFields[1] = new SortField<Student>
+            {
+                PropertyName = "Name",
+                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Descending
+            };
+            return await studentRepository.GetAsync(paging, sortFields).ToList();
         }
 
         // GET: api/Students/5

@@ -10,7 +10,7 @@ namespace SpikeRepo.Abstract
     public interface IStudentRepository : IBaseRepository<Student>
     {
         Task<Student> GetByNameAsync(string searchText);
-        IAsyncEnumerable<Student> GetAsync(Paging paging, string searchText = null);
+        IAsyncEnumerable<Student> GetAsync(Paging paging, SortField<Student>[] sortField, string searchText = null);
     }
     public interface ICourseRepository : IBaseRepository<Course> { }
 }
