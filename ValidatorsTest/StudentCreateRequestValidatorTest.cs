@@ -1,10 +1,9 @@
 using SpikeWebAPI.DTOs;
 using SpikeWebAPI.Validators;
-using System;
 using Xunit;
 namespace ValidatorsTest
 {
-    public class ValidatorsTest
+    public class StudentCreateRequestValidatorTest
     {
         [Theory]
         [InlineData(null)]
