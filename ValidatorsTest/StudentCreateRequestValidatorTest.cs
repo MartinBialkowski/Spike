@@ -8,6 +8,7 @@ namespace ValidatorsTest
         [Theory]
         [InlineData(null)]
         [InlineData("  ")]
+        [InlineData("")]
         public void InvalidWhenNameIsNotValid(string name)
         {
             var id = 1;
