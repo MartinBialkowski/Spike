@@ -58,5 +58,20 @@ namespace ValidatorsTest
             });
             Assert.False(result.IsValid);
         }
+
+        [Fact]
+        public void ValidWhenValidDataIsProvided()
+        {
+            var name = "SomeName";
+            var id = 1;
+            var validator = new StudentUpdateRequestDTOValidator();
+            var result = validator.Validate(new StudentUpdateRequestDataTransferObject
+            {
+                Id = id,
+                CourseId = id,
+                Name = name
+            });
+            Assert.True(result.IsValid);
+        }
     }
 }
