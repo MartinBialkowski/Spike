@@ -20,7 +20,7 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
-        public IAsyncEnumerable<Student> GetAsync(Paging paging, SortField<Student>[] sortField, string searchText = null)
+        public IAsyncEnumerable<Student> GetAsync(IPaging paging, SortField<Student>[] sortField, string searchText = null)
         {
             IQueryable<Student> query = context.Students;
 

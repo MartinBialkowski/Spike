@@ -6,7 +6,7 @@ namespace SpikeRepo.Extension
 {
     public static class PagingExtension
     {
-        public static IAsyncEnumerable<T> Page<T>(this Paging paging, IQueryable<T> query) where T : class
+        public static IAsyncEnumerable<T> Page<T>(this IPaging paging, IQueryable<T> query) where T : class
         {
             return query.Skip(paging.Offset).Take(paging.PageLimit).ToAsyncEnumerable();
         }

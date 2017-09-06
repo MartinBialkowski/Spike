@@ -1,13 +1,9 @@
-﻿using EFCoreSpike5.ConstraintsModels;
-using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using EFCoreSpike5.ConstraintsModels;
 
 namespace SpikeWebAPI.Validators
 {
-    public class PagingValidator : AbstractValidator<Paging>
+    public class PagingValidator : AbstractValidator<IPaging>
     {
         public PagingValidator()
         {

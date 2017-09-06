@@ -1,8 +1,5 @@
-﻿using EFCoreSpike5.ConstraintsModels;
+﻿using SpikeWebAPI.ConstraintsModels;
 using SpikeWebAPI.Validators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace ValidatorsTest
