@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using EFCoreSpike5.Models;
 using SpikeRepo.Abstract;
 using EFCoreSpike5.ConstraintsModels;
+using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -22,11 +23,11 @@ namespace SpikeWebAPI.Controllers
             this.studentRepository = studentRepository;
         }
 
-        // GET: api/Students
+        // GET: api/students?page=1&pageSize=2&sort=CourseId,-Name
         [HttpGet]
-        public async Task<ICollection<Student>> GetStudents()
+        public async Task<ICollection<Student>> GetStudents(Paging paging, string sort)
         {
-            var paging = new Paging(1, 3);
+            //var paging = new Paging(page, pageSize);
             var sortFields = new SortField<Student>[2];
             sortFields[0] = new SortField<Student>
             {
@@ -41,7 +42,7 @@ namespace SpikeWebAPI.Controllers
             return await studentRepository.GetAsync(paging, sortFields).ToList();
         }
 
-        // GET: api/Students/5
+        // GET: api/students/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudent([FromRoute] int id)
         {
@@ -60,9 +61,9 @@ namespace SpikeWebAPI.Controllers
             return Ok(student);
         }
 
-        // PUT: api/Students/5
+        // PUT: api/students/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] Student student)
+        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject student)
         {
             if (!ModelState.IsValid)
             {
@@ -95,22 +96,23 @@ namespace SpikeWebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Students
+        // POST: api/students
         [HttpPost]
-        public async Task<IActionResult> PostStudent([FromBody] Student student)
+        public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject student)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            //_context.Students.Add(student);
+            //await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            return null;
+            //return CreatedAtAction("GetStudent", new { id = student.Id }, student);
         }
 
-        // DELETE: api/Students/5
+        // DELETE: api/students/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent([FromRoute] int id)
         {
