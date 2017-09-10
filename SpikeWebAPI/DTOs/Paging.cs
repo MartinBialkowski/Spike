@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace SpikeWebAPI.ConstraintsModels
+namespace SpikeWebAPI.DTOs
 {
-    public class Paging : IPaging
+    public class Paging : IPaging, IValidatableObject
     {
         public int PageNumber { get; set; }
         public int PageLimit { get; set; }
