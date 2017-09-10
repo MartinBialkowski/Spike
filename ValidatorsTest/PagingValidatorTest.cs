@@ -1,4 +1,4 @@
-﻿using SpikeWebAPI.ConstraintsModels;
+﻿using SpikeWebAPI.DTOs;
 using SpikeWebAPI.Validators;
 using Xunit;
 

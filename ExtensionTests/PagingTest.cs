@@ -1,5 +1,5 @@
 using SpikeRepo.Extension;
-using SpikeWebAPI.ConstraintsModels;
+using SpikeWebAPI.DTOs;
 using System.Linq;
 using Xunit;
 

@@ -7,7 +7,6 @@ using EFCoreSpike5.Models;
 using SpikeRepo.Abstract;
 using EFCoreSpike5.ConstraintsModels;
 using SpikeWebAPI.DTOs;
-using SpikeWebAPI.ConstraintsModels;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -26,7 +25,7 @@ namespace SpikeWebAPI.Controllers
 
         // GET: /api/students?pageNumber=1&pageLimit=1&sort=CourseId,-Name
         [HttpGet]
-        public async Task<ICollection<Student>> GetStudents(Paging paging, string sort)
+        public async Task<ICollection<Student>> GetStudents(Paging paging, string sort = "Id")
         {
             var sortFields = new SortField<Student>[2];
             sortFields[0] = new SortField<Student>
@@ -51,7 +50,7 @@ namespace SpikeWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.Id == id);
+            var student = await studentRepository.GetByIdAsync(id);
 
             if (student == null)
             {
