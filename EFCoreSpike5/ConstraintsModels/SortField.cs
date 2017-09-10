@@ -3,7 +3,7 @@ using EFCoreSpike5.CommonModels;
 
 namespace EFCoreSpike5.ConstraintsModels
 {
-    public class SortField<T> where T : class
+    public class SortField<T> : ISortField where T : class
     {
         public SortOrder SortOrder { get; set; }
         public string PropertyName
