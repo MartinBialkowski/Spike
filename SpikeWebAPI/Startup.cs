@@ -9,6 +9,7 @@ using SpikeRepo.Repositories;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using SpikeWebAPI.Mappings;
 
 namespace SpikeWebAPI
 {
@@ -29,6 +30,9 @@ namespace SpikeWebAPI
             // Repositories
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
+            // Automapper
+            AutoMapperConfiguration.Configure();
+
             // Enable Cors
             services.AddCors();
 
