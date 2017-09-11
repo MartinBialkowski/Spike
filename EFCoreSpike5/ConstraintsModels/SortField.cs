@@ -29,6 +29,13 @@ namespace EFCoreSpike5.ConstraintsModels
             ModelType = typeof(T);
         }
 
+        public SortField(string propertyName, SortOrder sortOrder)
+        {
+            ModelType = typeof(T);
+            PropertyName = propertyName;
+            SortOrder = sortOrder;
+        }
+
         protected void ValidatePropertyName(string propertyName)
         {
             if (propertyName == null)

@@ -7,6 +7,7 @@ using EFCoreSpike5.Models;
 using SpikeRepo.Abstract;
 using EFCoreSpike5.ConstraintsModels;
 using SpikeWebAPI.DTOs;
+using AutoMapper;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -23,22 +24,21 @@ namespace SpikeWebAPI.Controllers
             this.studentRepository = studentRepository;
         }
 
-        // GET: /api/students?pageNumber=1&pageLimit=1&sort=CourseId,-Name
+        // GET: /api/students?pageNumber=1&pageLimit=3&sort=CourseId,Name-
         [HttpGet]
-        public async Task<ICollection<Student>> GetStudents(Paging paging, string sort = "Id")
+        public async Task<IActionResult> GetStudents(Paging paging, string sort = "Id")
         {
-            var sortFields = new SortField<Student>[2];
-            sortFields[0] = new SortField<Student>
+            if (!ModelState.IsValid)
             {
-                PropertyName = "CourseId",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Ascending
-            };
-            sortFields[1] = new SortField<Student>
+                return BadRequest(ModelState);
+            }
+            SortFieldDTO[] sortFieldsDTO = Mapper.Map<string, SortFieldDTO[]>(sort);
+            var sortFields = new SortField<Student>[sortFieldsDTO.Length];
+            for (int i = 0; i < sortFieldsDTO.Length; i++)
             {
-                PropertyName = "Name",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Descending
-            };
-            return await studentRepository.GetAsync(paging, sortFields).ToList();
+                sortFields[i] = new SortField<Student>(sortFieldsDTO[i].PropertyName, sortFieldsDTO[i].SortOrder);
+            }
+            return Ok(await studentRepository.GetAsync(paging, sortFields).ToList());
         }
 
         // GET: api/students/5
