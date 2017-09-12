@@ -6,25 +6,41 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EFCoreSpike5.Models;
+using SpikeRepo.Abstract;
+using EFCoreSpike5.ConstraintsModels;
 
 namespace SpikeWebAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Students")]
+    [Route("api/students")]
     public class StudentsController : Controller
     {
         private readonly EFCoreSpikeContext _context;
+        private readonly IStudentRepository studentRepository;
 
-        public StudentsController(EFCoreSpikeContext context)
+        public StudentsController(EFCoreSpikeContext context, IStudentRepository studentRepository)
         {
             _context = context;
+            this.studentRepository = studentRepository;
         }
 
         // GET: api/Students
         [HttpGet]
-        public IEnumerable<Student> GetStudents()
+        public async Task<ICollection<Student>> GetStudents()
         {
-            return _context.Students;
+            var paging = new Paging(1, 3);
+            var sortFields = new SortField<Student>[2];
+            sortFields[0] = new SortField<Student>
+            {
+                PropertyName = "CourseId",
+                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Ascending
+            };
+            sortFields[1] = new SortField<Student>
+            {
+                PropertyName = "Name",
+                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Descending
+            };
+            return await studentRepository.GetAsync(paging, sortFields).ToList();
         }
 
         // GET: api/Students/5
