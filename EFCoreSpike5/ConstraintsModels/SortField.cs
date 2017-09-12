@@ -38,7 +38,7 @@ namespace EFCoreSpike5.ConstraintsModels
 
         protected void ValidatePropertyName(string propertyName)
         {
-            if (propertyName == null)
+            if (string.IsNullOrEmpty(propertyName))
             {
                 throw new ArgumentNullException("propertyName");
             }
