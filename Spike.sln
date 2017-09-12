@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeWebAPI", "SpikeWebAPI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeRepo", "SpikeRepo\SpikeRepo.csproj", "{623BDD32-0546-4B56-92BA-4A08C2582999}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidatorsTest", "ValidatorsTest\ValidatorsTest.csproj", "{5C105B50-8C9D-451A-9EF5-CBDB23378FFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidatorsTest", "ValidatorsTest\ValidatorsTest.csproj", "{5C105B50-8C9D-451A-9EF5-CBDB23378FFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtensionTests", "ExtensionTests\ExtensionTests.csproj", "{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtensionTests", "ExtensionTests\ExtensionTests.csproj", "{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using SpikeRepo.Abstract;
 using EFCoreSpike5.ConstraintsModels;
 using SpikeWebAPI.DTOs;
 using AutoMapper;
+using System;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -15,12 +15,10 @@ namespace SpikeWebAPI.Controllers
     [Route("api/students")]
     public class StudentsController : Controller
     {
-        private readonly EFCoreSpikeContext _context;
         private readonly IStudentRepository studentRepository;
 
-        public StudentsController(EFCoreSpikeContext context, IStudentRepository studentRepository)
+        public StudentsController(IStudentRepository studentRepository)
         {
-            _context = context;
             this.studentRepository = studentRepository;
         }
 
@@ -32,12 +30,16 @@ namespace SpikeWebAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            SortFieldDTO[] sortFieldsDTO = Mapper.Map<string, SortFieldDTO[]>(sort);
-            var sortFields = new SortField<Student>[sortFieldsDTO.Length];
-            for (int i = 0; i < sortFieldsDTO.Length; i++)
+            SortField<Student>[] sortFields;
+            try
             {
-                sortFields[i] = new SortField<Student>(sortFieldsDTO[i].PropertyName, sortFieldsDTO[i].SortOrder);
+                sortFields = Mapper.Map<string, SortField<Student>[]>(sort);
             }
+            catch(ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
             return Ok(await studentRepository.GetAsync(paging, sortFields).ToList());
         }
 
@@ -62,27 +64,28 @@ namespace SpikeWebAPI.Controllers
 
         // PUT: api/students/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject student)
+        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != student.Id)
+            if (id != studentDTO.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            var student = Mapper.Map<StudentUpdateRequestDataTransferObject, Student>(studentDTO);
+            studentRepository.Update(student);
 
             try
             {
-                await _context.SaveChangesAsync();
+                await studentRepository.CommitAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StudentExists(id))
+                if (await studentRepository.GetByIdAsync(id) == null)
                 {
                     return NotFound();
                 }
@@ -97,18 +100,18 @@ namespace SpikeWebAPI.Controllers
 
         // POST: api/students
         [HttpPost]
-        public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject student)
+        public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            //_context.Students.Add(student);
-            //await _context.SaveChangesAsync();
+            var student = Mapper.Map<StudentCreateRequestDataTransferObject, Student>(studentDTO);
+            studentRepository.Add(student);
+            await studentRepository.CommitAsync();
 
-            return null;
-            //return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
         }
 
         // DELETE: api/students/5
@@ -120,21 +123,17 @@ namespace SpikeWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.Id == id);
+            var student = await studentRepository.GetByIdAsync(id);
             if (student == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
+            studentRepository.Delete(student);
+            await studentRepository.CommitAsync();
 
-            return Ok(student);
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
+            return NoContent();
+            //return Ok(student);
         }
     }
 }
