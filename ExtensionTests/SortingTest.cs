@@ -43,7 +43,7 @@ namespace ExtensionTests
         }
 
         [Fact]
-        public void ShouldReturnSortedDataWhenArraySortFiledsProvided()
+        public void ShouldReturnSortedDataWhenArraySortFieldsProvided()
         {
             // arrange
             var testData = ModelHelper.GetTestData().AsQueryable();
