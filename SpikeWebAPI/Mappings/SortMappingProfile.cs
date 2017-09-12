@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EFCoreSpike5.CommonModels;
+using EFCoreSpike5.ConstraintsModels;
+using EFCoreSpike5.Models;
 using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Mappings
@@ -8,34 +10,34 @@ namespace SpikeWebAPI.Mappings
     {
         public SortMappingProfile()
         {
-            CreateMap(typeof(string), typeof(SortFieldDTO[]))
-                .ConvertUsing(typeof(StringToSortFieldsConverter));
+            CreateMap(typeof(string), typeof(SortField<Student>[]))
+                .ConvertUsing(typeof(StringToSortFieldsConverter<Student>));
         }
     }
 
-    public class StringToSortFieldsConverter : ITypeConverter<string, SortFieldDTO[]>
+    public class StringToSortFieldsConverter<T> : ITypeConverter<string, SortField<T>[]> where T: class
     {
-        public SortFieldDTO[] Convert(string source, SortFieldDTO[] destination, ResolutionContext context)
+        public SortField<T>[] Convert(string source, SortField<T>[] destination, ResolutionContext context)
         {
             var sortData = source.Split(',');
-            destination = new SortFieldDTO[sortData.Length];
+            destination = new SortField<T>[sortData.Length];
             for (int i = 0; i < sortData.Length; i++)
             {
-                destination[i] = ConvertToSortFieldDTO(sortData[i]);
+                destination[i] = ConvertToSortField(sortData[i]);
             }
 
             return destination;
         }
 
-        private SortFieldDTO ConvertToSortFieldDTO(string sortData)
+        private SortField<T> ConvertToSortField(string sortData)
         {
-            SortFieldDTO SortFieldDTO = new SortFieldDTO
+            SortField<T> SortField = new SortField<T>()
             {
                 SortOrder = sortData.EndsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
                 PropertyName = sortData.Trim('-')
             };
 
-            return SortFieldDTO;
+            return SortField;
         }
     }
 }
