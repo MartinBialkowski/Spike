@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using SpikeWebAPI.Mappings;
 using Swashbuckle.AspNetCore.Swagger;
+using Newtonsoft.Json.Serialization;
 
 namespace SpikeWebAPI
 {
@@ -43,7 +44,9 @@ namespace SpikeWebAPI
             // Enable Cors
             services.AddCors();
 
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
@@ -88,7 +91,7 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
-            
+
         }
     }
 }
