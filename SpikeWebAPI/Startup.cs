@@ -10,6 +10,7 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using SpikeWebAPI.Mappings;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace SpikeWebAPI
 {
@@ -33,6 +34,12 @@ namespace SpikeWebAPI
             // Automapper
             AutoMapperConfiguration.Configure();
 
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Spike Controller", Version = "v1" });
+            });
+
             // Enable Cors
             services.AddCors();
 
@@ -49,6 +56,13 @@ namespace SpikeWebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Controller v1");
+            });
 
             app.UseCors(builder =>
                 builder.AllowAnyOrigin()
