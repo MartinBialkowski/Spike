@@ -7,24 +7,27 @@ using Newtonsoft.Json;
 using SpikeRepo.Repositories;
 using SpikeWebAPI;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using System.Net.Http.Formatting;
 
 namespace ControllersTest
 {
     public class StudentControllerTest : IDisposable
     {
         private readonly TestServer server;
-        private readonly HttpClient client;
+        private HttpClient client;
         private readonly EFCoreSpikeContext context;
         private string url = "api/students";
         private string studentName = "TestName";
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
+
         public StudentControllerTest()
         {
             var builder = new ConfigurationBuilder()
@@ -39,7 +42,7 @@ namespace ControllersTest
             server = new TestServer(new WebHostBuilder()
             .UseConfiguration(configuration)
             .UseStartup<Startup>());
-            client = server.CreateClient();
+
         }
 
         public void Dispose()
@@ -49,92 +52,134 @@ namespace ControllersTest
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public async Task ShouldGetThreeElementsSortedByName()
         {
             // arrange
-            string expected = @"[{""Id"":1,""CourseId"":1,""Name"":""Martin B"",""Course"":null},{""Id"":3,""CourseId"":1,""Name"":""SomeRandomStudent"",""Course"":null},{""Id"":2,""CourseId"":1,""Name"":""Witalian"",""Course"":null}]";
             var queryString = "?pageNumber=1&pageLimit=3&sort=Name";
             var request = url + queryString;
+            HttpResponseMessage httpResponse;
+            List<Student> response, students;
+            string actual, expected;
             // act
-            var response = await client.GetAsync(request);
-            var responseString = await response.Content.ReadAsStringAsync();
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.GetAsync(request);
+                response = await httpResponse.Content.ReadAsAsync<List<Student>>();
+            }
+
+            students = context.Students.OrderBy(s => s.Name).Take(3).ToList();
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(students);
             // assert
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(expected, responseString);
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public async Task ShouldGetSingleStudent()
         {
             // arrange
-            string expected = @"{""Id"":1,""CourseId"":1,""Name"":""Martin B"",""Course"":null}";
-            string studentId = "/1";
-            var request = url + studentId;
+            int studentId = 1;
+            var request = $"{url}/{studentId}";
+            HttpResponseMessage httpResponse;
+            Student response, student;
+            string actual, expected;
             // act
-            var response = await client.GetAsync(request);
-            var responseString = await response.Content.ReadAsStringAsync();
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.GetAsync(request);
+                response = await httpResponse.Content.ReadAsAsync<Student>();
+            }
+
+            student = context.Students.FirstOrDefault(s => s.Id == studentId);
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(student);
             // assert
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(expected, responseString);
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public async Task ShouldAddNewStudent()
         {
             // arrange
-            var student = new StudentCreateRequest()
+            var newStudent = new StudentCreateRequest()
             {
                 CourseId = 1,
                 Name = studentName
             };
-            string studentJson = JsonConvert.SerializeObject(student);
-            var content = new StringContent(studentJson, Encoding.UTF8, contentType);
+
             string request = url;
+            string studentJson = JsonConvert.SerializeObject(newStudent);
+            var content = new StringContent(studentJson, Encoding.UTF8, contentType);
+
+            HttpResponseMessage httpResponse;
+            Student response, student;
+            string actual, expected;
             // act
-            var response = await client.PostAsync(request, content);
-            var responseString = await response.Content.ReadAsStringAsync();
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.PostAsync(request, content);
+                response = await httpResponse.Content.ReadAsAsync<Student>();
+            }
+
+            student = await GetStudentByName(studentName);
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(student);
             // assert
-            var expectedStudent = await GetStudentByName(studentName);
-            var expected = JsonConvert.SerializeObject(expectedStudent);
-            response.EnsureSuccessStatusCode();
-            Assert.Equal(expected, responseString);
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public async Task ShouldUpdateStudent()
         {
             // arrange
             int studentId = PrepareStudentForTest(studentName);
-            var student = new StudentUpdateRequest()
+            var newStudent = new StudentUpdateRequest()
             {
                 Id = studentId,
                 CourseId = 1,
                 Name = updatedName
             };
-            var studentJson = JsonConvert.SerializeObject(student);
+
+            var studentJson = JsonConvert.SerializeObject(newStudent);
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
             string request = $"{url}/{studentId}";
+
+            HttpResponseMessage httpResponse;
+            Student student;
             // act
-            var response = await client.PutAsync(request, content);
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.PutAsync(request, content);
+            }
+            student = await GetStudentByName(updatedName);
             // assert
-            response.EnsureSuccessStatusCode();
-            var expected = JsonConvert.SerializeObject(student);
-            var actualStudent = await GetStudentByName(updatedName);
-            var result = JsonConvert.SerializeObject(actualStudent);
-            Assert.Equal(expected, result);
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.True(student != null);
         }
 
         [Fact]
+        [Trait("Category", "Integration")]
         public async Task ShouldDeleteStudent()
         {
             // arrange
             int studentId = PrepareStudentForTest(updatedName);
             string request = $"{url}/{studentId}";
+            HttpResponseMessage httpResponse;
             // act
-            var response = await client.DeleteAsync(request);
-            // assert
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.DeleteAsync(request);
+            }
             var expectedStudent = await GetStudentByName(updatedName);
-            response.EnsureSuccessStatusCode();
+            // assert
+            httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expectedStudent, null);
         }
 
@@ -169,6 +214,7 @@ namespace ControllersTest
             if ((result = context.Students.FirstOrDefault(x => x.Name == name)) != null)
             {
                 context.Remove(result);
+                context.SaveChanges();
             }
         }
     }
