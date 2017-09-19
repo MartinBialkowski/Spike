@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using SpikeRepo.Repositories;
 using SpikeWebAPI;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using System.Net.Http.Formatting;
 
 namespace ControllersTest
 {
@@ -27,6 +25,9 @@ namespace ControllersTest
         private string studentName = "TestName";
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
+
+        //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
+        //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
 
         public StudentControllerTest()
         {
