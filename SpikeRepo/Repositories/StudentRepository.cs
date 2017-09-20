@@ -28,7 +28,7 @@ namespace SpikeRepo.Repositories
             {
                 query = query.Where(s => s.Name == searchText);
             }
-            query = sortField.SortBy(query);
+            query = sortField.Sort(query);
             return paging.Page(query);
         }
     }

@@ -60,7 +60,7 @@ namespace ExtensionTests
                 SortOrder = SortOrder.Descending
             };
             // act
-            var result = sortFields.SortBy(testData);
+            var result = sortFields.Sort(testData);
             // assert
             Assert.Equal(exptectedData, result);
         }
