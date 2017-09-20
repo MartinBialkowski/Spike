@@ -35,11 +35,11 @@ namespace SpikeWebAPI.Controllers
             {
                 sortFields = Mapper.Map<string, SortField<Student>[]>(sort);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
             return Ok(await studentRepository.GetAsync(paging, sortFields).ToList());
         }
 
@@ -56,7 +56,8 @@ namespace SpikeWebAPI.Controllers
 
             if (student == null)
             {
-                return NotFound();
+                string message = $"Student with id: {id} does not exist";
+                return NotFound(message);
             }
 
             return Ok(student);
@@ -73,7 +74,8 @@ namespace SpikeWebAPI.Controllers
 
             if (id != studentDTO.Id)
             {
-                return BadRequest();
+                string message = $"Mismatch, student id: {studentDTO.Id} does not equal id : {id}";
+                return BadRequest(message);
             }
 
             var student = Mapper.Map<StudentUpdateRequestDataTransferObject, Student>(studentDTO);
@@ -87,7 +89,8 @@ namespace SpikeWebAPI.Controllers
             {
                 if (await studentRepository.GetByIdAsync(id) == null)
                 {
-                    return NotFound();
+                    string message = $"Student with id: {id} does not exist";
+                    return NotFound(message);
                 }
                 else
                 {
@@ -126,7 +129,8 @@ namespace SpikeWebAPI.Controllers
             var student = await studentRepository.GetByIdAsync(id);
             if (student == null)
             {
-                return NotFound();
+                string message = $"Student with id: {id} does not exist";
+                return NotFound(message);
             }
 
             studentRepository.Delete(student);
