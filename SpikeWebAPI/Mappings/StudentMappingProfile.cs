@@ -10,6 +10,7 @@ namespace SpikeWebAPI.Mappings
         {
             CreateMap<StudentCreateRequestDataTransferObject, Student>();
             CreateMap<StudentUpdateRequestDataTransferObject, Student>();
+            CreateMap<Student, StudentResponseDataTransferObject>();
         }
     }
 }
