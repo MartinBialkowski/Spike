@@ -20,7 +20,7 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
-        public IAsyncEnumerable<Student> GetAsync(IPaging paging, SortField<Student>[] sortField, string searchText = null)
+        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortField, string searchText = null)
         {
             IQueryable<Student> query = context.Students;
 
@@ -29,7 +29,16 @@ namespace SpikeRepo.Repositories
                 query = query.Where(s => s.Name == searchText);
             }
             query = sortField.SortBy(query);
-            return paging.Page(query);
+            var result = new PagedResult<Student>()
+            {
+                Results = await paging.Page(query).ToList(),
+                PageNumber = paging.PageNumber,
+                PageSize = paging.PageLimit,
+                TotalNumberOfRecords = query.Count(),
+                TotalNumberOfPages = query.Count() / paging.PageLimit
+            };
+
+            return result;
         }
     }
 }

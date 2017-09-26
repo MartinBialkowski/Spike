@@ -8,6 +8,7 @@ using EFCoreSpike5.ConstraintsModels;
 using SpikeWebAPI.DTOs;
 using AutoMapper;
 using System;
+using System.Collections.Generic;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace SpikeWebAPI.Controllers
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&sort=CourseId,Name-
-        [HttpGet]
+        [HttpGet("", Name = "GetStudents")]
         public async Task<IActionResult> GetStudents(Paging paging, string sort = "Id")
         {
             if (!ModelState.IsValid)
@@ -35,12 +36,12 @@ namespace SpikeWebAPI.Controllers
             {
                 sortFields = Mapper.Map<string, SortField<Student>[]>(sort);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            
-            return Ok(await studentRepository.GetAsync(paging, sortFields).ToList());
+            var pagedResult = await studentRepository.GetAsync(paging, sortFields);
+            return Ok(CreatePagedResultDTO<Student, StudentResponseDataTransferObject>(pagedResult, paging, sort));
         }
 
         // GET: api/students/5
@@ -134,6 +135,33 @@ namespace SpikeWebAPI.Controllers
 
             return NoContent();
             //return Ok(student);
+        }
+
+        private PagedResultDataTransferObject<TReturn> CreatePagedResultDTO<T, TReturn>(PagedResult<T> result, Paging paging, string sort)
+        {
+            const int firstPage = 1;
+            return new PagedResultDataTransferObject<TReturn>()
+            {
+                PageNumber = paging.PageNumber,
+                PageSize = paging.PageLimit,
+                TotalNumberOfPages = result.TotalNumberOfPages,
+                TotalNumberOfRecords = result.TotalNumberOfRecords,
+                Results = Mapper.Map<List<T>, List<TReturn>>(result.Results),
+                FirstPageUrl = PrepareUrlPage(firstPage, paging.PageLimit, sort),
+                LastPageUrl = PrepareUrlPage(result.TotalNumberOfPages, paging.PageLimit, sort),
+                NextPageUrl = paging.PageNumber < result.TotalNumberOfPages ? PrepareUrlPage(paging.PageNumber + 1, paging.PageLimit, sort) : null,
+                PreviousPageUrl = paging.PageNumber > firstPage ? PrepareUrlPage(paging.PageNumber - 1, paging.PageLimit, sort) : null
+            };
+        }
+
+        private string PrepareUrlPage(int pageNumber, int pageLimit, string sortFields)
+        {
+            return Url.Link("GetStudents", new
+            {
+                pageNumber = pageNumber,
+                pageLimit = pageLimit,
+                sort = sortFields
+            });
         }
     }
 }
