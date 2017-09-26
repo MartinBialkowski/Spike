@@ -2,7 +2,7 @@
 
 namespace SpikeWebAPI.DTOs
 {
-    public class PagedResult<T>
+    public class PagedResultDataTransferObject<T>
     {
         /// <summary>
         /// The page number this page represents. 
