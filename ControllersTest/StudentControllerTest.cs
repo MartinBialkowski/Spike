@@ -1,3 +1,4 @@
+using AutoMapper;
 using EFCoreSpike5.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SpikeWebAPI;
+using SpikeWebAPI.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,7 +30,6 @@ namespace ControllersTest
 
         //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
         //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
-
         public StudentControllerTest()
         {
             var builder = new ConfigurationBuilder()
@@ -54,10 +55,48 @@ namespace ControllersTest
 
         [Fact]
         [Trait("Category", "Integration")]
-        public async Task ShouldGetThreeElementsSortedByName()
+        public async Task ShouldGetTwoElementsSortedByName()
         {
             // arrange
-            var queryString = "?pageNumber=1&pageLimit=3&sort=Name";
+            var queryString = "?pageNumber=1&pageLimit=2&sort=Name";
+            var request = url + queryString;
+            HttpResponseMessage httpResponse;
+            TestPagedResult<StudentResponseDataTransferObject> response;
+            List<StudentResponseDataTransferObject> students;
+            string actual, expected;
+            students = Mapper.Map<List<Student>, List<StudentResponseDataTransferObject>>(context.Students.OrderBy(s => s.Name).Skip(0).Take(2).ToList());
+            TestPagedResult<StudentResponseDataTransferObject> expectedPagedResult = new TestPagedResult<StudentResponseDataTransferObject>()
+            {
+                PageNumber = 1,
+                PageSize = 2,
+                TotalNumberOfPages = 2,
+                TotalNumberOfRecords = 3,
+                Results = students,
+                FirstPageUrl = "http://localhost/api/students?pageNumber=1&pageLimit=2&sort=Name",
+                PreviousPageUrl = null,
+                NextPageUrl = "http://localhost/api/students?pageNumber=2&pageLimit=2&sort=Name",
+                LastPageUrl = "http://localhost/api/students?pageNumber=2&pageLimit=2&sort=Name",
+
+            };
+            // act
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.GetAsync(request);
+                response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentResponseDataTransferObject>>();
+            }
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(expectedPagedResult);
+            // assert
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact(Skip = "No functionality provided yet")]
+        [Trait("Category", "Integration")]
+        public async Task ShouldGetAllElementsSortedByName()
+        {
+            // arrange
+            var queryString = "?sort=Name";
             var request = url + queryString;
             HttpResponseMessage httpResponse;
             List<Student> response, students;
@@ -69,7 +108,7 @@ namespace ControllersTest
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = context.Students.OrderBy(s => s.Name).Take(3).ToList();
+            students = context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -107,7 +146,7 @@ namespace ControllersTest
         public async Task ShouldAddNewStudent()
         {
             // arrange
-            var newStudent = new StudentCreateRequest()
+            var newStudent = new StudentTestCreateRequest()
             {
                 CourseId = 1,
                 Name = studentName
@@ -141,7 +180,7 @@ namespace ControllersTest
         {
             // arrange
             int studentId = PrepareStudentForTest(studentName);
-            var newStudent = new StudentUpdateRequest()
+            var newStudent = new StudentTestUpdateRequest()
             {
                 Id = studentId,
                 CourseId = 1,
