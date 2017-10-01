@@ -60,7 +60,7 @@ namespace SpikeWebAPI.Controllers
                 return NotFound($"Student by Id: {id} not found.");
             }
 
-            return Ok(student);
+            return Ok(Mapper.Map<Student, StudentResponseDataTransferObject>(student));
         }
 
         // PUT: api/students/5

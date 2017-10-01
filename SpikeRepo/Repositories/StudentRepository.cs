@@ -21,6 +21,13 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
+        public override async Task<Student> GetByIdAsync(int id)
+        {
+            return await context.Students
+                .Include(s => s.Course)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
+
         public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortFields, string searchText = null)
         {
             var query = GetStudents(sortFields, searchText);
@@ -45,7 +52,7 @@ namespace SpikeRepo.Repositories
 
         private IQueryable<Student> GetStudents(SortField<Student>[] sortFields, string searchText = null)
         {
-            IQueryable<Student> query = context.Students;
+            IQueryable<Student> query = context.Students.Include(s => s.Course);
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
