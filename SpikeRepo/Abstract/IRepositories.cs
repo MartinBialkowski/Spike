@@ -9,6 +9,7 @@ namespace SpikeRepo.Abstract
     {
         Task<Student> GetByNameAsync(string searchText);
         Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortField, string searchText = null);
+        IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, string searchText = null);
     }
     public interface ICourseRepository : IBaseRepository<Course> { }
 }

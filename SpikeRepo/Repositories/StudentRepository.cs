@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SpikeRepo.Extension;
+using System;
 
 namespace SpikeRepo.Repositories
 {
@@ -20,7 +21,29 @@ namespace SpikeRepo.Repositories
             return await context.Students.FirstOrDefaultAsync(s => s.Name == searchText);
         }
 
-        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortField, string searchText = null)
+        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortFields, string searchText = null)
+        {
+            var query = GetStudents(sortFields, searchText);
+            var result = new PagedResult<Student>()
+            {
+                Results = await paging.Page(query).ToList(),
+                PageNumber = paging.PageNumber,
+                PageSize = paging.PageLimit,
+                TotalNumberOfRecords = query.Count(),
+                TotalNumberOfPages = (int)Math.Ceiling(query.Count() / (double)paging.PageLimit)
+            };
+
+            return result;
+        }
+
+        public IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, string searchText = null)
+        {
+            var query = GetStudents(sortFields, searchText);
+
+            return query.ToAsyncEnumerable();
+        }
+
+        private IQueryable<Student> GetStudents(SortField<Student>[] sortFields, string searchText = null)
         {
             IQueryable<Student> query = context.Students;
 
@@ -28,17 +51,7 @@ namespace SpikeRepo.Repositories
             {
                 query = query.Where(s => s.Name == searchText);
             }
-            query = sortField.SortBy(query);
-            var result = new PagedResult<Student>()
-            {
-                Results = await paging.Page(query).ToList(),
-                PageNumber = paging.PageNumber,
-                PageSize = paging.PageLimit,
-                TotalNumberOfRecords = query.Count(),
-                TotalNumberOfPages = query.Count() / paging.PageLimit
-            };
-
-            return result;
+            return query = sortFields.SortBy(query);
         }
     }
 }
