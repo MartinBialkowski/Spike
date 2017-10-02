@@ -19,7 +19,7 @@ namespace SpikeRepo.Extension
 
         }
 
-        public static IOrderedQueryable<T> SortBy<T>(this SortField<T>[] sortFields, IQueryable<T> query) where T : class
+        public static IOrderedQueryable<T> Sort<T>(this SortField<T>[] sortFields, IQueryable<T> query) where T : class
         {
             IOrderedQueryable<T> sortedData = null;
             foreach (var sortField in sortFields)

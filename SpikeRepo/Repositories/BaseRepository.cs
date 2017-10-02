@@ -1,9 +1,7 @@
 ﻿using EFCoreSpike5.Models;
 using Microsoft.EntityFrameworkCore;
 using SpikeRepo.Abstract;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SpikeRepo.Repositories

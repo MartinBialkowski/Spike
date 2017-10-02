@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using EFCoreSpike5.Models;
 using Microsoft.EntityFrameworkCore;
 using SpikeRepo.Abstract;
@@ -15,6 +9,9 @@ using SpikeRepo.Repositories;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using SpikeWebAPI.Mappings;
+using Swashbuckle.AspNetCore.Swagger;
+using Newtonsoft.Json.Serialization;
 
 namespace SpikeWebAPI
 {
@@ -35,10 +32,21 @@ namespace SpikeWebAPI
             // Repositories
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
+            // Automapper
+            AutoMapperConfiguration.Configure();
+
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Spike Controller", Version = "v1" });
+            });
+
             // Enable Cors
             services.AddCors();
 
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
@@ -51,6 +59,13 @@ namespace SpikeWebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Controller v1");
+            });
 
             app.UseCors(builder =>
                 builder.AllowAnyOrigin()
@@ -76,7 +91,7 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
-            
+
         }
     }
 }

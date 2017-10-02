@@ -3,7 +3,7 @@ using EFCoreSpike5.CommonModels;
 
 namespace EFCoreSpike5.ConstraintsModels
 {
-    public class SortField<T> where T : class
+    public class SortField<T> : ISortField where T : class
     {
         public SortOrder SortOrder { get; set; }
         public string PropertyName
@@ -29,9 +29,16 @@ namespace EFCoreSpike5.ConstraintsModels
             ModelType = typeof(T);
         }
 
+        public SortField(string propertyName, SortOrder sortOrder)
+        {
+            ModelType = typeof(T);
+            PropertyName = propertyName;
+            SortOrder = sortOrder;
+        }
+
         protected void ValidatePropertyName(string propertyName)
         {
-            if (propertyName == null)
+            if (string.IsNullOrWhiteSpace(propertyName))
             {
                 throw new ArgumentNullException("propertyName");
             }

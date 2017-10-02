@@ -13,8 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EFCoreSpike5\EFCoreSpike5.csproj" />
-    <ProjectReference Include="..\SpikeRepo\SpikeRepo.csproj" />
     <ProjectReference Include="..\SpikeWebAPI\SpikeWebAPI.csproj" />
   </ItemGroup>
 
