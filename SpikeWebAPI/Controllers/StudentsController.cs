@@ -57,10 +57,10 @@ namespace SpikeWebAPI.Controllers
 
             if (student == null)
             {
-                return NotFound();
+                return NotFound($"Student by Id: {id} not found.");
             }
 
-            return Ok(student);
+            return Ok(Mapper.Map<Student, StudentResponseDataTransferObject>(student));
         }
 
         // PUT: api/students/5
@@ -74,7 +74,7 @@ namespace SpikeWebAPI.Controllers
 
             if (id != studentDTO.Id)
             {
-                return BadRequest();
+                return BadRequest($"Provided student Id: {studentDTO.Id} not match id from url {id}.");
             }
 
             var student = Mapper.Map<StudentUpdateRequestDataTransferObject, Student>(studentDTO);
@@ -88,7 +88,7 @@ namespace SpikeWebAPI.Controllers
             {
                 if (await studentRepository.GetByIdAsync(id) == null)
                 {
-                    return NotFound();
+                    return NotFound($"Student by id: {id} not exist.");
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace SpikeWebAPI.Controllers
             var student = await studentRepository.GetByIdAsync(id);
             if (student == null)
             {
-                return NotFound();
+                return NotFound($"Student by id: {id} not exist.");
             }
 
             studentRepository.Delete(student);

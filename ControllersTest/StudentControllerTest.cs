@@ -64,7 +64,7 @@ namespace ControllersTest
             TestPagedResult<StudentResponseDataTransferObject> response;
             List<StudentResponseDataTransferObject> students;
             string actual, expected;
-            students = Mapper.Map<List<Student>, List<StudentResponseDataTransferObject>>(context.Students.OrderBy(s => s.Name).Skip(0).Take(2).ToList());
+            students = Mapper.Map<List<Student>, List<StudentResponseDataTransferObject>>(context.Students.Include(s => s.Course).OrderBy(s => s.Name).Skip(0).Take(2).ToList());
             TestPagedResult<StudentResponseDataTransferObject> expectedPagedResult = new TestPagedResult<StudentResponseDataTransferObject>()
             {
                 PageNumber = 1,
@@ -108,7 +108,7 @@ namespace ControllersTest
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = context.Students.OrderBy(s => s.Name).ToList();
+            students = context.Students.Include(s => s.Course).OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -124,18 +124,29 @@ namespace ControllersTest
             int studentId = 1;
             var request = $"{url}/{studentId}";
             HttpResponseMessage httpResponse;
-            Student response, student;
+            Student student;
+            StudentResponseDataTransferObject response;
             string actual, expected;
+
+            student = context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
+            var courseDTO = new CourseResponseDataTransferObject()
+            {
+                Name = student.Course.Name
+            };
+            var studentDTO = new StudentResponseDataTransferObject()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Course = courseDTO
+            };
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.GetAsync(request);
-                response = await httpResponse.Content.ReadAsAsync<Student>();
+                response = await httpResponse.Content.ReadAsAsync<StudentResponseDataTransferObject>();
             }
-
-            student = context.Students.FirstOrDefault(s => s.Id == studentId);
             actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(student);
+            expected = JsonConvert.SerializeObject(studentDTO);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
