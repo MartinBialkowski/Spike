@@ -24,7 +24,7 @@ namespace SpikeWebAPI.Controllers
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&sort=CourseId,Name-
-        [HttpGet("", Name = "GetStudents")]
+        [HttpGet]
         public async Task<IActionResult> GetStudents(Paging paging, string sort = "Id")
         {
             if (!ModelState.IsValid)
@@ -156,7 +156,7 @@ namespace SpikeWebAPI.Controllers
 
         private string PrepareUrlPage(int pageNumber, int pageLimit, string sortFields)
         {
-            return Url.Link("GetStudents", new
+            return Url.Action("GetStudents", new
             {
                 pageNumber = pageNumber,
                 pageLimit = pageLimit,
