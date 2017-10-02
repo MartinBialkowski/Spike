@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26823.1
+VisualStudioVersion = 15.0.26906.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCoreSpike5", "EFCoreSpike5\EFCoreSpike5.csproj", "{6C81414F-C1FB-4DE5-B229-259BB8EF0A0F}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidatorsTest", "ValidatorsTest\ValidatorsTest.csproj", "{5C105B50-8C9D-451A-9EF5-CBDB23378FFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtensionTests", "ExtensionTests\ExtensionTests.csproj", "{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllersTest", "ControllersTest\ControllersTest.csproj", "{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
