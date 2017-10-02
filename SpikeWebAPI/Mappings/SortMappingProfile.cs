@@ -2,7 +2,6 @@
 using EFCoreSpike5.CommonModels;
 using EFCoreSpike5.ConstraintsModels;
 using EFCoreSpike5.Models;
-using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Mappings
 {
@@ -15,7 +14,7 @@ namespace SpikeWebAPI.Mappings
         }
     }
 
-    public class StringToSortFieldsConverter<T> : ITypeConverter<string, SortField<T>[]> where T: class
+    public class StringToSortFieldsConverter<T> : ITypeConverter<string, SortField<T>[]> where T : class
     {
         public SortField<T>[] Convert(string source, SortField<T>[] destination, ResolutionContext context)
         {
