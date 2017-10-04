@@ -15,6 +15,18 @@ namespace ControllersTest
         public string Name { get; set; }
     }
 
+    public class StudentTestResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public CourseTestResponse Course { get; set; }
+    }
+
+    public class CourseTestResponse
+    {
+        public string Name { get; set; }
+    }
+
     public class TestPagedResult<T>
     {
         public int PageNumber { get; set; }

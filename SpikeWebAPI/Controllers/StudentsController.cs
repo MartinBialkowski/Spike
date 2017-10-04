@@ -134,7 +134,6 @@ namespace SpikeWebAPI.Controllers
             await studentRepository.CommitAsync();
 
             return NoContent();
-            //return Ok(student);
         }
 
         private PagedResultDataTransferObject<TReturn> CreatePagedResultDTO<T, TReturn>(PagedResult<T> result, Paging paging, string sort)

@@ -61,28 +61,42 @@ namespace ControllersTest
             var queryString = "?pageNumber=1&pageLimit=2&sort=Name";
             var request = url + queryString;
             HttpResponseMessage httpResponse;
-            TestPagedResult<StudentResponseDataTransferObject> response;
-            List<StudentResponseDataTransferObject> students;
+            TestPagedResult<StudentTestResponse> response;
+            List<StudentTestResponse> students = new List<StudentTestResponse>();
             string actual, expected;
-            students = Mapper.Map<List<Student>, List<StudentResponseDataTransferObject>>(context.Students.Include(s => s.Course).OrderBy(s => s.Name).Skip(0).Take(2).ToList());
-            TestPagedResult<StudentResponseDataTransferObject> expectedPagedResult = new TestPagedResult<StudentResponseDataTransferObject>()
+            foreach (var item in context.Students.Include(s => s.Course).OrderBy(s => s.Name).Skip(0).Take(2).ToList())
+            {
+                var courseDTO = new CourseTestResponse()
+                {
+                    Name = item.Course.Name
+                };
+                var studentDTO = new StudentTestResponse()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Course = courseDTO
+                };
+                students.Add(studentDTO);
+            }
+
+            TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
             {
                 PageNumber = 1,
                 PageSize = 2,
                 TotalNumberOfPages = 2,
                 TotalNumberOfRecords = 3,
                 Results = students,
-                FirstPageUrl = "http://localhost/api/students?pageNumber=1&pageLimit=2&sort=Name",
+                FirstPageUrl = "/api/students?pageNumber=1&pageLimit=2&sort=Name",
                 PreviousPageUrl = null,
-                NextPageUrl = "http://localhost/api/students?pageNumber=2&pageLimit=2&sort=Name",
-                LastPageUrl = "http://localhost/api/students?pageNumber=2&pageLimit=2&sort=Name",
+                NextPageUrl = "/api/students?pageNumber=2&pageLimit=2&sort=Name",
+                LastPageUrl = "/api/students?pageNumber=2&pageLimit=2&sort=Name",
 
             };
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.GetAsync(request);
-                response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentResponseDataTransferObject>>();
+                response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(expectedPagedResult);
@@ -125,28 +139,28 @@ namespace ControllersTest
             var request = $"{url}/{studentId}";
             HttpResponseMessage httpResponse;
             Student student;
-            StudentResponseDataTransferObject response;
+            StudentTestResponse response;
             string actual, expected;
 
             student = context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
-            var courseDTO = new CourseResponseDataTransferObject()
+            var courseDTO = new CourseTestResponse()
             {
                 Name = student.Course.Name
             };
-            var studentDTO = new StudentResponseDataTransferObject()
+            var studentDTO = new StudentTestResponse()
             {
                 Id = student.Id,
                 Name = student.Name,
                 Course = courseDTO
             };
+            expected = JsonConvert.SerializeObject(studentDTO);
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.GetAsync(request);
-                response = await httpResponse.Content.ReadAsAsync<StudentResponseDataTransferObject>();
+                response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
             actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(studentDTO);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -168,13 +182,14 @@ namespace ControllersTest
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
 
             HttpResponseMessage httpResponse;
-            Student response, student;
+            StudentTestResponse response;
+            Student student;
             string actual, expected;
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.PostAsync(request, content);
-                response = await httpResponse.Content.ReadAsAsync<Student>();
+                response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
 
             student = await GetStudentByName(studentName);
