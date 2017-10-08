@@ -51,5 +51,20 @@ namespace ExtensionTests
             // assert
             Assert.Equal(expectedData, result);
         }
+
+        [Fact]
+        public void ShouldReturnFilteredDataWhenNonStringFilteringFieldProvided()
+        {
+            // arrange
+            var propertyName = "IsEven";
+            var filterValue = true;
+            var filterField = new FilterField<TestModel>(propertyName, filterValue);
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            var expectedData = testData.Where(t => t.IsEven == (filterValue));
+            // act
+            var result = filterField.Filter(testData);
+            // assert
+            Assert.Equal(expectedData, result);
+        }
     }
 }

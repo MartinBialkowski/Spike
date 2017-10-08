@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -24,11 +25,11 @@ namespace SpikeRepo.Extension
             }
             else
             {
-                containsMethod = typeof(object).GetMethod("Equals");
+                containsMethod = typeof(object).GetMethods().First(x => x.Name == "Equals" && x.GetParameters().Length == 1);
             }
             var parameter = Expression.Parameter(typeof(T), "x");
-            Expression property = Expression.Property(parameter, propertyName);  
-            var expression = Expression.Call(property, containsMethod, Expression.Constant(filterValue));
+            Expression property = Expression.Property(parameter, propertyName);
+            var expression = Expression.Call(property, containsMethod, Expression.Constant(filterValue, typeof(object)));
             return Expression.Lambda<Func<T, bool>>(expression, parameter);
         }
     }
