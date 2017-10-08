@@ -22,6 +22,19 @@ namespace ExtensionTests
             Assert.Equal(testData, result);
         }
 
-
+        [Fact]
+        public void ShouldReturnFilteredDataWhenStringFilteringFieldProvided()
+        {
+            // arrange
+            var propertyName = "Name";
+            var filterValue = "TestName_6";
+            var filterField = new FilterField<TestModel>(propertyName, filterValue);
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            var expectedData = testData.Where(t => t.Name == filterValue);
+            // act
+            var result = filterField.Filter(testData);
+            // assert
+            Assert.Equal(expectedData, result);
+        }
     }
 }

@@ -15,8 +15,8 @@ namespace EFCoreSpike5.ConstraintsModels
                 if (value != propertyName)
                 {
                     ValidatePropertyName(value);
-                    PropertyType = ModelType.GetProperty(propertyName).PropertyType;
                     propertyName = value;
+                    PropertyType = ModelType.GetProperty(propertyName).PropertyType;
                 }
             }
         }
