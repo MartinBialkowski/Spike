@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace SpikeRepo.Extension
 {
@@ -12,6 +13,23 @@ namespace SpikeRepo.Extension
             Expression property = Expression.Property(parameter, propertyName);
             Expression conversion = Expression.Convert(property, typeof(object));
             return Expression.Lambda<Func<T, object>>(conversion, parameter);
+        }
+
+        public static Expression<Func<T, bool>> ToConstraintExpression<T>(this string propertyName, object filterValue)
+        {
+            MethodInfo containsMethod;
+            if (filterValue.GetType() == typeof(string))
+            {
+                containsMethod = typeof(string).GetMethod("Contains");
+            }
+            else
+            {
+                containsMethod = typeof(object).GetMethod("Equals");
+            }
+            var parameter = Expression.Parameter(typeof(T), "x");
+            Expression property = Expression.Property(parameter, propertyName);  
+            var expression = Expression.Call(property, containsMethod, Expression.Constant(filterValue));
+            return Expression.Lambda<Func<T, bool>>(expression, parameter);
         }
     }
 }
