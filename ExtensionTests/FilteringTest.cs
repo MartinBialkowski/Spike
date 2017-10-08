@@ -66,5 +66,31 @@ namespace ExtensionTests
             // assert
             Assert.Equal(expectedData, result);
         }
+
+        [Fact]
+        public void ShouldSupportMultipleFiltering()
+        {
+            // arrange
+            var isEvenFilterValue = true;
+            var nameFilterValue = "TestName_6";
+            var filterFields = new FilterField<TestModel>[2];
+            filterFields[0] = new FilterField<TestModel>()
+            {
+                PropertyName = "IsEven",
+                FilterValue = isEvenFilterValue
+            };
+            filterFields[1] = new FilterField<TestModel>()
+            {
+                PropertyName = "Name",
+                FilterValue = nameFilterValue
+            };
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            var expectedData = testData.Where(t => t.IsEven == (isEvenFilterValue))
+                .Where(t => t.Name.Contains(nameFilterValue));
+            // act
+            var result = filterFields.Filter(testData);
+            // assert
+            Assert.Equal(expectedData, result);
+        }
     }
 }

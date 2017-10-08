@@ -19,17 +19,20 @@ namespace SpikeRepo.Extension
         public static Expression<Func<T, bool>> ToConstraintExpression<T>(this string propertyName, object filterValue)
         {
             MethodInfo containsMethod;
+            Expression argument;
             if (filterValue.GetType() == typeof(string))
             {
                 containsMethod = typeof(string).GetMethod("Contains");
+                argument = Expression.Constant(filterValue);
             }
             else
             {
                 containsMethod = typeof(object).GetMethods().First(x => x.Name == "Equals" && x.GetParameters().Length == 1);
+                argument = Expression.Constant(filterValue, typeof(object));
             }
             var parameter = Expression.Parameter(typeof(T), "x");
             Expression property = Expression.Property(parameter, propertyName);
-            var expression = Expression.Call(property, containsMethod, Expression.Constant(filterValue, typeof(object)));
+            var expression = Expression.Call(property, containsMethod, argument);
             return Expression.Lambda<Func<T, bool>>(expression, parameter);
         }
     }
