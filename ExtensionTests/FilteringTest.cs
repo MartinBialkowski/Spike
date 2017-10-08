@@ -23,7 +23,7 @@ namespace ExtensionTests
         }
 
         [Fact]
-        public void ShouldReturnFilteredDataWhenStringFilteringFieldProvided()
+        public void ShouldReturnFilteredDataWhenStringFullNameFilteringFieldProvided()
         {
             // arrange
             var propertyName = "Name";
@@ -31,6 +31,21 @@ namespace ExtensionTests
             var filterField = new FilterField<TestModel>(propertyName, filterValue);
             var testData = ModelHelper.GetTestData().AsQueryable();
             var expectedData = testData.Where(t => t.Name == filterValue);
+            // act
+            var result = filterField.Filter(testData);
+            // assert
+            Assert.Equal(expectedData, result);
+        }
+
+        [Fact]
+        public void ShouldReturnEveryElement()
+        {
+            // arrange
+            var propertyName = "Name";
+            var filterValue = "TestName";
+            var filterField = new FilterField<TestModel>(propertyName, filterValue);
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            var expectedData = testData.Where(t => t.Name.Contains(filterValue));
             // act
             var result = filterField.Filter(testData);
             // assert
