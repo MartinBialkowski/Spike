@@ -1,9 +1,10 @@
 ﻿using EFCoreSpike5.CommonModels;
 using EFCoreSpike5.ConstraintsModels;
 using SpikeRepo.Extension;
+using System;
 using System.Linq;
 using Xunit;
-
+// add test should return null when sort field not provided
 namespace ExtensionTests
 {
     public class SortingTest
@@ -63,6 +64,32 @@ namespace ExtensionTests
             var result = sortFields.Sort(testData);
             // assert
             Assert.Equal(exptectedData, result);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionWhenSortFieldNull()
+        {
+            // arrange
+            SortField<TestModel>[] sortFields = null;
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            // act
+            var exception = Record.Exception(() => sortFields.Sort(testData));
+            // assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public void ShouldThrowExceptionWhenSortFieldEmpty()
+        {
+            // arrange
+            var sortFields = new SortField<TestModel>[0];
+            var testData = ModelHelper.GetTestData().AsQueryable();
+            // act
+            var exception = Record.Exception(() => sortFields.Sort(testData));
+            // assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentException>(exception);
         }
     }
 }
