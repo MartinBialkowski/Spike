@@ -33,7 +33,7 @@ namespace SpikeWebAPI.Mappings
             SortField<T> SortField = new SortField<T>()
             {
                 SortOrder = sortData.EndsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
-                PropertyName = sortData.Trim('-')
+                PropertyName = sortData.Trim('-', '+')
             };
 
             return SortField;
