@@ -72,13 +72,5 @@ namespace ConvertersTest
             // assert
             Assert.NotNull(exception);
         }
-
-        [Fact]
-        public void ShouldReturnSortFieldsAscending1()
-        {
-            // assign
-            // act
-            // assert
-        }
     }
 }

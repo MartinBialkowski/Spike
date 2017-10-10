@@ -4,7 +4,7 @@ using SpikeRepo.Extension;
 using System;
 using System.Linq;
 using Xunit;
-// add test should return null when sort field not provided
+
 namespace ExtensionTests
 {
     public class SortingTest
