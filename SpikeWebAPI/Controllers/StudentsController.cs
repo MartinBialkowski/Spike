@@ -23,24 +23,26 @@ namespace SpikeWebAPI.Controllers
             this.studentRepository = studentRepository;
         }
 
-        // GET: /api/students?pageNumber=1&pageLimit=3&sort=CourseId,Name-
+        // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
         [HttpGet]
-        public async Task<IActionResult> GetStudents(Paging paging, string sort = "Id")
+        public async Task<IActionResult> GetStudents(Paging paging, StudentFilterDTO filterDTO, string sort = "Id")
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             SortField<Student>[] sortFields;
+            FilterField<Student>[] filterFields;
             try
             {
                 sortFields = Mapper.Map<string, SortField<Student>[]>(sort);
+                filterFields = Mapper.Map<StudentFilterDTO, FilterField<Student>[]>(filterDTO);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex) when (ex is ArgumentException || ex is ArgumentNullException)
             {
                 return BadRequest(ex.Message);
             }
-            var pagedResult = await studentRepository.GetAsync(paging, sortFields);
+            var pagedResult = await studentRepository.GetAsync(paging, sortFields, filterFields);
             return Ok(CreatePagedResultDTO<Student, StudentResponseDataTransferObject>(pagedResult, paging, sort));
         }
 
