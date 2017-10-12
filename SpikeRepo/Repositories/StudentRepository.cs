@@ -28,9 +28,9 @@ namespace SpikeRepo.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortFields, string searchText = null)
+        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
-            var query = GetStudents(sortFields, searchText);
+            var query = GetStudents(sortFields, filterFields);
             var result = new PagedResult<Student>()
             {
                 Results = await paging.Page(query).ToList(),
@@ -43,22 +43,27 @@ namespace SpikeRepo.Repositories
             return result;
         }
 
-        public IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, string searchText = null)
+        public IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
-            var query = GetStudents(sortFields, searchText);
+            var query = GetStudents(sortFields, filterFields);
 
             return query.ToAsyncEnumerable();
         }
 
-        private IQueryable<Student> GetStudents(SortField<Student>[] sortFields, string searchText = null)
+        private IQueryable<Student> GetStudents(SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
             IQueryable<Student> query = context.Students.Include(s => s.Course);
 
-            if (!string.IsNullOrWhiteSpace(searchText))
+            if (filterFields != null)
             {
-                query = query.Where(s => s.Name == searchText);
+                query = filterFields.Filter(query);
             }
-            return query = sortFields.Sort(query);
+
+            if (sortFields != null)
+            {
+                return query = sortFields.Sort(query);
+            }
+            return query;
         }
     }
 }
