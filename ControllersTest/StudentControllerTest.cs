@@ -64,19 +64,13 @@ namespace ControllersTest
             TestPagedResult<StudentTestResponse> response;
             List<StudentTestResponse> students = new List<StudentTestResponse>();
             string actual, expected;
-            foreach (var item in context.Students.Include(s => s.Course).OrderBy(s => s.Name).Skip(0).Take(2).ToList())
+            var studentsList = context.Students.Include(s => s.Course)
+                .OrderBy(s => s.Name)
+                .Skip(0).Take(2).ToList();
+
+            foreach (var item in studentsList)
             {
-                var courseDTO = new CourseTestResponse()
-                {
-                    Name = item.Course.Name
-                };
-                var studentDTO = new StudentTestResponse()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Course = courseDTO
-                };
-                students.Add(studentDTO);
+                students.Add(CreateResponseStudent(item));
             }
 
             TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
@@ -125,6 +119,53 @@ namespace ControllersTest
             students = context.Students.Include(s => s.Course).OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
+            // assert
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task ShouldGetFilteredStudentSortedByName()
+        {
+            // arrange
+            var filterValue = "Martin";
+            var queryString = $"?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name";
+            var request = url + queryString;
+            HttpResponseMessage httpResponse;
+            TestPagedResult<StudentTestResponse> response;
+            List<StudentTestResponse> students = new List<StudentTestResponse>();
+            string actual, expected;
+            var filteredStudents = context.Students.Include(s => s.Course)
+                .Where(s => s.Name.Contains(filterValue))
+                .OrderBy(s => s.Name)
+                .Skip(0).Take(3).ToList();
+            foreach (var item in filteredStudents)
+            {
+                students.Add(CreateResponseStudent(item));
+            }
+
+            TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
+            {
+                PageNumber = 1,
+                PageSize = 3,
+                TotalNumberOfPages = 1,
+                TotalNumberOfRecords = 1,
+                Results = students,
+                FirstPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+                PreviousPageUrl = null,
+                NextPageUrl = null,
+                LastPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+
+            };
+            // act
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.GetAsync(request);
+                response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
+            }
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(expectedPagedResult);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -282,6 +323,22 @@ namespace ControllersTest
                 context.Remove(result);
                 context.SaveChanges();
             }
+        }
+
+        private StudentTestResponse CreateResponseStudent(Student student)
+        {
+            var courseDTO = new CourseTestResponse()
+            {
+                Name = student.Course.Name
+            };
+            var studentDTO = new StudentTestResponse()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Course = courseDTO
+            };
+
+            return studentDTO;
         }
     }
 }
