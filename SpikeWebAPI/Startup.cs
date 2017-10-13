@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using SpikeWebAPI.Mappings;
 using Swashbuckle.AspNetCore.Swagger;
 using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace SpikeWebAPI
 {
@@ -46,7 +47,11 @@ namespace SpikeWebAPI
 
             services
                 .AddMvc()
-                .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
