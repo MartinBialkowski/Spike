@@ -20,7 +20,7 @@ namespace ValidatorsTest
             pageNumber = 1;
             var validator = new PagingValidator();
             // act
-            var result = validator.Validate(new Paging(pageNumber, this.pageSize));
+            var result = validator.Validate(new PagingDTO(pageNumber, this.pageSize));
             // assert
             Assert.False(result.IsValid);
         }
@@ -36,7 +36,7 @@ namespace ValidatorsTest
             pageSize = 1;
             var validator = new PagingValidator();
             // act
-            var result = validator.Validate(new Paging(this.pageNumber, pageSize));
+            var result = validator.Validate(new PagingDTO(this.pageNumber, pageSize));
             // assert
             Assert.False(result.IsValid);
         }
@@ -49,7 +49,7 @@ namespace ValidatorsTest
             pageNumber = 1;
             var validator = new PagingValidator();
             // act
-            var result = validator.Validate(new Paging(pageNumber, pageSize));
+            var result = validator.Validate(new PagingDTO(pageNumber, pageSize));
             // assert
             Assert.True(result.IsValid);
         }

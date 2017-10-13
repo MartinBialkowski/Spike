@@ -6,24 +6,24 @@ using System.Linq;
 
 namespace SpikeWebAPI.DTOs
 {
-    public class Paging : IPaging, IValidatableObject
+    public class PagingDTO: IValidatableObject
     {
-        public int PageNumber { get; set; }
-        public int PageLimit { get; set; }
+        public int? PageNumber { get; set; }
+        public int? PageLimit { get; set; }
 
         public int Offset
         {
             get
             {
-                return (PageNumber - 1) * PageLimit;
+                return (PageNumber.GetValueOrDefault() - 1) * PageLimit.GetValueOrDefault();
             }
         }
 
-        public Paging()
+        public PagingDTO()
         {
         }
 
-        public Paging(int pageNumber = 1, int pageLimit = 50)
+        public PagingDTO(int pageNumber = 1, int pageLimit = 50)
         {
             PageNumber = pageNumber;
             PageLimit = pageLimit;

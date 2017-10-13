@@ -28,7 +28,7 @@ namespace SpikeRepo.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task<PagedResult<Student>> GetAsync(IPaging paging, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
+        public async Task<PagedResult<Student>> GetAsync(Paging paging, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
             var query = GetStudents(sortFields, filterFields);
             var result = new PagedResult<Student>()
