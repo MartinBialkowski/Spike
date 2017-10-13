@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EFCoreSpike5.Models;
@@ -9,7 +8,7 @@ using SpikeWebAPI.DTOs;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -26,12 +25,8 @@ namespace SpikeWebAPI.Controllers
 
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
         [HttpGet]
-        public async Task<IActionResult> GetStudents(Paging paging, StudentFilterDTO filterDTO, string sort = "Id")
+        public async Task<IActionResult> GetStudents(PagingDTO pagingDTO, StudentFilterDTO filterDTO, string sort = "Id")
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             SortField<Student>[] sortFields;
             FilterField<Student>[] filterFields;
             try
@@ -43,6 +38,15 @@ namespace SpikeWebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            if (pagingDTO.PageNumber == null && pagingDTO.PageLimit == null)
+            {
+                return Ok(await studentRepository.GetAsync(sortFields, filterFields).ToList());
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            Paging paging = Mapper.Map<PagingDTO, Paging>(pagingDTO);
             var pagedResult = await studentRepository.GetAsync(paging, sortFields, filterFields);
             return Ok(CreatePagedResultDTO<Student, StudentResponseDataTransferObject>(pagedResult, paging, sort, filterDTO));
         }
@@ -114,8 +118,8 @@ namespace SpikeWebAPI.Controllers
             var student = Mapper.Map<StudentCreateRequestDataTransferObject, Student>(studentDTO);
             studentRepository.Add(student);
             await studentRepository.CommitAsync();
-
-            return CreatedAtAction("GetStudent", new { id = student.Id }, student);
+            var studentResponse = Mapper.Map<Student, StudentResponseDataTransferObject>(student);
+            return CreatedAtAction("GetStudent", new { id = student.Id }, studentResponse);
         }
 
         // DELETE: api/students/5
