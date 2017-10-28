@@ -1,4 +1,3 @@
-using AutoMapper;
 using EFCoreSpike5.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -6,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SpikeWebAPI;
-using SpikeWebAPI.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -99,7 +97,7 @@ namespace ControllersTest
             Assert.Equal(expected, actual);
         }
 
-        [Fact(Skip = "No functionality provided yet")]
+        [Fact]
         [Trait("Category", "Integration")]
         public async Task ShouldGetAllElementsSortedByName()
         {
@@ -116,7 +114,7 @@ namespace ControllersTest
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = context.Students.Include(s => s.Course).OrderBy(s => s.Name).ToList();
+            students = context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -184,16 +182,7 @@ namespace ControllersTest
             string actual, expected;
 
             student = context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
-            var courseDTO = new CourseTestResponse()
-            {
-                Name = student.Course.Name
-            };
-            var studentDTO = new StudentTestResponse()
-            {
-                Id = student.Id,
-                Name = student.Name,
-                Course = courseDTO
-            };
+            var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
             using (client = server.CreateClient())
@@ -226,16 +215,22 @@ namespace ControllersTest
             StudentTestResponse response;
             Student student;
             string actual, expected;
+
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
-
-            student = await GetStudentByName(studentName);
             actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(student);
+            student = await GetStudentByName(studentName);
+            var studentDTO = new StudentTestResponse()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Course = null
+            };
+            expected = JsonConvert.SerializeObject(studentDTO);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -292,7 +287,9 @@ namespace ControllersTest
 
         private async Task<Student> GetStudentByName(string name)
         {
-            return await context.Students.FirstOrDefaultAsync(x => x.Name == name);
+            return await context.Students
+                .Include(s => s.Course)
+                .FirstOrDefaultAsync(x => x.Name == name);
         }
 
         private int PrepareStudentForTest(string name)
@@ -327,10 +324,14 @@ namespace ControllersTest
 
         private StudentTestResponse CreateResponseStudent(Student student)
         {
-            var courseDTO = new CourseTestResponse()
+            CourseTestResponse courseDTO = null;
+            if (student.Course != null)
             {
-                Name = student.Course.Name
-            };
+                courseDTO = new CourseTestResponse()
+                {
+                    Name = student.Course.Name
+                };
+            }
             var studentDTO = new StudentTestResponse()
             {
                 Id = student.Id,

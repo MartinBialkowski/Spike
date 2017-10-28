@@ -12,6 +12,7 @@ namespace SpikeWebAPI.Mappings
                 cfg.AddProfile<SortMappingProfile>();
                 cfg.AddProfile<CourseMappingProfile>();
                 cfg.AddProfile<FilterMappingProfile>();
+                cfg.AddProfile<PagingMappingProfile>();
             });
         }
     }
