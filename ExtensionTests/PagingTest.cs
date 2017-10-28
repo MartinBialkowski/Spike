@@ -1,6 +1,5 @@
 using EFCoreSpike5.ConstraintsModels;
 using SpikeRepo.Extension;
-using SpikeWebAPI.DTOs;
 using System.Linq;
 using Xunit;
 
@@ -35,7 +34,7 @@ namespace ExtensionTests
             // act
             var result = paging.Page(testData.AsQueryable()).ToList();
             // assert
-            Assert.Equal(0, result.Result.Count);
+            Assert.Empty(result.Result);
         }
 
         [Fact]

@@ -1,7 +1,6 @@
 using EFCoreSpike5.ConstraintsModels;
 using Newtonsoft.Json;
 using SpikeWebAPI.Mappings;
-using System;
 using Xunit;
 
 namespace ConvertersTest

@@ -1,4 +1,3 @@
-using AutoMapper;
 using EFCoreSpike5.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -6,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SpikeWebAPI;
-using SpikeWebAPI.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IO;

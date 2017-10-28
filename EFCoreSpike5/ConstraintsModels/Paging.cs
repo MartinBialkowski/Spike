@@ -6,7 +6,7 @@ namespace EFCoreSpike5.ConstraintsModels
     {
         public int PageNumber { get; set; }
         public int PageLimit { get; set; }
-        public int Offset { get; }
+        public int Offset => (PageNumber - 1) * PageLimit;
 
         public Paging()
         {
