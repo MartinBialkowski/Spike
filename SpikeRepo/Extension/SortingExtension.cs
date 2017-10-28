@@ -1,6 +1,7 @@
 ﻿using EFCoreSpike5.ConstraintsModels;
 using System.Linq;
 using EFCoreSpike5.CommonModels;
+using System;
 
 namespace SpikeRepo.Extension
 {
@@ -21,6 +22,14 @@ namespace SpikeRepo.Extension
 
         public static IOrderedQueryable<T> Sort<T>(this SortField<T>[] sortFields, IQueryable<T> query) where T : class
         {
+            if(sortFields == null)
+            {
+                throw new ArgumentNullException("sortFields");
+            }
+            if (sortFields.Length < 1)
+            {
+                throw new ArgumentException("sortFields can not be empty");
+            }
             IOrderedQueryable<T> sortedData = null;
             foreach (var sortField in sortFields)
             {

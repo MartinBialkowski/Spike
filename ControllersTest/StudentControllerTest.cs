@@ -1,4 +1,3 @@
-using AutoMapper;
 using EFCoreSpike5.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -6,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SpikeWebAPI;
-using SpikeWebAPI.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,19 +62,13 @@ namespace ControllersTest
             TestPagedResult<StudentTestResponse> response;
             List<StudentTestResponse> students = new List<StudentTestResponse>();
             string actual, expected;
-            foreach (var item in context.Students.Include(s => s.Course).OrderBy(s => s.Name).Skip(0).Take(2).ToList())
+            var studentsList = context.Students.Include(s => s.Course)
+                .OrderBy(s => s.Name)
+                .Skip(0).Take(2).ToList();
+
+            foreach (var item in studentsList)
             {
-                var courseDTO = new CourseTestResponse()
-                {
-                    Name = item.Course.Name
-                };
-                var studentDTO = new StudentTestResponse()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Course = courseDTO
-                };
-                students.Add(studentDTO);
+                students.Add(CreateResponseStudent(item));
             }
 
             TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
@@ -105,7 +97,7 @@ namespace ControllersTest
             Assert.Equal(expected, actual);
         }
 
-        [Fact(Skip = "No functionality provided yet")]
+        [Fact]
         [Trait("Category", "Integration")]
         public async Task ShouldGetAllElementsSortedByName()
         {
@@ -122,9 +114,56 @@ namespace ControllersTest
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = context.Students.Include(s => s.Course).OrderBy(s => s.Name).ToList();
+            students = context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
+            // assert
+            httpResponse.EnsureSuccessStatusCode();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task ShouldGetFilteredStudentSortedByName()
+        {
+            // arrange
+            var filterValue = "Martin";
+            var queryString = $"?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name";
+            var request = url + queryString;
+            HttpResponseMessage httpResponse;
+            TestPagedResult<StudentTestResponse> response;
+            List<StudentTestResponse> students = new List<StudentTestResponse>();
+            string actual, expected;
+            var filteredStudents = context.Students.Include(s => s.Course)
+                .Where(s => s.Name.Contains(filterValue))
+                .OrderBy(s => s.Name)
+                .Skip(0).Take(3).ToList();
+            foreach (var item in filteredStudents)
+            {
+                students.Add(CreateResponseStudent(item));
+            }
+
+            TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
+            {
+                PageNumber = 1,
+                PageSize = 3,
+                TotalNumberOfPages = 1,
+                TotalNumberOfRecords = 1,
+                Results = students,
+                FirstPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+                PreviousPageUrl = null,
+                NextPageUrl = null,
+                LastPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+
+            };
+            // act
+            using (client = server.CreateClient())
+            {
+                httpResponse = await client.GetAsync(request);
+                response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
+            }
+            actual = JsonConvert.SerializeObject(response);
+            expected = JsonConvert.SerializeObject(expectedPagedResult);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -143,16 +182,7 @@ namespace ControllersTest
             string actual, expected;
 
             student = context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
-            var courseDTO = new CourseTestResponse()
-            {
-                Name = student.Course.Name
-            };
-            var studentDTO = new StudentTestResponse()
-            {
-                Id = student.Id,
-                Name = student.Name,
-                Course = courseDTO
-            };
+            var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
             using (client = server.CreateClient())
@@ -185,16 +215,22 @@ namespace ControllersTest
             StudentTestResponse response;
             Student student;
             string actual, expected;
+
             // act
             using (client = server.CreateClient())
             {
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
-
-            student = await GetStudentByName(studentName);
             actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(student);
+            student = await GetStudentByName(studentName);
+            var studentDTO = new StudentTestResponse()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Course = null
+            };
+            expected = JsonConvert.SerializeObject(studentDTO);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -251,7 +287,9 @@ namespace ControllersTest
 
         private async Task<Student> GetStudentByName(string name)
         {
-            return await context.Students.FirstOrDefaultAsync(x => x.Name == name);
+            return await context.Students
+                .Include(s => s.Course)
+                .FirstOrDefaultAsync(x => x.Name == name);
         }
 
         private int PrepareStudentForTest(string name)
@@ -282,6 +320,26 @@ namespace ControllersTest
                 context.Remove(result);
                 context.SaveChanges();
             }
+        }
+
+        private StudentTestResponse CreateResponseStudent(Student student)
+        {
+            CourseTestResponse courseDTO = null;
+            if (student.Course != null)
+            {
+                courseDTO = new CourseTestResponse()
+                {
+                    Name = student.Course.Name
+                };
+            }
+            var studentDTO = new StudentTestResponse()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Course = courseDTO
+            };
+
+            return studentDTO;
         }
     }
 }
