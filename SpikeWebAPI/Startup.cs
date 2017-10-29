@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Autofac;
+using SpikeWebAPI.Modules;
 
 namespace SpikeWebAPI
 {
@@ -57,8 +58,7 @@ namespace SpikeWebAPI
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<StudentRepository>().As<IStudentRepository>();
-            builder.RegisterType<CourseRepository>().As<ICourseRepository>();
+            builder.RegisterModule(new RepositoryModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
