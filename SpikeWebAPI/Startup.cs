@@ -13,6 +13,7 @@ using SpikeWebAPI.Mappings;
 using Swashbuckle.AspNetCore.Swagger;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Autofac;
 
 namespace SpikeWebAPI
 {
@@ -28,14 +29,11 @@ namespace SpikeWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // EF Core
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            // Repositories
-            services.AddScoped<IStudentRepository, StudentRepository>();
-            services.AddScoped<ICourseRepository, CourseRepository>();
             // Automapper
             AutoMapperConfiguration.Configure();
-
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -55,6 +53,12 @@ namespace SpikeWebAPI
 
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType<StudentRepository>().As<IStudentRepository>();
+            builder.RegisterType<CourseRepository>().As<ICourseRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
