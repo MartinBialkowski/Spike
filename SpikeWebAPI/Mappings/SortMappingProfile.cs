@@ -9,8 +9,8 @@ namespace SpikeWebAPI.Mappings
     {
         public SortMappingProfile()
         {
-            CreateMap(typeof(string), typeof(SortField<Student>[]))
-                .ConvertUsing(typeof(StringToSortFieldsConverter<Student>));
+            CreateMap<string, SortField<Student>[]>()
+                .ConvertUsing(new StringToSortFieldsConverter<Student>());
         }
     }
 
