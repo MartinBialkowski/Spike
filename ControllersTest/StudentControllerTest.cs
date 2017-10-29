@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Autofac.Extensions.DependencyInjection;
 
 namespace ControllersTest
 {
@@ -31,8 +32,8 @@ namespace ControllersTest
         public StudentControllerTest()
         {
             var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..")))
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .SetBasePath(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..")))
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             var configuration = builder.Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<EFCoreSpikeContext>();
@@ -40,8 +41,9 @@ namespace ControllersTest
             context = new EFCoreSpikeContext(optionsBuilder.Options);
 
             server = new TestServer(new WebHostBuilder()
-            .UseConfiguration(configuration)
-            .UseStartup<Startup>());
+                .ConfigureServices(services => services.AddAutofac())
+                .UseConfiguration(configuration)
+                .UseStartup<Startup>());
 
         }
 
