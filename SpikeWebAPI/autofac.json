@@ -1,0 +1,20 @@
+﻿{
+  "components": [
+    {
+      "type": "SpikeRepo.Repositories.StudentRepository, SpikeRepo",
+      "services": [
+        {
+          "type": "SpikeRepo.Abstract.IStudentRepository, SpikeRepo"
+        }
+      ]
+    },
+    {
+      "type": "SpikeRepo.Repositories.CourseRepository, SpikeRepo",
+      "services": [
+        {
+          "type": "SpikeRepo.Abstract.ICourseRepository, SpikeRepo"
+        }
+      ]
+    }
+  ]
+}
