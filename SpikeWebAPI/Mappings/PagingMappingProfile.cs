@@ -8,8 +8,8 @@ namespace SpikeWebAPI.Mappings
     {
         public PagingMappingProfile()
         {
-            CreateMap(typeof(PagingDTO), typeof(Paging))
-                .ConvertUsing(typeof(PagingConverter));
+            CreateMap<PagingDTO, Paging>()
+                .ConvertUsing(new PagingConverter());
         }
     }
 

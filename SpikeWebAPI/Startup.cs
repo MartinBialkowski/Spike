@@ -4,16 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using EFCoreSpike5.Models;
 using Microsoft.EntityFrameworkCore;
-using SpikeRepo.Abstract;
-using SpikeRepo.Repositories;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using SpikeWebAPI.Mappings;
 using Swashbuckle.AspNetCore.Swagger;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Autofac;
+using SpikeWebAPI.Modules;
 
 namespace SpikeWebAPI
 {
@@ -32,8 +30,6 @@ namespace SpikeWebAPI
             // EF Core
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            // Automapper
-            AutoMapperConfiguration.Configure();
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -57,8 +53,8 @@ namespace SpikeWebAPI
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<StudentRepository>().As<IStudentRepository>();
-            builder.RegisterType<CourseRepository>().As<ICourseRepository>();
+            builder.RegisterModule(new RepositoryModule());
+            builder.RegisterModule(new AutoMapperModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

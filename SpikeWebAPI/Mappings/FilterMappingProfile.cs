@@ -10,8 +10,8 @@ namespace SpikeWebAPI.Mappings
     {
         public FilterMappingProfile()
         {
-            CreateMap(typeof(StudentFilterDTO), typeof(FilterField<Student>[]))
-                .ConvertUsing(typeof(FilterDtoToFilterField<StudentFilterDTO, Student>));
+            CreateMap<StudentFilterDTO, FilterField<Student>[]>()
+                .ConvertUsing(new FilterDtoToFilterField<StudentFilterDTO, Student>());
         }
     }
 
