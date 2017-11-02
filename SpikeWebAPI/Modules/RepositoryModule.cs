@@ -4,6 +4,7 @@ using SpikeRepo.Repositories;
 
 namespace SpikeWebAPI.Modules
 {
+    // Left just for learning purpose
     public class RepositoryModule: Module
     {
         protected override void Load(ContainerBuilder builder)
