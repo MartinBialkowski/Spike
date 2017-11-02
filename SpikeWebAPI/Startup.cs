@@ -12,6 +12,8 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Autofac;
 using SpikeWebAPI.Modules;
+using Autofac.Configuration;
+using System.IO;
 
 namespace SpikeWebAPI
 {
@@ -53,7 +55,12 @@ namespace SpikeWebAPI
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new RepositoryModule());
+            var autofacConfig = new ConfigurationBuilder();
+            string path = Path.GetFullPath(Configuration["AutofacConfig:RepositoryConfig"]);
+            autofacConfig.AddJsonFile(path);
+            var repositoryModule = new ConfigurationModule(autofacConfig.Build());
+
+            builder.RegisterModule(repositoryModule);
             builder.RegisterModule(new AutoMapperModule());
         }
 
