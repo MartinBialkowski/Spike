@@ -1,16 +1,26 @@
 ﻿using Autofac;
-using SpikeRepo.Abstract;
-using SpikeRepo.Repositories;
+using Autofac.Configuration;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace SpikeWebAPI.Modules
 {
-    // Left just for learning purpose
     public class RepositoryModule: Module
     {
+        private string configAbsolutePath;
+
+        public RepositoryModule(string configPath)
+        {
+            configAbsolutePath = Path.GetFullPath(configPath);
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<StudentRepository>().As<IStudentRepository>();
-            builder.RegisterType<CourseRepository>().As<ICourseRepository>();
+            var autofacConfig = new ConfigurationBuilder();
+            autofacConfig.AddJsonFile(configAbsolutePath);
+            var repositoryModule = new ConfigurationModule(autofacConfig.Build());
+
+            builder.RegisterModule(repositoryModule);
         }
     }
 }
