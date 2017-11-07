@@ -14,12 +14,6 @@ namespace SpikeWebAPI.DTOs
         {
         }
 
-        public PagingDTO(int pageNumber = 1, int pageLimit = 50)
-        {
-            PageNumber = pageNumber;
-            PageLimit = pageLimit;
-        }
-
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var validator = new PagingValidator();
