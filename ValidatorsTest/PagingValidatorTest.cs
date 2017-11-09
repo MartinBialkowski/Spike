@@ -6,21 +6,21 @@ namespace ValidatorsTest
 {
     public class PagingValidatorTest
     {
-        private int pageSize;
-        private int pageNumber;
-
         [Theory]
         [InlineData(null)]
         [InlineData(0)]
         [InlineData(-1)]
-        public void InvalidWhenPageLimitIsNotValid(int pageSize)
+        public void InvalidWhenPageLimitIsNotValid(int? pageSize)
         {
             // arrange
-            this.pageSize = pageSize;
-            pageNumber = 1;
             var validator = new PagingValidator();
+            var paging = new PagingDTO()
+            {
+                PageNumber = 1,
+                PageLimit = pageSize
+            };
             // act
-            var result = validator.Validate(new PagingDTO(pageNumber, this.pageSize));
+            var result = validator.Validate(paging);
             // assert
             Assert.False(result.IsValid);
         }
@@ -29,14 +29,17 @@ namespace ValidatorsTest
         [InlineData(null)]
         [InlineData(-1)]
         [InlineData(0)]
-        public void InvalidWhenPageNumberIsNotValid(int pageNumber)
+        public void InvalidWhenPageNumberIsNotValid(int? pageNumber)
         {
             // arrange
-            this.pageNumber = pageNumber;
-            pageSize = 1;
             var validator = new PagingValidator();
+            var paging = new PagingDTO()
+            {
+                PageNumber = pageNumber,
+                PageLimit = 1
+            };
             // act
-            var result = validator.Validate(new PagingDTO(this.pageNumber, pageSize));
+            var result = validator.Validate(paging);
             // assert
             Assert.False(result.IsValid);
         }
@@ -45,11 +48,14 @@ namespace ValidatorsTest
         public void ValidWhenPageNumberAndPageSizeProvided()
         {
             // arrange
-            pageSize = 5;
-            pageNumber = 1;
             var validator = new PagingValidator();
+            var paging = new PagingDTO()
+            {
+                PageNumber = 1,
+                PageLimit = 5
+            };
             // act
-            var result = validator.Validate(new PagingDTO(pageNumber, pageSize));
+            var result = validator.Validate(paging);
             // assert
             Assert.True(result.IsValid);
         }

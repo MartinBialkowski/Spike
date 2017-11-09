@@ -7,8 +7,10 @@ namespace SpikeWebAPI.Validators
     {
         public PagingValidator()
         {
-            RuleFor(paging => paging.PageLimit).GreaterThan(0).WithMessage("page size must be greater than 0");
-            RuleFor(paging => paging.PageNumber).GreaterThan(0).WithMessage("page number must be greater than 0");
+            CascadeMode = CascadeMode.StopOnFirstFailure;
+
+            RuleFor(paging => paging.PageLimit).NotNull().GreaterThan(0).WithMessage("page size must be greater than 0");
+            RuleFor(paging => paging.PageNumber).NotNull().GreaterThan(0).WithMessage("page number must be greater than 0");
         }
     }
 }

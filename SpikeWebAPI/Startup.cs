@@ -53,7 +53,7 @@ namespace SpikeWebAPI
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new RepositoryModule());
+            builder.RegisterModule(new RepositoryModule(Configuration["AutofacConfig:RepositoryConfig"]));
             builder.RegisterModule(new AutoMapperModule());
         }
 

@@ -166,8 +166,8 @@ namespace SpikeWebAPI.Controllers
         {
             return Url.Action("GetStudents", new
             {
-                pageNumber = pageNumber,
-                pageLimit = pageLimit,
+                pageNumber,
+                pageLimit,
                 filterDTO?.Id,
                 filterDTO?.Name,
                 filterDTO?.CourseId,

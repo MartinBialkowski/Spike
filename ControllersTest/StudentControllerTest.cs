@@ -284,7 +284,7 @@ namespace ControllersTest
             var expectedStudent = await GetStudentByName(updatedName);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expectedStudent, null);
+            Assert.Null(expectedStudent);
         }
 
         private async Task<Student> GetStudentByName(string name)
