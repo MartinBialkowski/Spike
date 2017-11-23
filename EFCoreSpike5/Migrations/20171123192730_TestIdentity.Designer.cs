@@ -11,9 +11,10 @@ using System;
 namespace EFCoreSpike5.Migrations
 {
     [DbContext(typeof(EFCoreSpikeContext))]
-    partial class EFCoreSpikeContextModelSnapshot : ModelSnapshot
+    [Migration("20171123192730_TestIdentity")]
+    partial class TestIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
