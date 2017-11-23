@@ -12,6 +12,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Autofac;
 using SpikeWebAPI.Modules;
+using Microsoft.AspNetCore.Identity;
 
 namespace SpikeWebAPI
 {
@@ -30,6 +31,12 @@ namespace SpikeWebAPI
             // EF Core
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Identity Core
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<EFCoreSpikeContext>()
+                .AddDefaultTokenProviders();
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -58,7 +65,7 @@ namespace SpikeWebAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EFCoreSpikeContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -96,6 +103,8 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
+
+            dbContext.Database.EnsureCreated();
 
         }
     }
