@@ -15,9 +15,9 @@ namespace ValidatorsTest
         [InlineData(null)]
         [InlineData("")]
         [InlineData("    ")]
+        [InlineData("InvalidEmailAtProviderDotCom")]
         public void InvalidWhenLoginEmailNotProvided(string email)
         {
-
             // arrange
             var validator = new LoginValidator();
             var login = new UserDTO()

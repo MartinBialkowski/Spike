@@ -10,8 +10,10 @@ namespace SpikeWebAPI.Validators
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
             RuleFor(login => login.Email)
-                .NotEmpty().WithMessage("Email address is required.");
-                
+                .NotEmpty().WithMessage("Email address is required.")
+                .EmailAddress().WithMessage("A valid email address is required.");
+            
+
         }
     }
 }
