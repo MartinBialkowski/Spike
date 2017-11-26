@@ -11,6 +11,7 @@ namespace ValidatorsTest
     {
         private string validEmail = "test@test.com";
         private string validPassword = "Password123";
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -29,6 +30,41 @@ namespace ValidatorsTest
             var result = validator.Validate(login);
             // assert
             Assert.False(result.IsValid);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("    ")]
+        public void InvalidWhenLoginPasswordNotProvided(string password)
+        {
+            // arrange
+            var validator = new LoginValidator();
+            var login = new UserDTO()
+            {
+                Email = validEmail,
+                Password = password
+            };
+            // act
+            var result = validator.Validate(login);
+            // assert
+            Assert.False(result.IsValid);
+        }
+
+        [Fact]
+        public void ValidWhenEmailAndPasswordProvided()
+        {
+            // arrange
+            var validator = new LoginValidator();
+            var login = new UserDTO()
+            {
+                Email = validEmail,
+                Password = validPassword
+            };
+            // act
+            var result = validator.Validate(login);
+            // assert
+            Assert.True(result.IsValid);
         }
     }
 }
