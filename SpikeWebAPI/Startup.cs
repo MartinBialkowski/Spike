@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using EFCoreSpike5.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -74,6 +75,7 @@ namespace SpikeWebAPI
 
             services
                 .AddMvc()
+                .AddFluentValidation()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -88,6 +90,7 @@ namespace SpikeWebAPI
         {
             builder.RegisterModule(new RepositoryModule(Configuration["AutofacConfig:RepositoryConfig"]));
             builder.RegisterModule(new AutoMapperModule());
+            builder.RegisterModule(new ValidatorModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
