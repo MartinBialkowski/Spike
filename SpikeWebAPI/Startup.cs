@@ -1,17 +1,24 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Autofac;
+using EFCoreSpike5.Models;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using EFCoreSpike5.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Swashbuckle.AspNetCore.Swagger;
-using Newtonsoft.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Autofac;
+using Newtonsoft.Json.Serialization;
 using SpikeWebAPI.Modules;
+using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Text;
 
 namespace SpikeWebAPI
 {
@@ -30,6 +37,33 @@ namespace SpikeWebAPI
             // EF Core
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Identity Core
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<EFCoreSpikeContext>()
+                .AddDefaultTokenProviders();
+
+            // JWT Authentication
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidAudience = Configuration["JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -41,6 +75,7 @@ namespace SpikeWebAPI
 
             services
                 .AddMvc()
+                .AddFluentValidation()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -55,10 +90,11 @@ namespace SpikeWebAPI
         {
             builder.RegisterModule(new RepositoryModule(Configuration["AutofacConfig:RepositoryConfig"]));
             builder.RegisterModule(new AutoMapperModule());
+            builder.RegisterModule(new ValidatorModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EFCoreSpikeContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -96,7 +132,6 @@ namespace SpikeWebAPI
               });
 
             app.UseMvc();
-
         }
     }
 }
