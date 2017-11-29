@@ -22,7 +22,6 @@ namespace ValidatorsTest
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(-1)]
         [InlineData(0)]
         public void InvalidWhenCourseIdIsNotValid(int id)

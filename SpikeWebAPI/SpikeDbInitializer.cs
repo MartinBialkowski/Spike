@@ -10,7 +10,7 @@ namespace SpikeWebAPI
         public static void Initialize(IServiceProvider serviceProvider)
         {
             context = (EFCoreSpikeContext)serviceProvider.GetService(typeof(EFCoreSpikeContext));
-
+            context.Database.EnsureCreated();
             InitilizeDatabase();
         }
 
