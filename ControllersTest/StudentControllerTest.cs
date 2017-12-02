@@ -14,6 +14,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Autofac.Extensions.DependencyInjection;
+using System.Net.Http.Headers;
+using SpikeWebAPI.DTOs;
 
 namespace ControllersTest
 {
@@ -26,6 +28,7 @@ namespace ControllersTest
         private string studentName = "TestName";
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
+        private string authenticationToken;
 
         //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
         //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
@@ -45,6 +48,7 @@ namespace ControllersTest
                 .UseConfiguration(configuration)
                 .UseStartup<Startup>());
 
+            authenticationToken = getAuthorizationToken();
         }
 
         public void Dispose()
@@ -89,6 +93,7 @@ namespace ControllersTest
             // act
             using (client = server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
@@ -342,6 +347,24 @@ namespace ControllersTest
             };
 
             return studentDTO;
+        }
+
+        private string getAuthorizationToken()
+        {
+            using (client = server.CreateClient())
+            {
+                var loginUrl = "api/account/login";
+                var userCredential = new UserDTO()
+                {
+                    Email = "embe@test.com",
+                    Password = "Test123!"
+                };
+                string userJson = JsonConvert.SerializeObject(userCredential);
+                var content = new StringContent(userJson, Encoding.UTF8, contentType);
+                HttpResponseMessage httpResponse = client.PostAsync(loginUrl, content).Result;
+                var response = httpResponse.Content.ReadAsStringAsync();
+                return response.Result.Trim('"');
+            }
         }
     }
 }
