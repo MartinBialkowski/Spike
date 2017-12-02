@@ -9,6 +9,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -26,6 +27,7 @@ namespace SpikeWebAPI.Controllers
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetStudents(PagingDTO pagingDTO, StudentFilterDTO filterDTO, string sort = "Id")
         {
