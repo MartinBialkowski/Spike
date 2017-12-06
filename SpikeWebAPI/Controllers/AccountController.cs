@@ -14,6 +14,7 @@ using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/account")]
     public class AccountController : Controller
@@ -77,6 +78,15 @@ namespace SpikeWebAPI.Controllers
             {
                 return BadRequest(result.Errors);
             }
+        }
+
+        [HttpGet("refresh")]
+        public IActionResult RefreshToken()
+        {
+            string email = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+            var appUser = userManager.Users.SingleOrDefault(x => x.Email == email);
+
+            return Ok(GenerateJwtToken(email, appUser));
         }
 
         // POST: /Account/LogOut
