@@ -1,54 +1,31 @@
 using EFCoreSpike5.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using SpikeWebAPI;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Autofac.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
-using SpikeWebAPI.DTOs;
 
 namespace ControllersTest
 {
-    public class StudentControllerTest : IDisposable
+    public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {
-        private readonly TestServer server;
         private HttpClient client;
-        private readonly EFCoreSpikeContext context;
+        private ControllerFixture fixture;
         private string url = "api/students";
         private string studentName = "TestName";
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
-        private string authenticationToken;
 
         //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
         //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
-        public StudentControllerTest()
+        public StudentControllerTest(ControllerFixture fixture)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..")))
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
-
-            var optionsBuilder = new DbContextOptionsBuilder<EFCoreSpikeContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            context = new EFCoreSpikeContext(optionsBuilder.Options);
-
-            server = new TestServer(new WebHostBuilder()
-                .ConfigureServices(services => services.AddAutofac())
-                .UseConfiguration(configuration)
-                .UseStartup<Startup>());
-
-            authenticationToken = getAuthorizationToken();
+            this.fixture = fixture;
         }
 
         public void Dispose()
@@ -68,7 +45,7 @@ namespace ControllersTest
             TestPagedResult<StudentTestResponse> response;
             List<StudentTestResponse> students = new List<StudentTestResponse>();
             string actual, expected;
-            var studentsList = context.Students.Include(s => s.Course)
+            var studentsList = fixture.context.Students.Include(s => s.Course)
                 .OrderBy(s => s.Name)
                 .Skip(0).Take(2).ToList();
 
@@ -91,9 +68,9 @@ namespace ControllersTest
 
             };
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
@@ -115,13 +92,14 @@ namespace ControllersTest
             List<Student> response, students;
             string actual, expected;
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = context.Students.OrderBy(s => s.Name).ToList();
+            students = fixture.context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -141,7 +119,7 @@ namespace ControllersTest
             TestPagedResult<StudentTestResponse> response;
             List<StudentTestResponse> students = new List<StudentTestResponse>();
             string actual, expected;
-            var filteredStudents = context.Students.Include(s => s.Course)
+            var filteredStudents = fixture.context.Students.Include(s => s.Course)
                 .Where(s => s.Name.Contains(filterValue))
                 .OrderBy(s => s.Name)
                 .Skip(0).Take(3).ToList();
@@ -164,8 +142,9 @@ namespace ControllersTest
 
             };
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
@@ -188,11 +167,11 @@ namespace ControllersTest
             StudentTestResponse response;
             string actual, expected;
 
-            student = context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
+            student = fixture.context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
             var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
@@ -224,7 +203,7 @@ namespace ControllersTest
             string actual, expected;
 
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
@@ -248,7 +227,7 @@ namespace ControllersTest
         public async Task ShouldUpdateStudent()
         {
             // arrange
-            int studentId = PrepareStudentForTest(studentName);
+            int studentId = GetOrCreateStudentForTest(studentName);
             var newStudent = new StudentTestUpdateRequest()
             {
                 Id = studentId,
@@ -263,7 +242,7 @@ namespace ControllersTest
             HttpResponseMessage httpResponse;
             Student student;
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
                 httpResponse = await client.PutAsync(request, content);
             }
@@ -278,11 +257,11 @@ namespace ControllersTest
         public async Task ShouldDeleteStudent()
         {
             // arrange
-            int studentId = PrepareStudentForTest(updatedName);
+            int studentId = GetOrCreateStudentForTest(updatedName);
             string request = $"{url}/{studentId}";
             HttpResponseMessage httpResponse;
             // act
-            using (client = server.CreateClient())
+            using (client = fixture.server.CreateClient())
             {
                 httpResponse = await client.DeleteAsync(request);
             }
@@ -294,15 +273,15 @@ namespace ControllersTest
 
         private async Task<Student> GetStudentByName(string name)
         {
-            return await context.Students
+            return await fixture.context.Students
                 .Include(s => s.Course)
                 .FirstOrDefaultAsync(x => x.Name == name);
         }
 
-        private int PrepareStudentForTest(string name)
+        private int GetOrCreateStudentForTest(string name)
         {
             Student result;
-            if ((result = context.Students.FirstOrDefault(x => x.Name == name)) != null)
+            if ((result = fixture.context.Students.FirstOrDefault(x => x.Name == name)) != null)
             {
                 return result.Id;
             }
@@ -313,8 +292,8 @@ namespace ControllersTest
                 CourseId = 1
             };
 
-            context.Add(student);
-            context.SaveChanges();
+            fixture.context.Add(student);
+            fixture.context.SaveChanges();
 
             return student.Id;
         }
@@ -322,10 +301,10 @@ namespace ControllersTest
         private void CleanupCreatedStudent(string name)
         {
             Student result;
-            if ((result = context.Students.FirstOrDefault(x => x.Name == name)) != null)
+            if ((result = fixture.context.Students.FirstOrDefault(x => x.Name == name)) != null)
             {
-                context.Remove(result);
-                context.SaveChanges();
+                fixture.context.Remove(result);
+                fixture.context.SaveChanges();
             }
         }
 
@@ -347,24 +326,6 @@ namespace ControllersTest
             };
 
             return studentDTO;
-        }
-
-        private string getAuthorizationToken()
-        {
-            using (client = server.CreateClient())
-            {
-                var loginUrl = "api/account/login";
-                var userCredential = new UserDTO()
-                {
-                    Email = "embe@test.com",
-                    Password = "Test123!"
-                };
-                string userJson = JsonConvert.SerializeObject(userCredential);
-                var content = new StringContent(userJson, Encoding.UTF8, contentType);
-                HttpResponseMessage httpResponse = client.PostAsync(loginUrl, content).Result;
-                var response = httpResponse.Content.ReadAsStringAsync();
-                return response.Result.Trim('"');
-            }
         }
     }
 }
