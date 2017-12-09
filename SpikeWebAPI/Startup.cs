@@ -60,6 +60,7 @@ namespace SpikeWebAPI
                         ValidIssuer = Configuration["JwtIssuer"],
                         ValidAudience = Configuration["JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                        ValidateLifetime = true,
                         ClockSkew = TimeSpan.Zero
                     };
                 });
@@ -130,6 +131,7 @@ namespace SpikeWebAPI
                         }
                     });
               });
+            app.UseAuthentication();
 
             app.UseMvc();
         }

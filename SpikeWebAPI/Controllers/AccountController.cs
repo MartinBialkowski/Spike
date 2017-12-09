@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Controllers
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/account")]
     public class AccountController : Controller
@@ -32,6 +34,7 @@ namespace SpikeWebAPI.Controllers
             this.configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
@@ -50,6 +53,7 @@ namespace SpikeWebAPI.Controllers
             return Unauthorized();
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
@@ -76,6 +80,25 @@ namespace SpikeWebAPI.Controllers
             }
         }
 
+        [HttpGet("refresh")]
+        public IActionResult RefreshToken()
+        {
+            string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+            var appUser = userManager.Users.SingleOrDefault(x => x.Email == email);
+
+            return Ok(GenerateJwtToken(email, appUser));
+        }
+
+        // POST: /Account/LogOut
+        // To do this, need to use Reference Token
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogOut()
+        {
+            await signInManager.SignOutAsync();
+
+            return NoContent();
+        }
+
         private string GenerateJwtToken(string email, IdentityUser user)
         {
             var claims = new List<Claim>
@@ -87,7 +110,7 @@ namespace SpikeWebAPI.Controllers
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddDays(Convert.ToDouble(configuration["JwtExpireDays"]));
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
                 configuration["JwtIssuer"],
