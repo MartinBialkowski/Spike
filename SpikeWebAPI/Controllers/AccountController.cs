@@ -83,14 +83,14 @@ namespace SpikeWebAPI.Controllers
         [HttpGet("refresh")]
         public IActionResult RefreshToken()
         {
-            string email = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+            string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
             var appUser = userManager.Users.SingleOrDefault(x => x.Email == email);
 
             return Ok(GenerateJwtToken(email, appUser));
         }
 
         // POST: /Account/LogOut
-        // Not working yet (Authorization PBI)
+        // To do this, need to use Reference Token
         [HttpPost("logout")]
         public async Task<IActionResult> LogOut()
         {
