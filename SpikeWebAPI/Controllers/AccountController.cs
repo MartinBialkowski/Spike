@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SpikeConnectProviders.Abstract;
+using SpikeConnectProviders.Extensions;
 using SpikeWebAPI.DTOs;
+using SpikeWebAPI.Extensions;
 
 namespace SpikeWebAPI.Controllers
 {
@@ -22,20 +25,24 @@ namespace SpikeWebAPI.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IConfiguration configuration;
+        private readonly IEmailSender emailSender;
 
-        public AccountController(
+        public AccountController
+        (
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IConfiguration configuration
-            )
+            IConfiguration configuration,
+            IEmailSender emailSender
+        )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
+            this.emailSender = emailSender;
         }
 
-        [AllowAnonymous]
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
             if (!ModelState.IsValid)
@@ -47,14 +54,14 @@ namespace SpikeWebAPI.Controllers
 
             if (result.Succeeded)
             {
-                var appUser = userManager.Users.SingleOrDefault(r => r.Email == userDTO.Email);
-                return Ok(GenerateJwtToken(userDTO.Email, appUser));
+                var appUser = GetUser(userDTO.Email);
+                return Ok(GenerateJwtToken(appUser));
             }
             return Unauthorized();
         }
 
-        [AllowAnonymous]
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
             if (!ModelState.IsValid)
@@ -71,8 +78,11 @@ namespace SpikeWebAPI.Controllers
 
             if (result.Succeeded)
             {
+                var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.EmailConfirmationLink(user.Id, confirmationToken, Request.Scheme);
+                await emailSender.SendConfirmationEmail(userDTO.Email, callbackUrl);
                 await signInManager.SignInAsync(user, false);
-                return Ok(GenerateJwtToken(userDTO.Email, user));
+                return Ok(GenerateJwtToken(user));
             }
             else
             {
@@ -84,9 +94,17 @@ namespace SpikeWebAPI.Controllers
         public IActionResult RefreshToken()
         {
             string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
-            var appUser = userManager.Users.SingleOrDefault(x => x.Email == email);
+            var appUser = GetUser(email);
 
-            return Ok(GenerateJwtToken(email, appUser));
+            return Ok(GenerateJwtToken(appUser));
+        }
+
+
+        [HttpGet("confirm")]
+        [AllowAnonymous]
+        public IActionResult ConfirmEmail()
+        {
+            throw new NotImplementedException();
         }
 
         // POST: /Account/LogOut
@@ -99,11 +117,11 @@ namespace SpikeWebAPI.Controllers
             return NoContent();
         }
 
-        private string GenerateJwtToken(string email, IdentityUser user)
+        private string GenerateJwtToken(IdentityUser user)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
@@ -121,6 +139,11 @@ namespace SpikeWebAPI.Controllers
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private IdentityUser GetUser(string email)
+        {
+            return userManager.Users.SingleOrDefault(x => x.Email == email);
         }
     }
 }
