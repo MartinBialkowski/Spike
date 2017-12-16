@@ -1,13 +1,9 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using SpikeConnectProviders.Abstract;
 using EFCoreSpike5.CommonModels;
 using Microsoft.Extensions.Options;
+using Infrastructure.ContactProvider;
 
 namespace SpikeConnectProviders
 {
