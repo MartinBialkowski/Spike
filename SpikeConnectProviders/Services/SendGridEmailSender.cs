@@ -4,6 +4,7 @@ using SendGrid.Helpers.Mail;
 using EFCoreSpike5.CommonModels;
 using Microsoft.Extensions.Options;
 using Infrastructure.ContactProvider;
+using System.Text.Encodings.Web;
 
 namespace SpikeConnectProviders
 {
@@ -15,6 +16,13 @@ namespace SpikeConnectProviders
         }
 
         public SendGridOptions Options { get; set; }
+
+        public Task SendConfirmationEmail(string email, string link)
+        {
+            string subject = "Confirm your email";
+            string message = $"Click this <a href='{HtmlEncoder.Default.Encode(link)}'>link</a> to confirm your email";
+            return SendEmailAsync(email, subject, message);
+        }
 
         public Task SendEmailAsync(string receiverEmail, string subject, string message)
         {
