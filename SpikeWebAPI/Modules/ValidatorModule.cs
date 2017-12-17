@@ -9,7 +9,7 @@ namespace SpikeWebAPI.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<LoginValidator>().As<IValidator<UserDTO>>();
+            builder.RegisterType<UserValidator>().As<IValidator<UserDTO>>();
             builder.RegisterType<ConfirmationValidator>().As<IValidator<AccountConfirmationDTO>>();
             builder.RegisterType<ValidatorFactory>().As<IValidatorFactory>().SingleInstance();
         }
