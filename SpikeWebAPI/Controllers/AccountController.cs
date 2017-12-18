@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SpikeConnectProviders.Extensions;
 using SpikeWebAPI.DTOs;
 using SpikeWebAPI.Extensions;
 
@@ -41,6 +40,7 @@ namespace SpikeWebAPI.Controllers
             this.emailSender = emailSender;
         }
 
+        // POST: account/login
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
@@ -60,6 +60,7 @@ namespace SpikeWebAPI.Controllers
             return Unauthorized();
         }
 
+        // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
@@ -90,6 +91,7 @@ namespace SpikeWebAPI.Controllers
             }
         }
 
+        // GET: account/refresh
         [HttpGet("refresh")]
         public IActionResult RefreshToken()
         {
@@ -99,15 +101,32 @@ namespace SpikeWebAPI.Controllers
             return Ok(GenerateJwtToken(appUser));
         }
 
-
+        // GET: account/confirm
         [HttpGet("confirm")]
         [AllowAnonymous]
-        public IActionResult ConfirmEmail()
+        public async Task<IActionResult> ConfirmEmail(AccountConfirmationDTO confirmationDTO)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await userManager.FindByIdAsync(confirmationDTO.UserId);
+            if (user == null)
+            {
+                return NotFound("User not exist");
+            }
+            var result = await userManager.ConfirmEmailAsync(user, confirmationDTO.Code);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
-        // POST: /Account/LogOut
+        // POST: /account/logout
         // To do this, need to use Reference Token
         [HttpPost("logout")]
         public async Task<IActionResult> LogOut()
