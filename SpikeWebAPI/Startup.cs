@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using EFCoreSpike5.CommonModels;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,9 +40,12 @@ namespace SpikeWebAPI
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Identity Core
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<EFCoreSpikeContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<EFCoreSpikeContext>()
+            .AddDefaultTokenProviders();
 
             // JWT Authentication
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -83,6 +87,8 @@ namespace SpikeWebAPI
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
+            services.Configure<SendGridOptions>(Configuration);
+
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
         }
@@ -92,6 +98,7 @@ namespace SpikeWebAPI
             builder.RegisterModule(new RepositoryModule(Configuration["AutofacConfig:RepositoryConfig"]));
             builder.RegisterModule(new AutoMapperModule());
             builder.RegisterModule(new ValidatorModule());
+            builder.RegisterModule(new SenderProviderModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

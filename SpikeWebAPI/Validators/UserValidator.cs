@@ -3,9 +3,9 @@ using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Validators
 {
-    public class LoginValidator : AbstractValidator<UserDTO>
+    public class UserValidator : AbstractValidator<UserDTO>
     {
-        public LoginValidator()
+        public UserValidator()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 

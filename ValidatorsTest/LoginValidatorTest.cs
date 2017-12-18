@@ -17,7 +17,7 @@ namespace ValidatorsTest
         public void InvalidWhenLoginEmailNotProvided(string email)
         {
             // arrange
-            var validator = new LoginValidator();
+            var validator = new UserValidator();
             var login = new UserDTO()
             {
                 Email = email,
@@ -36,7 +36,7 @@ namespace ValidatorsTest
         public void InvalidWhenLoginPasswordNotProvided(string password)
         {
             // arrange
-            var validator = new LoginValidator();
+            var validator = new UserValidator();
             var login = new UserDTO()
             {
                 Email = validEmail,
@@ -52,7 +52,7 @@ namespace ValidatorsTest
         public void ValidWhenEmailAndPasswordProvided()
         {
             // arrange
-            var validator = new LoginValidator();
+            var validator = new UserValidator();
             var login = new UserDTO()
             {
                 Email = validEmail,
