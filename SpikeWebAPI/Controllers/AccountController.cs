@@ -23,6 +23,7 @@ namespace SpikeWebAPI.Controllers
     {
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
+
         private readonly IConfiguration configuration;
         private readonly IEmailSender emailSender;
 
@@ -116,6 +117,48 @@ namespace SpikeWebAPI.Controllers
                 return NotFound("User not exist");
             }
             var result = await userManager.ConfirmEmailAsync(user, confirmationDTO.Code);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Forbid();
+            }
+        }
+
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO forgotPasswordDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await userManager.FindByEmailAsync(forgotPasswordDTO.Email);
+            if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
+            {
+                return Forbid();
+            }
+            var code = await userManager.GeneratePasswordResetTokenAsync(user);
+            await emailSender.SendResetPasswordEmail(user.Email, code);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
+            if (user == null)
+            {
+                return Forbid();
+            }
+            var result = await userManager.ResetPasswordAsync(user, resetPasswordDTO.Token, resetPasswordDTO.Password);
             if (result.Succeeded)
             {
                 return NoContent();
