@@ -3,7 +3,7 @@ using SpikeWebAPI.Controllers;
 
 namespace SpikeWebAPI.Extensions
 {
-    public static class AuthorizationUrlExtension
+    public static class UrlExtension
     {
         public static string EmailConfirmationLink(this IUrlHelper urlHelper, string userId, string code, string scheme)
         {
