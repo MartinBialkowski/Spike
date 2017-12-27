@@ -60,6 +60,44 @@ namespace SpikeWebAPI.Controllers
             return Unauthorized();
         }
 
+        // GET: /account/external-logins
+        [HttpGet("external-logins")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLogins()
+        {
+            return Ok(await signInManager.GetExternalAuthenticationSchemesAsync());
+        }
+
+        // POST: /account/login-microsoft
+        [HttpPost("login-microsoft")]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        {
+            //var providers = await signInManager.GetExternalAuthenticationSchemesAsync();
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                return BadRequest(remoteError);
+                //ErrorMessage = $"Error from external provider: {remoteError}";
+                //return RedirectToAction(nameof(Login));
+            }
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            return Ok();
+        }
+
         // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
