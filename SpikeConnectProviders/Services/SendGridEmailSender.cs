@@ -24,6 +24,13 @@ namespace SpikeConnectProviders
             return SendEmailAsync(email, subject, message);
         }
 
+        public Task SendResetPasswordEmail(string email, string code)
+        {
+            string subject = "Reset password";
+            string message = $"Use token below to reset password \n{code}";
+            return SendEmailAsync(email, subject, message);
+        }
+
         public Task SendEmailAsync(string receiverEmail, string subject, string message)
         {
             return Execute(Options.ApiKey, receiverEmail, subject, message);
