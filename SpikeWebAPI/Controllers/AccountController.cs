@@ -69,32 +69,34 @@ namespace SpikeWebAPI.Controllers
         }
 
         // POST: /account/login-microsoft
-        [HttpPost("login-microsoft")]
+        [HttpGet("login-microsoft")]
         [AllowAnonymous]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            //var providers = await signInManager.GetExternalAuthenticationSchemesAsync();
-            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
+            var redirectUrl = Url.Action("ExternalLoginCallback");
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
-        [HttpGet]
+        [HttpGet("callback")]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
             if (remoteError != null)
-            {
+            { 
                 return BadRequest(remoteError);
-                //ErrorMessage = $"Error from external provider: {remoteError}";
-                //return RedirectToAction(nameof(Login));
             }
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                return RedirectToAction(nameof(Login));
+                return Unauthorized();
             }
 
+            var result = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            if(result.Succeeded)
+            {
+
+            }
             return Ok();
         }
 
