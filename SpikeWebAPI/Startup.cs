@@ -80,7 +80,19 @@ namespace SpikeWebAPI
             });
 
             // Enable Cors
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
 
             services
                 .AddMvc()
@@ -120,10 +132,7 @@ namespace SpikeWebAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Controller v1");
             });
 
-            app.UseCors(builder =>
-                builder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod());
+            app.UseCors("AllowAll");
 
             app.UseExceptionHandler(
               builder =>
