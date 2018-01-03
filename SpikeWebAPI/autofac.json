@@ -4,7 +4,7 @@
       "type": "SpikeRepo.Repositories.StudentRepository, SpikeRepo",
       "services": [
         {
-          "type": "SpikeRepo.Abstract.IStudentRepository, SpikeRepo"
+          "type": "Spike.Core.Interface.IStudentRepository, Spike.Core.Interface"
         }
       ]
     },
@@ -12,7 +12,7 @@
       "type": "SpikeRepo.Repositories.CourseRepository, SpikeRepo",
       "services": [
         {
-          "type": "SpikeRepo.Abstract.ICourseRepository, SpikeRepo"
+          "type": "Spike.Core.Interface.ICourseRepository, Spike.Core.Interface"
         }
       ]
     }
