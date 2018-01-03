@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EFCoreSpike5.Models
+namespace Spike.Core.Model
 {
     public class PagedResult<T>
     {

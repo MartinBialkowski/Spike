@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Spike.Core.Entity;
 
 namespace SpikeRepo.Repositories
 {

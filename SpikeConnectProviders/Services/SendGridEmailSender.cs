@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using EFCoreSpike5.CommonModels;
 using Microsoft.Extensions.Options;
 using Infrastructure.ContactProvider;
 using System.Text.Encodings.Web;
+using Spike.Core.CommonModel;
 
 namespace SpikeConnectProviders
 {

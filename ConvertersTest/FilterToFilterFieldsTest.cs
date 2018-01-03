@@ -1,5 +1,5 @@
-﻿using EFCoreSpike5.ConstraintsModels;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Spike.Core.Model;
 using SpikeWebAPI.Mappings;
 using Xunit;
 

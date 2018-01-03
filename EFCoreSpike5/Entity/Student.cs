@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EFCoreSpike5.Models
+namespace Spike.Core.Entity
 {
     public class Student: IEntityBase
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26923.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCoreSpike5", "EFCoreSpike5\EFCoreSpike5.csproj", "{6C81414F-C1FB-4DE5-B229-259BB8EF0A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core", "EFCoreSpike5\Spike.Core.csproj", "{6C81414F-C1FB-4DE5-B229-259BB8EF0A0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeWebAPI", "SpikeWebAPI\SpikeWebAPI.csproj", "{6B916AE7-841E-4AA5-9D48-B579D73BD4EB}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertersTest", "Converter
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeConnectProviders", "SpikeConnectProviders\SpikeConnectProviders.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

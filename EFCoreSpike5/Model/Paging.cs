@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace EFCoreSpike5.ConstraintsModels
+﻿namespace Spike.Core.Model
 {
     public class Paging
     {

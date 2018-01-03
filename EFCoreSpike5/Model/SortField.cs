@@ -1,7 +1,7 @@
-﻿using System;
-using EFCoreSpike5.CommonModels;
+﻿using Spike.Core.CommonModel;
+using System;
 
-namespace EFCoreSpike5.ConstraintsModels
+namespace Spike.Core.Model
 {
     public class SortField<T> where T : class
     {

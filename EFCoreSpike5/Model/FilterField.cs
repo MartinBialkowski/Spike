@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFCoreSpike5.ConstraintsModels
+namespace Spike.Core.Model
 {
     public class FilterField<T> where T : class
     {

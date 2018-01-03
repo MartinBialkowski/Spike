@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EFCoreSpike5.ConstraintsModels;
+using Spike.Core.Model;
 using SpikeWebAPI.DTOs;
 
 namespace SpikeWebAPI.Mappings

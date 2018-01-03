@@ -1,4 +1,4 @@
-﻿namespace EFCoreSpike5.CommonModels
+﻿namespace Spike.Core.CommonModel
 {
     public enum SortOrder
     {

@@ -1,4 +1,4 @@
-﻿using EFCoreSpike5.ConstraintsModels;
+﻿using Spike.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 

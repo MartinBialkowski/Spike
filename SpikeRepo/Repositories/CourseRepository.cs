@@ -1,4 +1,5 @@
 ﻿using EFCoreSpike5.Models;
+using Spike.Core.Entity;
 using SpikeRepo.Abstract;
 using System;
 using System.Threading.Tasks;

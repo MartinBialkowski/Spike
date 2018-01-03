@@ -1,4 +1,4 @@
-using EFCoreSpike5.ConstraintsModels;
+using Spike.Core.Model;
 using SpikeRepo.Extension;
 using System.Linq;
 using Xunit;

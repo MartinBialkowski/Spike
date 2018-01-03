@@ -1,4 +1,4 @@
-﻿namespace EFCoreSpike5.Models
+﻿namespace Spike.Core.Entity
 {
     public class UserClaim
     {

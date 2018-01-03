@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using EFCoreSpike5.CommonModels;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Spike.Core.CommonModel;
 using SpikeWebAPI.Modules;
 using Swashbuckle.AspNetCore.Swagger;
 using System;

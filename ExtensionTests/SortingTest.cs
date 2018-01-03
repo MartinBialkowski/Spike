@@ -1,5 +1,5 @@
-﻿using EFCoreSpike5.CommonModels;
-using EFCoreSpike5.ConstraintsModels;
+﻿using Spike.Core.Model;
+using Spike.Core.CommonModel;
 using SpikeRepo.Extension;
 using System;
 using System.Linq;

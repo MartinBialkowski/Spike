@@ -1,7 +1,7 @@
-﻿using EFCoreSpike5.ConstraintsModels;
+﻿using Spike.Core.Model;
 using System.Linq;
-using EFCoreSpike5.CommonModels;
 using System;
+using Spike.Core.CommonModel;
 
 namespace SpikeRepo.Extension
 {

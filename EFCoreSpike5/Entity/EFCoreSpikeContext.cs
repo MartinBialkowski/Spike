@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Spike.Core.Entity;
 
 namespace EFCoreSpike5.Models
 {
