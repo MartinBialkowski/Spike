@@ -3,7 +3,7 @@ using Spike.Core.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SpikeRepo.Abstract
+namespace Spike.Core.Interface
 {
     public interface IStudentRepository : IBaseRepository<Student>
     {

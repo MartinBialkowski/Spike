@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SpikeRepo.Abstract;
+using Spike.Core.Interface;
 using SpikeWebAPI.DTOs;
 using AutoMapper;
 using System;

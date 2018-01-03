@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
-    <ProjectReference Include="..\Spike.Core.Interface\Spike.Core.Interface.csproj" />
   </ItemGroup>
 
 </Project>

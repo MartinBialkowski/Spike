@@ -1,5 +1,5 @@
 ﻿using EFCoreSpike5.Models;
-using SpikeRepo.Abstract;
+using Spike.Core.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

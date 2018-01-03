@@ -1,7 +1,7 @@
 ﻿using Spike.Core.Entity;
 using System.Threading.Tasks;
 
-namespace SpikeRepo.Abstract
+namespace Spike.Core.Interface
 {
     public interface IBaseRepository<T> where T : class, IEntityBase, new()
     {
