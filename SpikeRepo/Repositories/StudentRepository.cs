@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using SpikeRepo.Extension;
+using Spike.Infrastructure.Extension;
 using System;
 using Spike.Core.Entity;
 using Spike.Core.Model;
 
-namespace SpikeRepo.Repositories
+namespace Spike.Infrastructure.Repositories
 {
     public class StudentRepository : BaseRepository<Student>, IStudentRepository
     {

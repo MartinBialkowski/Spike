@@ -1,6 +1,6 @@
 ﻿using Spike.Core.Model;
 using Spike.Core.CommonModel;
-using SpikeRepo.Extension;
+using Spike.Infrastructure.Extension;
 using System;
 using System.Linq;
 using Xunit;

@@ -1,7 +1,7 @@
 ﻿{
   "components": [
     {
-      "type": "SpikeRepo.Repositories.StudentRepository, SpikeRepo",
+      "type": "Spike.Infrastructure.Repositories.StudentRepository, Spike.Infrastructure",
       "services": [
         {
           "type": "Spike.Core.Interface.IStudentRepository, Spike.Core.Interface"
@@ -9,7 +9,7 @@
       ]
     },
     {
-      "type": "SpikeRepo.Repositories.CourseRepository, SpikeRepo",
+      "type": "Spike.Infrastructure.Repositories.CourseRepository, Spike.Infrastructure",
       "services": [
         {
           "type": "Spike.Core.Interface.ICourseRepository, Spike.Core.Interface"

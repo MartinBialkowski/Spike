@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SpikeRepo.Extension
+namespace Spike.Infrastructure.Extension
 {
     public static class PagingExtension
     {

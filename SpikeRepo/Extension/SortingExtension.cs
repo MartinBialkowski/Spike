@@ -3,7 +3,7 @@ using System.Linq;
 using System;
 using Spike.Core.CommonModel;
 
-namespace SpikeRepo.Extension
+namespace Spike.Infrastructure.Extension
 {
     public static class SortingExtension
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace SpikeRepo.Extension
+namespace Spike.Infrastructure.Extension
 {
     public static class StringExtension
     {

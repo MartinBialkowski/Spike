@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core", "EFCoreSpike5\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeWebAPI", "SpikeWebAPI\SpikeWebAPI.csproj", "{6B916AE7-841E-4AA5-9D48-B579D73BD4EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeRepo", "SpikeRepo\SpikeRepo.csproj", "{623BDD32-0546-4B56-92BA-4A08C2582999}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Infrastructure", "SpikeRepo\Spike.Infrastructure.csproj", "{623BDD32-0546-4B56-92BA-4A08C2582999}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidatorsTest", "ValidatorsTest\ValidatorsTest.csproj", "{5C105B50-8C9D-451A-9EF5-CBDB23378FFA}"
 EndProject
@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertersTest", "Converter
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeConnectProviders", "SpikeConnectProviders\SpikeConnectProviders.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Service.Interface", "Infrastructure\Spike.Service.Interface.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.Core.Interface", "Spike.Core.Interface\Spike.Core.Interface.csproj", "{FDAA0263-FD45-47D5-9C68-9B01D1F4FCC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core.Interface", "Spike.Core.Interface\Spike.Core.Interface.csproj", "{FDAA0263-FD45-47D5-9C68-9B01D1F4FCC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

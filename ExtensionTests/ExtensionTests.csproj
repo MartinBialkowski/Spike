@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
-    <ProjectReference Include="..\SpikeRepo\SpikeRepo.csproj" />
+    <ProjectReference Include="..\SpikeRepo\Spike.Infrastructure.csproj" />
     <ProjectReference Include="..\SpikeWebAPI\SpikeWebAPI.csproj" />
   </ItemGroup>
 

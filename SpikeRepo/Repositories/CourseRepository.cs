@@ -4,7 +4,7 @@ using Spike.Core.Interface;
 using System;
 using System.Threading.Tasks;
 
-namespace SpikeRepo.Repositories
+namespace Spike.Infrastructure.Repositories
 {
     public class CourseRepository: EntityBaseRepository<Course>, ICourseRepository
     {

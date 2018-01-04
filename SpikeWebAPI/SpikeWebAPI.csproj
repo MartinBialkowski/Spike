@@ -31,9 +31,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Spike.Service.Interface.csproj" />
     <ProjectReference Include="..\SpikeConnectProviders\SpikeConnectProviders.csproj" />
-    <ProjectReference Include="..\SpikeRepo\SpikeRepo.csproj" />
+    <ProjectReference Include="..\SpikeRepo\Spike.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
