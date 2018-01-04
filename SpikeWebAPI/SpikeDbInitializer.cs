@@ -3,7 +3,7 @@ using Spike.Core.Entity;
 using System;
 using System.Linq;
 
-namespace SpikeWebAPI
+namespace Spike.WebApi
 {
     public class SpikeDbInitializer
     {

@@ -4,7 +4,7 @@ using Spike.Core.Model;
 using SpikeWebAPI.DTOs;
 using System.Collections.Generic;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class FilterMappingProfile : Profile
     {

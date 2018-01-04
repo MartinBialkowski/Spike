@@ -3,7 +3,7 @@ using Spike.Core.Model;
 using Spike.Core.CommonModel;
 using Spike.Core.Entity;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class SortMappingProfile : Profile
     {

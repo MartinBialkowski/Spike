@@ -14,14 +14,14 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Spike.Core.CommonModel;
-using SpikeWebAPI.Modules;
+using Spike.WebApi.Modules;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
 
-namespace SpikeWebAPI
+namespace Spike.WebApi
 {
     public class Startup
     {

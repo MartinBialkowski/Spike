@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SpikeWebAPI\SpikeWebAPI.csproj" />
+    <ProjectReference Include="..\SpikeWebAPI\Spike.WebApi.csproj" />
   </ItemGroup>
 
 </Project>

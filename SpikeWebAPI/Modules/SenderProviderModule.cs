@@ -2,7 +2,7 @@
 using Spike.Service.Interface.ContactProvider;
 using SpikeConnectProviders;
 
-namespace SpikeWebAPI.Modules
+namespace Spike.WebApi.Modules
 {
     public class SenderProviderModule : Module
     {

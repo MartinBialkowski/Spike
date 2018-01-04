@@ -2,7 +2,7 @@
 using Spike.Core.Model;
 using SpikeWebAPI.DTOs;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class PagingMappingProfile : Profile
     {

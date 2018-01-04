@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26923.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core", "EFCoreSpike5\Spike.Core.csproj", "{6C81414F-C1FB-4DE5-B229-259BB8EF0A0F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeWebAPI", "SpikeWebAPI\SpikeWebAPI.csproj", "{6B916AE7-841E-4AA5-9D48-B579D73BD4EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi", "SpikeWebAPI\Spike.WebApi.csproj", "{6B916AE7-841E-4AA5-9D48-B579D73BD4EB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Infrastructure", "SpikeRepo\Spike.Infrastructure.csproj", "{623BDD32-0546-4B56-92BA-4A08C2582999}"
 EndProject

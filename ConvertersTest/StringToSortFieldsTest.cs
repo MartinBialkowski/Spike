@@ -1,7 +1,7 @@
 using Spike.Core.Model;
 using Newtonsoft.Json;
 using Spike.Core.CommonModel;
-using SpikeWebAPI.Mappings;
+using Spike.WebApi.Mappings;
 using Xunit;
 
 namespace ConvertersTest

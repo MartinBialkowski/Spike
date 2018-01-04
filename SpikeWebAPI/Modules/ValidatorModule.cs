@@ -3,7 +3,7 @@ using FluentValidation;
 using SpikeWebAPI.DTOs;
 using SpikeWebAPI.Validators;
 
-namespace SpikeWebAPI.Modules
+namespace Spike.WebApi.Modules
 {
     public class ValidatorModule : Module
     {

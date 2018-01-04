@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using SpikeWebAPI;
+using Spike.WebApi;
 using SpikeWebAPI.DTOs;
 using System;
 using System.IO;

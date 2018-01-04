@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SpikeWebAPI.DTOs;
-using SpikeWebAPI.Extensions;
+using Spike.WebApi.Extensions;
 
-namespace SpikeWebAPI.Controllers
+namespace Spike.WebApi.Controllers
 {
     [Authorize]
     [Produces("application/json")]

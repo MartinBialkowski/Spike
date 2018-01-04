@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SpikeWebAPI.DTOs;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class UserMappingProfile: Profile
     {

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Spike.Core.Model;
 using Spike.Core.Entity;
 
-namespace SpikeWebAPI.Controllers
+namespace Spike.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/students")]
