@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Infrastructure.ContactProvider
+namespace Spike.Service.Interface.ContactProvider
 {
     public interface IEmailSender
     {

@@ -2,7 +2,7 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Options;
-using Infrastructure.ContactProvider;
+using Spike.Service.Interface.ContactProvider;
 using System.Text.Encodings.Web;
 using Spike.Core.CommonModel;
 

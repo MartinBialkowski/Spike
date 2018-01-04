@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Spike.Service.Interface.csproj" />
   </ItemGroup>
 
 </Project>
