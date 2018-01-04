@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValidatorsTest", "Validator
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Infrastructure.Extension.Test", "ExtensionTests\Spike.Infrastructure.Extension.Test.csproj", "{AAAE15D4-DFE3-427A-913A-77AFEAB47F46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControllersTest", "ControllersTest\ControllersTest.csproj", "{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.IntegrationTest", "ControllersTest\Spike.WebApi.IntegrationTest.csproj", "{581B4B75-7BA7-4E96-BE62-6F7557B62E9A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertersTest", "ConvertersTest\ConvertersTest.csproj", "{AA51D926-CB8E-44F1-BF31-4A7C29905280}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConvertersTests", "ConvertersTest\ConvertersTests.csproj", "{AA51D926-CB8E-44F1-BF31-4A7C29905280}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeConnectProviders", "SpikeConnectProviders\SpikeConnectProviders.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
 EndProject
