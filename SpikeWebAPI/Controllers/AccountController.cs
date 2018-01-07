@@ -44,6 +44,9 @@ namespace Spike.WebApi.Controllers
         // POST: account/login
         [HttpPost("login")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]  
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
             if (!ModelState.IsValid)
@@ -64,6 +67,8 @@ namespace Spike.WebApi.Controllers
         // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
             if (!ModelState.IsValid)
@@ -94,6 +99,8 @@ namespace Spike.WebApi.Controllers
 
         // GET: account/refresh
         [HttpGet("refresh")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(void), 401)]
         public IActionResult RefreshToken()
         {
             string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
@@ -105,6 +112,11 @@ namespace Spike.WebApi.Controllers
         // GET: account/confirm
         [HttpGet("confirm")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        [ProducesResponseType(typeof(void), 403)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> ConfirmEmail(AccountConfirmationDTO confirmationDTO)
         {
             if (!ModelState.IsValid)
@@ -129,6 +141,9 @@ namespace Spike.WebApi.Controllers
 
         [HttpPost("forgot-password")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO forgotPasswordDTO)
         {
             if (!ModelState.IsValid)
@@ -147,6 +162,9 @@ namespace Spike.WebApi.Controllers
 
         [HttpPost("reset-password")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
         {
             if (!ModelState.IsValid)
