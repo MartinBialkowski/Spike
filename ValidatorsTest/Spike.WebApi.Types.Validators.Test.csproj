@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Spike.WebApi.Types\Spike.WebApi.Types.csproj" />
     <ProjectReference Include="..\SpikeWebAPI\Spike.WebApi.csproj" />
   </ItemGroup>
 
