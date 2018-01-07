@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Spike.Core.Entity;
 using Spike.Core.Model;
-using SpikeWebAPI.DTOs;
+using Spike.WebApi.Types.DTOs;
 using System.Collections.Generic;
 
 namespace Spike.WebApi.Mappings

@@ -1,4 +1,4 @@
-﻿namespace SpikeWebAPI.DTOs
+﻿namespace Spike.WebApi.Types.DTOs
 {
     public class UserDTO
     {

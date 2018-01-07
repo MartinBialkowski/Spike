@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Spike.Core.Model;
-using SpikeWebAPI.DTOs;
+using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Mappings
 {

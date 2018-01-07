@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using Spike.Service.Interface.ContactProvider;
+using Spike.WebApi.Extensions;
+using Spike.WebApi.Types.DTOs;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Spike.Service.Interface.ContactProvider;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SpikeWebAPI.DTOs;
-using Spike.WebApi.Extensions;
 
 namespace Spike.WebApi.Controllers
 {

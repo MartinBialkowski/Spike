@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Spike.Core.Interface;
-using SpikeWebAPI.DTOs;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Spike.Core.Model;
 using Spike.Core.Entity;
+using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using SpikeWebAPI.DTOs;
+using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Mappings
 {

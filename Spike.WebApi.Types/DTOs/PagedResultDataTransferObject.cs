@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SpikeWebAPI.DTOs
+namespace Spike.WebApi.Types.DTOs
 {
     public class PagedResultDataTransferObject<T>
     {

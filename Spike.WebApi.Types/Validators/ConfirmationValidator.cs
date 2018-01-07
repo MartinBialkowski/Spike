@@ -1,11 +1,7 @@
 ﻿using FluentValidation;
-using SpikeWebAPI.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Spike.WebApi.Types.DTOs;
 
-namespace SpikeWebAPI.Validators
+namespace Spike.WebApi.Types.Validators
 {
     public class ConfirmationValidator: AbstractValidator<AccountConfirmationDTO>
     {

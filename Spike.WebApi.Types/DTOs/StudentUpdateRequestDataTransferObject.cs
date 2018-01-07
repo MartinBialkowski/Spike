@@ -1,9 +1,9 @@
-﻿using SpikeWebAPI.Validators;
+﻿using Spike.WebApi.Types.Validators;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace SpikeWebAPI.DTOs
+namespace Spike.WebApi.Types.DTOs
 {
     public class StudentUpdateRequestDataTransferObject : IValidatableObject
     {

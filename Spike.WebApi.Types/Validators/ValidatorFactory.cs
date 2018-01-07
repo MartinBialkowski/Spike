@@ -2,7 +2,7 @@
 using FluentValidation;
 using System;
 
-namespace SpikeWebAPI.Validators
+namespace Spike.WebApi.Types.Validators
 {
     public class ValidatorFactory : IValidatorFactory
     {

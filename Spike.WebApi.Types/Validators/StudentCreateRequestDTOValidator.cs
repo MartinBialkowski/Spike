@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SpikeWebAPI.DTOs;
+using Spike.WebApi.Types.DTOs;
 
-namespace SpikeWebAPI.Validators
+namespace Spike.WebApi.Types.Validators
 {
     public class StudentCreateRequestDTOValidator: AbstractValidator<StudentCreateRequestDataTransferObject>
     {

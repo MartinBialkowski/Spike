@@ -1,20 +1,25 @@
-﻿using SpikeWebAPI.Validators;
+﻿using Spike.WebApi.Types.Validators;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace SpikeWebAPI.DTOs
+namespace Spike.WebApi.Types.DTOs
 {
-    public class StudentCreateRequestDataTransferObject : IValidatableObject
+    public class PagingDTO: IValidatableObject
     {
-        public int CourseId { get; set; }
-        public string Name { get; set; }
+        public int? PageNumber { get; set; }
+        public int? PageLimit { get; set; }
+
+        public PagingDTO()
+        {
+        }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var validator = new StudentCreateRequestDTOValidator();
+            var validator = new PagingValidator();
             var result = validator.Validate(this);
             return result.Errors.Select(item => new ValidationResult(item.ErrorMessage, new[] { item.PropertyName }));
+
         }
     }
 }

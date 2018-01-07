@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Spike.WebApi;
-using SpikeWebAPI.DTOs;
+using Spike.WebApi.Types.DTOs;
 using System;
 using System.IO;
 using System.Net.Http;

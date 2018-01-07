@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using FluentValidation;
-using SpikeWebAPI.DTOs;
-using SpikeWebAPI.Validators;
+using Spike.WebApi.Types.DTOs;
+using Spike.WebApi.Types.Validators;
 
 namespace Spike.WebApi.Modules
 {
