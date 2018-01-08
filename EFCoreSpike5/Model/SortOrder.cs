@@ -1,4 +1,4 @@
-﻿namespace Spike.Core.CommonModel
+﻿namespace Spike.Core.Model
 {
     public enum SortOrder
     {

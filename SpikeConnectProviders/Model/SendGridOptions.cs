@@ -1,4 +1,4 @@
-﻿namespace Spike.Core.CommonModel
+﻿namespace Spike.Backend.Connect.Model
 {
     public class SendGridOptions
     {

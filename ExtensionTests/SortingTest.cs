@@ -1,5 +1,4 @@
 ﻿using Spike.Core.Model;
-using Spike.Core.CommonModel;
 using Spike.Infrastructure.Extension;
 using System;
 using System.Linq;

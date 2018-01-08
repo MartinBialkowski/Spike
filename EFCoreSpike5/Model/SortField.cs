@@ -1,4 +1,4 @@
-﻿using Spike.Core.CommonModel;
+﻿using Spike.Core.Model;
 using System;
 
 namespace Spike.Core.Model

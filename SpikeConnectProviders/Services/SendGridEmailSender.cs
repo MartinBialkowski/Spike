@@ -4,9 +4,9 @@ using SendGrid.Helpers.Mail;
 using Microsoft.Extensions.Options;
 using Spike.Service.Interface.ContactProvider;
 using System.Text.Encodings.Web;
-using Spike.Core.CommonModel;
+using Spike.Backend.Connect.Model;
 
-namespace SpikeConnectProviders
+namespace Spike.Backend.Connect
 {
     public class SendGridEmailSender : IEmailSender
     {

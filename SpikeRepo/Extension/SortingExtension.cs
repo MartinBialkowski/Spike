@@ -1,7 +1,6 @@
 ﻿using Spike.Core.Model;
 using System.Linq;
 using System;
-using Spike.Core.CommonModel;
 
 namespace Spike.Infrastructure.Extension
 {
