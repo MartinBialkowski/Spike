@@ -29,6 +29,10 @@ namespace Spike.WebApi.Controllers
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
         [Authorize]
         [HttpGet]
+        [ProducesResponseType(typeof(PagedResultDataTransferObject<StudentResponseDataTransferObject>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> GetStudents(PagingDTO pagingDTO, StudentFilterDTO filterDTO, string sort = "Id")
         {
             SortField<Student>[] sortFields;
@@ -57,6 +61,8 @@ namespace Spike.WebApi.Controllers
 
         // GET: api/students/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetStudent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -76,6 +82,9 @@ namespace Spike.WebApi.Controllers
 
         // PUT: api/students/5
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
@@ -112,6 +121,8 @@ namespace Spike.WebApi.Controllers
 
         // POST: api/students
         [HttpPost]
+        [ProducesResponseType(typeof(StudentResponseDataTransferObject), 201)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
@@ -128,6 +139,9 @@ namespace Spike.WebApi.Controllers
 
         // DELETE: api/students/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> DeleteStudent([FromRoute] int id)
         {
             if (!ModelState.IsValid)

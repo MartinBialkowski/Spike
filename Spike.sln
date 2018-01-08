@@ -17,13 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.IntegrationTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Converters.Test", "ConvertersTest\Spike.WebApi.Converters.Test.csproj", "{AA51D926-CB8E-44F1-BF31-4A7C29905280}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpikeConnectProviders", "SpikeConnectProviders\SpikeConnectProviders.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Backend.Connect", "SpikeConnectProviders\Spike.Backend.Connect.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Service.Interface", "Infrastructure\Spike.Service.Interface.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Backend.Interface", "Infrastructure\Spike.Backend.Interface.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core.Interface", "Spike.Core.Interface\Spike.Core.Interface.csproj", "{FDAA0263-FD45-47D5-9C68-9B01D1F4FCC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.WebApi.Types", "Spike.WebApi.Types\Spike.WebApi.Types.csproj", "{B0AD2A1D-126B-4AF6-8CBE-6B38ED1ADA7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Types", "Spike.WebApi.Types\Spike.WebApi.Types.csproj", "{B0AD2A1D-126B-4AF6-8CBE-6B38ED1ADA7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

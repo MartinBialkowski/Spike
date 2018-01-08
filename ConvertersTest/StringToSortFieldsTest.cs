@@ -1,6 +1,5 @@
 using Spike.Core.Model;
 using Newtonsoft.Json;
-using Spike.Core.CommonModel;
 using Spike.WebApi.Mappings;
 using Xunit;
 

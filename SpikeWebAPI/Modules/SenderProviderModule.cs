@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using Spike.Service.Interface.ContactProvider;
-using SpikeConnectProviders;
+using Spike.Backend.Interface.Contact;
+using Spike.Backend.Connect;
 
 namespace Spike.WebApi.Modules
 {
