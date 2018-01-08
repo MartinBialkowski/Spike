@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using EFCoreSpike5.ConstraintsModels;
-using SpikeWebAPI.DTOs;
+using Spike.Core.Model;
+using Spike.WebApi.Types.DTOs;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class PagingMappingProfile : Profile
     {

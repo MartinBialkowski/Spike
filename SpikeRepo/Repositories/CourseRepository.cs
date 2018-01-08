@@ -1,9 +1,10 @@
 ﻿using EFCoreSpike5.Models;
-using SpikeRepo.Abstract;
+using Spike.Core.Entity;
+using Spike.Core.Interface;
 using System;
 using System.Threading.Tasks;
 
-namespace SpikeRepo.Repositories
+namespace Spike.Infrastructure.Repositories
 {
     public class CourseRepository: EntityBaseRepository<Course>, ICourseRepository
     {

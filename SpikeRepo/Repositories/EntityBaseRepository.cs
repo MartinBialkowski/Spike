@@ -1,13 +1,14 @@
 ﻿using EFCoreSpike5.Models;
-using SpikeRepo.Abstract;
+using Spike.Core.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Spike.Core.Entity;
 
-namespace SpikeRepo.Repositories
+namespace Spike.Infrastructure.Repositories
 {
     public class EntityBaseRepository<T> : IEntityBaseRepository<T> where T : class, IEntityBase, new()
     {

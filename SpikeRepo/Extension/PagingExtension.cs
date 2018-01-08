@@ -1,8 +1,8 @@
-﻿using EFCoreSpike5.ConstraintsModels;
+﻿using Spike.Core.Model;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SpikeRepo.Extension
+namespace Spike.Infrastructure.Extension
 {
     public static class PagingExtension
     {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using EFCoreSpike5.ConstraintsModels;
-using EFCoreSpike5.Models;
-using SpikeWebAPI.DTOs;
+using Spike.Core.Entity;
+using Spike.Core.Model;
+using Spike.WebApi.Types.DTOs;
 using System.Collections.Generic;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class FilterMappingProfile : Profile
     {

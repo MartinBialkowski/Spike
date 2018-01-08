@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Autofac.Extensions.DependencyInjection;
 
-namespace SpikeWebAPI
+namespace Spike.WebApi
 {
     public class Program
     {

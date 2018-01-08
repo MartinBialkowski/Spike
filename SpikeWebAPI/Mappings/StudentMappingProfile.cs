@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using EFCoreSpike5.Models;
-using SpikeWebAPI.DTOs;
+using Spike.Core.Entity;
+using Spike.WebApi.Types.DTOs;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class StudentMappingProfile : Profile
     {

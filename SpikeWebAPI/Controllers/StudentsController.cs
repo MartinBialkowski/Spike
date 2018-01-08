@@ -1,17 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EFCoreSpike5.Models;
-using SpikeRepo.Abstract;
-using EFCoreSpike5.ConstraintsModels;
-using SpikeWebAPI.DTOs;
+using Spike.Core.Interface;
 using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Spike.Core.Model;
+using Spike.Core.Entity;
+using Spike.WebApi.Types.DTOs;
 
-namespace SpikeWebAPI.Controllers
+namespace Spike.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/students")]
@@ -29,6 +29,10 @@ namespace SpikeWebAPI.Controllers
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
         [Authorize]
         [HttpGet]
+        [ProducesResponseType(typeof(PagedResultDataTransferObject<StudentResponseDataTransferObject>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> GetStudents(PagingDTO pagingDTO, StudentFilterDTO filterDTO, string sort = "Id")
         {
             SortField<Student>[] sortFields;
@@ -57,6 +61,8 @@ namespace SpikeWebAPI.Controllers
 
         // GET: api/students/5
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> GetStudent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -76,6 +82,9 @@ namespace SpikeWebAPI.Controllers
 
         // PUT: api/students/5
         [HttpPut("{id}")]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
@@ -112,6 +121,8 @@ namespace SpikeWebAPI.Controllers
 
         // POST: api/students
         [HttpPost]
+        [ProducesResponseType(typeof(StudentResponseDataTransferObject), 201)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDTO)
         {
             if (!ModelState.IsValid)
@@ -128,6 +139,9 @@ namespace SpikeWebAPI.Controllers
 
         // DELETE: api/students/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(void), 204)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> DeleteStudent([FromRoute] int id)
         {
             if (!ModelState.IsValid)

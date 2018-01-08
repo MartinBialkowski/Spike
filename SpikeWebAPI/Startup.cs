@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using EFCoreSpike5.CommonModels;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,14 +13,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using SpikeWebAPI.Modules;
+using Spike.Backend.Connect.Model;
+using Spike.WebApi.Modules;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
 
-namespace SpikeWebAPI
+namespace Spike.WebApi
 {
     public class Startup
     {

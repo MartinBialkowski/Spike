@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using AutoMapper;
-using SpikeWebAPI.Mappings;
+using Spike.WebApi.Mappings;
 
-namespace SpikeWebAPI.Modules
+namespace Spike.WebApi.Modules
 {
     public class AutoMapperModule : Module
     {

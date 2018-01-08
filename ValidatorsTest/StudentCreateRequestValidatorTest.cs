@@ -1,5 +1,5 @@
-using SpikeWebAPI.DTOs;
-using SpikeWebAPI.Validators;
+using Spike.WebApi.Types.DTOs;
+using Spike.WebApi.Types.Validators;
 using Xunit;
 namespace ValidatorsTest
 {

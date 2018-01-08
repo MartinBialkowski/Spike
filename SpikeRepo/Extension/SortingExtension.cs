@@ -1,9 +1,8 @@
-﻿using EFCoreSpike5.ConstraintsModels;
+﻿using Spike.Core.Model;
 using System.Linq;
-using EFCoreSpike5.CommonModels;
 using System;
 
-namespace SpikeRepo.Extension
+namespace Spike.Infrastructure.Extension
 {
     public static class SortingExtension
     {

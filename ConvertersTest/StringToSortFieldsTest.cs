@@ -1,6 +1,6 @@
-using EFCoreSpike5.ConstraintsModels;
+using Spike.Core.Model;
 using Newtonsoft.Json;
-using SpikeWebAPI.Mappings;
+using Spike.WebApi.Mappings;
 using Xunit;
 
 namespace ConvertersTest
@@ -19,12 +19,12 @@ namespace ConvertersTest
             expected[0] = new SortField<TestModel>()
             {
                 PropertyName = "Id",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Ascending
+                SortOrder = SortOrder.Ascending
             };
             expected[1] = new SortField<TestModel>()
             {
                 PropertyName = "FieldName",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Ascending
+                SortOrder = SortOrder.Ascending
             };
             // act
             result = converter.Convert(source, result, null);
@@ -44,12 +44,12 @@ namespace ConvertersTest
             expected[0] = new SortField<TestModel>()
             {
                 PropertyName = "Id",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Descending
+                SortOrder = SortOrder.Descending
             };
             expected[1] = new SortField<TestModel>()
             {
                 PropertyName = "FieldName",
-                SortOrder = EFCoreSpike5.CommonModels.SortOrder.Descending
+                SortOrder = SortOrder.Descending
             };
             // act
             result = converter.Convert(source, result, null);

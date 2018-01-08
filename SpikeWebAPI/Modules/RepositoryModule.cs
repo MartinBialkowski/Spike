@@ -3,7 +3,7 @@ using Autofac.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 
-namespace SpikeWebAPI.Modules
+namespace Spike.WebApi.Modules
 {
     public class RepositoryModule: Module
     {

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using EFCoreSpike5.CommonModels;
 using Microsoft.Extensions.Options;
-using Infrastructure.ContactProvider;
+using Spike.Backend.Interface.Contact;
 using System.Text.Encodings.Web;
+using Spike.Backend.Connect.Model;
 
-namespace SpikeConnectProviders
+namespace Spike.Backend.Connect
 {
     public class SendGridEmailSender : IEmailSender
     {

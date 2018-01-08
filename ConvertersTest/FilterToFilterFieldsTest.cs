@@ -1,6 +1,6 @@
-﻿using EFCoreSpike5.ConstraintsModels;
-using Newtonsoft.Json;
-using SpikeWebAPI.Mappings;
+﻿using Newtonsoft.Json;
+using Spike.Core.Model;
+using Spike.WebApi.Mappings;
 using Xunit;
 
 namespace ConvertersTest

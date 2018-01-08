@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using EFCoreSpike5.CommonModels;
-using EFCoreSpike5.ConstraintsModels;
-using EFCoreSpike5.Models;
+using Spike.Core.Model;
+using Spike.Core.Entity;
 
-namespace SpikeWebAPI.Mappings
+namespace Spike.WebApi.Mappings
 {
     public class SortMappingProfile : Profile
     {

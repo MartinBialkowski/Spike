@@ -1,8 +1,8 @@
 ﻿using Autofac;
-using Infrastructure.ContactProvider;
-using SpikeConnectProviders;
+using Spike.Backend.Interface.Contact;
+using Spike.Backend.Connect;
 
-namespace SpikeWebAPI.Modules
+namespace Spike.WebApi.Modules
 {
     public class SenderProviderModule : Module
     {
