@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Converters.Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Backend.Connect", "SpikeConnectProviders\Spike.Backend.Connect.csproj", "{26558ED1-3E95-4068-B848-BACAA0C991D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Service.Interface", "Infrastructure\Spike.Service.Interface.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Backend.Interface", "Infrastructure\Spike.Backend.Interface.csproj", "{71971F03-5250-49B5-9593-BE141741067B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core.Interface", "Spike.Core.Interface\Spike.Core.Interface.csproj", "{FDAA0263-FD45-47D5-9C68-9B01D1F4FCC3}"
 EndProject

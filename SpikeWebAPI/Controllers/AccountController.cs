@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Spike.Service.Interface.ContactProvider;
+using Spike.Backend.Interface.Contact;
 using Spike.WebApi.Extensions;
 using Spike.WebApi.Types.DTOs;
 using System;
