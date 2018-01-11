@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Spike.Core.Model;
 using Spike.Core.Entity;
 using Spike.WebApi.Types.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace Spike.WebApi.Controllers
 {
@@ -19,11 +20,13 @@ namespace Spike.WebApi.Controllers
     {
         private readonly IStudentRepository studentRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<StudentsController> logger;
 
-        public StudentsController(IStudentRepository studentRepository, IMapper mapper)
+        public StudentsController(IStudentRepository studentRepository, IMapper mapper, ILogger<StudentsController> logger)
         {
             this.studentRepository = studentRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
