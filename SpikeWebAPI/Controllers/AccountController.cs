@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Spike.Backend.Interface.Contact;
 using Spike.WebApi.Extensions;
@@ -23,22 +24,24 @@ namespace Spike.WebApi.Controllers
     {
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
-
         private readonly IConfiguration configuration;
         private readonly IEmailSender emailSender;
+        private readonly ILogger<AccountController> logger;
 
         public AccountController
         (
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IConfiguration configuration,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            ILogger<AccountController> logger
         )
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.emailSender = emailSender;
+            this.logger = logger;
         }
 
         // POST: account/login
@@ -46,11 +49,12 @@ namespace Spike.WebApi.Controllers
         [AllowAnonymous]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        [ProducesResponseType(typeof(void), 401)]  
+        [ProducesResponseType(typeof(void), 401)]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
             if (!ModelState.IsValid)
             {
+                logger.LogError("User sent invalid credentials");
                 return BadRequest(ModelState);
             }
 
@@ -59,6 +63,7 @@ namespace Spike.WebApi.Controllers
             if (result.Succeeded)
             {
                 var appUser = GetUser(userDTO.Email);
+                logger.LogInformation($"User {appUser.Id} logged into application");
                 return Ok(GenerateJwtToken(appUser));
             }
             return Unauthorized();
@@ -105,7 +110,7 @@ namespace Spike.WebApi.Controllers
         {
             string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
             var appUser = GetUser(email);
-
+            logger.LogInformation($"user {appUser.Id}, prolonged token");
             return Ok(GenerateJwtToken(appUser));
         }
 

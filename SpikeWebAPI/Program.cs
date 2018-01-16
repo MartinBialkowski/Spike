@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Spike.WebApi
 {
@@ -13,6 +14,11 @@ namespace Spike.WebApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    var configuration = hostingContext.Configuration.GetSection("Logging");
+                    builder.AddFile(configuration);
+                })
                 .ConfigureServices(services => services.AddAutofac())
                 .UseStartup<Startup>()
                 .Build();
