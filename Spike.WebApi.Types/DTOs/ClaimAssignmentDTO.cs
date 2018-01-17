@@ -1,9 +1,8 @@
 ﻿namespace Spike.WebApi.Types.DTOs
 {
-    public class ClaimAssignmentDTO
+    public class ClaimDTO
     {
-        public string Email { get; set; }
-        public string ClaimValue { get; set; }
-        public string ClaimType { get; set; }
+        public string Value { get; set; }
+        public string Type { get; set; }
     }
 }

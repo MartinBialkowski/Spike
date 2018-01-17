@@ -3,20 +3,16 @@ using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Types.Validators
 {
-    public class ClaimAssignmentValidator : AbstractValidator<ClaimAssignmentDTO>
+    public class ClaimAssignmentValidator : AbstractValidator<ClaimDTO>
     {
         public ClaimAssignmentValidator()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Valid email address is required");
-
-            RuleFor(x => x.ClaimType)
+            RuleFor(x => x.Type)
                 .NotEmpty().WithMessage("ClaimType is required");
 
-            RuleFor(x => x.ClaimValue)
+            RuleFor(x => x.Value)
                 .NotEmpty().WithMessage("ClaimValue is required");
         }
     }

@@ -9,30 +9,8 @@ namespace Spike.WebApi.Types.Validators.Test
 {
     public class ClaimAssignmentValidatorTest
     {
-        private string validEmail = "test@test.com";
         private string validClaimType = "ClaimType";
         private string validClaimValue = "ClaimValue";
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("    ")]
-        [InlineData("InvalidEmailAtProviderDotCom")]
-        public void InvalidWhenAssignmentEmailNotProvided(string email)
-        {
-            // arrange
-            var validator = new ClaimAssignmentValidator();
-            var assignmentDTO = new ClaimAssignmentDTO()
-            {
-                Email = email,
-                ClaimType = validClaimType,
-                ClaimValue = validClaimValue
-            };
-            // act
-            var result = validator.Validate(assignmentDTO);
-            // assert
-            Assert.False(result.IsValid);
-        }
 
         [Theory]
         [InlineData(null)]
@@ -42,11 +20,10 @@ namespace Spike.WebApi.Types.Validators.Test
         {
             // arrange
             var validator = new ClaimAssignmentValidator();
-            var assignmentDTO = new ClaimAssignmentDTO()
+            var assignmentDTO = new ClaimDTO()
             {
-                ClaimType = claimType,
-                Email = validEmail,
-                ClaimValue = validClaimValue
+                Type = claimType,
+                Value = validClaimValue
             };
             // act
             var result = validator.Validate(assignmentDTO);
@@ -62,11 +39,10 @@ namespace Spike.WebApi.Types.Validators.Test
         {
             // arrange
             var validator = new ClaimAssignmentValidator();
-            var assignmentDTO = new ClaimAssignmentDTO()
+            var assignmentDTO = new ClaimDTO()
             {
-                ClaimValue = claimValue,
-                Email = validEmail,
-                ClaimType = validClaimType
+                Value = claimValue,
+                Type = validClaimType
             };
             // act
             var result = validator.Validate(assignmentDTO);
@@ -79,11 +55,10 @@ namespace Spike.WebApi.Types.Validators.Test
         {
             // arrange
             var validator = new ClaimAssignmentValidator();
-            var assignmentDTO = new ClaimAssignmentDTO()
+            var assignmentDTO = new ClaimDTO()
             {
-                Email = validEmail,
-                ClaimType = validClaimType,
-                ClaimValue = validClaimValue
+                Type = validClaimType,
+                Value = validClaimValue
             };
             // act
             var result = validator.Validate(assignmentDTO);
