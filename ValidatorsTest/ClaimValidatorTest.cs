@@ -1,13 +1,10 @@
 ﻿using Spike.WebApi.Types.DTOs;
 using Spike.WebApi.Types.Validators;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Spike.WebApi.Types.Validators.Test
 {
-    public class ClaimAssignmentValidatorTest
+    public class ClaimValidatorTest
     {
         private string validClaimType = "ClaimType";
         private string validClaimValue = "ClaimValue";
@@ -19,7 +16,7 @@ namespace Spike.WebApi.Types.Validators.Test
         public void InvalidWhenClaimTypeNotProvided(string claimType)
         {
             // arrange
-            var validator = new ClaimAssignmentValidator();
+            var validator = new ClaimValidator();
             var assignmentDTO = new ClaimDTO()
             {
                 Type = claimType,
@@ -38,7 +35,7 @@ namespace Spike.WebApi.Types.Validators.Test
         public void InvalidWhenClaimValueNotProvided(string claimValue)
         {
             // arrange
-            var validator = new ClaimAssignmentValidator();
+            var validator = new ClaimValidator();
             var assignmentDTO = new ClaimDTO()
             {
                 Value = claimValue,
@@ -54,7 +51,7 @@ namespace Spike.WebApi.Types.Validators.Test
         public void ValidWhenEmailAndPasswordProvided()
         {
             // arrange
-            var validator = new ClaimAssignmentValidator();
+            var validator = new ClaimValidator();
             var assignmentDTO = new ClaimDTO()
             {
                 Type = validClaimType,

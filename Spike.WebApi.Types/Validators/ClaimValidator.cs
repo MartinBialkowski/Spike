@@ -3,9 +3,9 @@ using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Types.Validators
 {
-    public class ClaimAssignmentValidator : AbstractValidator<ClaimDTO>
+    public class ClaimValidator : AbstractValidator<ClaimDTO>
     {
-        public ClaimAssignmentValidator()
+        public ClaimValidator()
         {
             CascadeMode = CascadeMode.StopOnFirstFailure;
 
