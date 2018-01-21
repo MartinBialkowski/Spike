@@ -52,20 +52,21 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(void), 401)]
         public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
+            logger.LogDebug("{@User} try to login", new { User = userDTO });
             if (!ModelState.IsValid)
             {
-                logger.LogError("User sent invalid credentials");
+                logger.LogWarning("User sent invalid credentials");
                 return BadRequest(ModelState);
             }
 
             var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, false, false);
-
             if (result.Succeeded)
             {
-                var appUser = GetUser(userDTO.Email);
-                logger.LogInformation($"User {appUser.Id} logged into application");
-                return Ok(GenerateJwtToken(appUser));
+                var user = await userManager.FindByEmailAsync(userDTO.Email);
+                logger.LogInformation("User {userId} logged into application", new { userId = user.Id });
+                return Ok(await GenerateJwtToken(user));
             }
+            logger.LogWarning("User unable to login");
             return Unauthorized();
         }
 
@@ -76,8 +77,10 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
         {
+            logger.LogDebug("{@User} try to login", new { User = userDTO });
             if (!ModelState.IsValid)
             {
+                logger.LogWarning("User sent invalid credentials");
                 return BadRequest(ModelState);
             }
 
@@ -90,14 +93,16 @@ namespace Spike.WebApi.Controllers
 
             if (result.Succeeded)
             {
-                var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                var callbackUrl = Url.EmailConfirmationLink(user.Id, confirmationToken, Request.Scheme);
-                await emailSender.SendConfirmationEmail(userDTO.Email, callbackUrl);
-                await signInManager.SignInAsync(user, false);
-                return Ok(GenerateJwtToken(user));
+                logger.LogInformation("User {userId} registered successfully", new { userId = user.Id });
+                await SendConfirmationEmail(user);
+                await AssignBasicClaims(user);
+                var jwt = await GenerateJwtToken(user);
+                return Ok(jwt);
             }
             else
             {
+                logger.LogWarning("Cannot register user");
+                logger.LogDebug("Cannot register {@User}, {@errors}", new { User = user }, new { errors = result.Errors });
                 return BadRequest(result.Errors);
             }
         }
@@ -106,12 +111,11 @@ namespace Spike.WebApi.Controllers
         [HttpGet("refresh")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(void), 401)]
-        public IActionResult RefreshToken()
+        public async Task<IActionResult> RefreshToken()
         {
-            string email = User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
-            var appUser = GetUser(email);
-            logger.LogInformation($"user {appUser.Id}, prolonged token");
-            return Ok(GenerateJwtToken(appUser));
+            var user = await GetUserFromClaim();
+            logger.LogInformation("user {userId}, prolonged token", new { userId = user.Id });
+            return Ok(await GenerateJwtToken(user));
         }
 
         // GET: account/confirm
@@ -202,18 +206,34 @@ namespace Spike.WebApi.Controllers
             return NoContent();
         }
 
-        private string GenerateJwtToken(IdentityUser user)
+        private async Task SendConfirmationEmail(IdentityUser user)
+        {
+            var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.EmailConfirmationLink(user.Id, confirmationToken, Request.Scheme);
+            await emailSender.SendConfirmationEmail(user.Email, callbackUrl);
+            logger.LogDebug("Sent confiramtion email, to {address}", user.Email);
+        }
+
+        private async Task<IdentityResult> AssignBasicClaims(IdentityUser user)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id)
             };
 
+            return await userManager.AddClaimsAsync(user, claims);
+        }
+
+        private async Task<string> GenerateJwtToken(IdentityUser user)
+        {
+            Console.WriteLine("test0");
+            var claims = await PrepareClaims(user);
+            Console.WriteLine("test1");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["JwtExpireDays"]));
+            Console.WriteLine("test2");
 
             var token = new JwtSecurityToken(
                 configuration["JwtIssuer"],
@@ -226,9 +246,20 @@ namespace Spike.WebApi.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private IdentityUser GetUser(string email)
+        private async Task<IList<Claim>> PrepareClaims(IdentityUser user)
         {
-            return userManager.Users.SingleOrDefault(x => x.Email == email);
+            var claims = await userManager.GetClaimsAsync(user);
+            //var identifierClaim = new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
+            //claims.Add(identifierClaim);
+            Console.WriteLine("test3");
+
+            return claims;
+        }
+
+        private async Task<IdentityUser> GetUserFromClaim()
+        {
+            string email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            return await userManager.FindByEmailAsync(email);
         }
     }
 }
