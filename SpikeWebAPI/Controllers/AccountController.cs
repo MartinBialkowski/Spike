@@ -227,19 +227,17 @@ namespace Spike.WebApi.Controllers
 
         private async Task<string> GenerateJwtToken(IdentityUser user)
         {
-            Console.WriteLine("test0");
             var claims = await PrepareClaims(user);
-            Console.WriteLine("test1");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddMinutes(Convert.ToDouble(configuration["JwtExpireDays"]));
-            Console.WriteLine("test2");
 
             var token = new JwtSecurityToken(
                 configuration["JwtIssuer"],
                 configuration["JwtIssuer"],
                 claims,
                 expires: expires,
+                notBefore: DateTime.Now,
                 signingCredentials: creds
             );
 
@@ -249,9 +247,8 @@ namespace Spike.WebApi.Controllers
         private async Task<IList<Claim>> PrepareClaims(IdentityUser user)
         {
             var claims = await userManager.GetClaimsAsync(user);
-            //var identifierClaim = new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
-            //claims.Add(identifierClaim);
-            Console.WriteLine("test3");
+            var identifierClaim = new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
+            claims.Insert(0, identifierClaim);
 
             return claims;
         }
