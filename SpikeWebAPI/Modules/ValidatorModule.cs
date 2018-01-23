@@ -12,6 +12,7 @@ namespace Spike.WebApi.Modules
             builder.RegisterType<UserValidator>().As<IValidator<UserDTO>>();
             builder.RegisterType<ConfirmationValidator>().As<IValidator<AccountConfirmationDTO>>();
             builder.RegisterType<ResetPasswordValidator>().As<IValidator<ResetPasswordDTO>>();
+            builder.RegisterType<ClaimValidator>().As<IValidator<ClaimDTO>>();
             builder.RegisterType<ValidatorFactory>().As<IValidatorFactory>().SingleInstance();
         }
     }
