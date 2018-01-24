@@ -54,7 +54,6 @@ namespace Spike.WebApi
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             }).AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;
@@ -68,6 +67,12 @@ namespace Spike.WebApi
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Person", policy => policy.RequireClaim("http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor"));
+                options.AddPolicy("Master", policy => policy.RequireClaim("http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor", "Master"));
+            });
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
