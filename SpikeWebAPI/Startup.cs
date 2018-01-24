@@ -19,6 +19,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace Spike.WebApi
@@ -70,8 +71,8 @@ namespace Spike.WebApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Person", policy => policy.RequireClaim("http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor"));
-                options.AddPolicy("Master", policy => policy.RequireClaim("http://schemas.xmlsoap.org/ws/2009/09/identity/claims/actor", "Master"));
+                options.AddPolicy("Person", policy => policy.RequireClaim(ClaimTypes.Actor));
+                options.AddPolicy("Master", policy => policy.RequireClaim(ClaimTypes.Actor, "Master"));
             });
 
             // Register the Swagger generator, defining one or more Swagger documents
