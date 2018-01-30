@@ -15,10 +15,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Spike.Backend.Connect.Model;
 using Spike.WebApi.Modules;
+using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace Spike.WebApi
@@ -54,7 +56,6 @@ namespace Spike.WebApi
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             }).AddJwtBearer(cfg =>
                 {
                     cfg.RequireHttpsMetadata = false;
@@ -68,6 +69,13 @@ namespace Spike.WebApi
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Person", policy => policy.RequireClaim(ClaimTypes.Actor));
+                options.AddPolicy("Master", policy => policy.RequireClaim(ClaimTypes.Actor, "Master"));
+                options.AddPolicy("StudentDiscount", policy => policy.AddRequirements(new StudentDiscountRequirement()));
+            });
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -99,6 +107,7 @@ namespace Spike.WebApi
             builder.RegisterModule(new AutoMapperModule());
             builder.RegisterModule(new ValidatorModule());
             builder.RegisterModule(new SenderProviderModule());
+            builder.RegisterModule(new HandlerModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

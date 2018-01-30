@@ -30,7 +30,7 @@ namespace Spike.WebApi.Controllers
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
-        [Authorize]
+        [Authorize(Policy = "StudentDiscount")]
         [HttpGet]
         [ProducesResponseType(typeof(PagedResultDataTransferObject<StudentResponseDataTransferObject>), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -63,6 +63,7 @@ namespace Spike.WebApi.Controllers
         }
 
         // GET: api/students/5
+        [Authorize(Policy = "Master")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
