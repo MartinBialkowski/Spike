@@ -19,14 +19,16 @@ namespace Spike.WebApi.Controllers
     public class StudentsController : Controller
     {
         private readonly IStudentRepository studentRepository;
+        private readonly IAuthorizationService authorizationService;
         private readonly IMapper mapper;
         private readonly ILogger<StudentsController> logger;
-
-        public StudentsController(IStudentRepository studentRepository, IMapper mapper, ILogger<StudentsController> logger)
+        public StudentsController(IStudentRepository studentRepository, IMapper mapper,
+            ILogger<StudentsController> logger, IAuthorizationService authorizationService)
         {
             this.studentRepository = studentRepository;
             this.mapper = mapper;
             this.logger = logger;
+            this.authorizationService = authorizationService;
         }
 
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
@@ -63,7 +65,7 @@ namespace Spike.WebApi.Controllers
         }
 
         // GET: api/students/5
-        [Authorize(Policy = "Master")]
+        //[Authorize(Policy = "Person")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -81,10 +83,25 @@ namespace Spike.WebApi.Controllers
                 return NotFound($"Student by Id: {id} not found.");
             }
 
-            return Ok(mapper.Map<Student, StudentResponseDataTransferObject>(student));
+            var authorizationResult = await authorizationService.AuthorizeAsync(User, student, "GetSelf");
+            if (authorizationResult.Succeeded)
+            {
+                return Ok(mapper.Map<Student, StudentResponseDataTransferObject>(student));
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                return Forbid();
+            }
+            else
+            {
+                return Challenge();
+            }
+
+
         }
 
         // PUT: api/students/5
+        [Authorize(Policy = "Master")]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
@@ -142,6 +159,7 @@ namespace Spike.WebApi.Controllers
         }
 
         // DELETE: api/students/5
+        [Authorize(Policy = "Master")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
