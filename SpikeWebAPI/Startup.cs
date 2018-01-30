@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Spike.Backend.Connect.Model;
 using Spike.WebApi.Modules;
+using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -73,6 +74,7 @@ namespace Spike.WebApi
             {
                 options.AddPolicy("Person", policy => policy.RequireClaim(ClaimTypes.Actor));
                 options.AddPolicy("Master", policy => policy.RequireClaim(ClaimTypes.Actor, "Master"));
+                options.AddPolicy("StudentDiscount", policy => policy.AddRequirements(new StudentDiscountRequirement()));
             });
 
             // Register the Swagger generator, defining one or more Swagger documents
@@ -105,6 +107,7 @@ namespace Spike.WebApi
             builder.RegisterModule(new AutoMapperModule());
             builder.RegisterModule(new ValidatorModule());
             builder.RegisterModule(new SenderProviderModule());
+            builder.RegisterModule(new HandlerModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
