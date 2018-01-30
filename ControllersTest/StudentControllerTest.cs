@@ -112,7 +112,7 @@ namespace ControllersTest
         public async Task ShouldGetFilteredStudentSortedByName()
         {
             // arrange
-            var filterValue = "Martin";
+            var filterValue = "Witalian";
             var queryString = $"?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name";
             var request = url + queryString;
             HttpResponseMessage httpResponse;
