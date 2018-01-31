@@ -65,7 +65,6 @@ namespace Spike.WebApi.Controllers
         }
 
         // GET: api/students/5
-        //[Authorize(Policy = "Person")]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
