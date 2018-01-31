@@ -52,13 +52,14 @@ namespace ControllersTest
                 var loginUrl = "api/account/login";
                 var userCredential = new UserDTO()
                 {
-                    Email = "embe@test.com",
-                    Password = "Test123!"
+                    Email = "embe2sc@gmail.com",
+                    Password = "TestMB123!"
                 };
                 string userJson = JsonConvert.SerializeObject(userCredential);
                 var content = new StringContent(userJson, Encoding.UTF8, requestMediaType);
                 HttpResponseMessage httpResponse = client.PostAsync(loginUrl, content).Result;
                 var response = httpResponse.Content.ReadAsStringAsync();
+                response.Wait();
                 return response.Result.Trim('"');
             }
         }

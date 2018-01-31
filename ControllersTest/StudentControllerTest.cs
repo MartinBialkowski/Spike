@@ -16,6 +16,9 @@ namespace ControllersTest
     {
         private HttpClient client;
         private ControllerFixture fixture;
+        private HttpResponseMessage httpResponse;
+        string actual, expected;
+
         private string url = "api/students";
         private string studentName = "TestName";
         private string updatedName = "UpdatedName";
@@ -39,21 +42,11 @@ namespace ControllersTest
         public async Task ShouldGetTwoElementsSortedByName()
         {
             // arrange
-            var queryString = "?pageNumber=1&pageLimit=2&sort=Name";
+            int pageSize = 2;
+            var queryString = $"?pageNumber=1&pageLimit={pageSize}&sort=Name";
             var request = url + queryString;
-            HttpResponseMessage httpResponse;
+            var students = PrepareStudentsResponse(pageSize);
             TestPagedResult<StudentTestResponse> response;
-            List<StudentTestResponse> students = new List<StudentTestResponse>();
-            string actual, expected;
-            var studentsList = fixture.context.Students.Include(s => s.Course)
-                .OrderBy(s => s.Name)
-                .Skip(0).Take(2).ToList();
-
-            foreach (var item in studentsList)
-            {
-                students.Add(CreateResponseStudent(item));
-            }
-
             TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
             {
                 PageNumber = 1,
@@ -88,9 +81,7 @@ namespace ControllersTest
             // arrange
             var queryString = "?sort=Name";
             var request = url + queryString;
-            HttpResponseMessage httpResponse;
-            List<Student> response, students;
-            string actual, expected;
+            List<Student> response;
             // act
             using (client = fixture.server.CreateClient())
             {
@@ -99,7 +90,7 @@ namespace ControllersTest
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            students = fixture.context.Students.OrderBy(s => s.Name).ToList();
+            var students = fixture.context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -112,33 +103,23 @@ namespace ControllersTest
         public async Task ShouldGetFilteredStudentSortedByName()
         {
             // arrange
+            var pageSize = 3;
             var filterValue = "Witalian";
-            var queryString = $"?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name";
+            var queryString = $"?pageNumber=1&pageLimit={pageSize}&Name={filterValue}&sort=Name";
             var request = url + queryString;
-            HttpResponseMessage httpResponse;
+            var students = PrepareStudentsResponse(pageSize, filterValue);
             TestPagedResult<StudentTestResponse> response;
-            List<StudentTestResponse> students = new List<StudentTestResponse>();
-            string actual, expected;
-            var filteredStudents = fixture.context.Students.Include(s => s.Course)
-                .Where(s => s.Name.Contains(filterValue))
-                .OrderBy(s => s.Name)
-                .Skip(0).Take(3).ToList();
-            foreach (var item in filteredStudents)
-            {
-                students.Add(CreateResponseStudent(item));
-            }
-
             TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
             {
                 PageNumber = 1,
-                PageSize = 3,
+                PageSize = pageSize,
                 TotalNumberOfPages = 1,
                 TotalNumberOfRecords = 1,
                 Results = students,
-                FirstPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+                FirstPageUrl = $"/api/students?pageNumber=1&pageLimit={pageSize}&Name={filterValue}&sort=Name",
                 PreviousPageUrl = null,
                 NextPageUrl = null,
-                LastPageUrl = $"/api/students?pageNumber=1&pageLimit=3&Name={filterValue}&sort=Name",
+                LastPageUrl = $"/api/students?pageNumber=1&pageLimit={pageSize}&Name={filterValue}&sort=Name",
 
             };
             // act
@@ -162,17 +143,15 @@ namespace ControllersTest
             // arrange
             int studentId = 1;
             var request = $"{url}/{studentId}";
-            HttpResponseMessage httpResponse;
-            Student student;
             StudentTestResponse response;
-            string actual, expected;
 
-            student = fixture.context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
+            var student = fixture.context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
             var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
             using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
@@ -197,19 +176,17 @@ namespace ControllersTest
             string studentJson = JsonConvert.SerializeObject(newStudent);
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
 
-            HttpResponseMessage httpResponse;
             StudentTestResponse response;
-            Student student;
-            string actual, expected;
 
             // act
             using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
             actual = JsonConvert.SerializeObject(response);
-            student = await GetStudentByName(studentName);
+            var student = await GetStudentByName(studentName);
             var studentDTO = new StudentTestResponse()
             {
                 Id = student.Id,
@@ -239,14 +216,13 @@ namespace ControllersTest
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
             string request = $"{url}/{studentId}";
 
-            HttpResponseMessage httpResponse;
-            Student student;
             // act
             using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PutAsync(request, content);
             }
-            student = await GetStudentByName(updatedName);
+            var student = await GetStudentByName(updatedName);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.True(student != null);
@@ -259,10 +235,10 @@ namespace ControllersTest
             // arrange
             int studentId = GetOrCreateStudentForTest(updatedName);
             string request = $"{url}/{studentId}";
-            HttpResponseMessage httpResponse;
             // act
             using (client = fixture.server.CreateClient())
             {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.DeleteAsync(request);
             }
             var expectedStudent = await GetStudentByName(updatedName);
@@ -306,6 +282,27 @@ namespace ControllersTest
                 fixture.context.Remove(result);
                 fixture.context.SaveChanges();
             }
+        }
+
+        private List<StudentTestResponse> PrepareStudentsResponse(int pageSize, string filterValue = "")
+        {
+            List<StudentTestResponse> studentsResult = new List<StudentTestResponse>();
+
+            var students = LoadStudents(pageSize, filterValue);
+            foreach (var item in students)
+            {
+                studentsResult.Add(CreateResponseStudent(item));
+            }
+
+            return studentsResult;
+        }
+
+        private List<Student> LoadStudents(int pageSize, string filterValue)
+        {
+            return fixture.context.Students.Include(s => s.Course)
+                .Where(s => s.Name.Contains(filterValue))
+                .OrderBy(s => s.Name)
+                .Skip(0).Take(pageSize).ToList();
         }
 
         private StudentTestResponse CreateResponseStudent(Student student)
