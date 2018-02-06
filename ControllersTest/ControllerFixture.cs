@@ -11,6 +11,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ControllersTest
 {
@@ -37,14 +38,15 @@ namespace ControllersTest
                 .UseConfiguration(configuration)
                 .UseStartup<Startup>());
 
-            authenticationToken = GetAuthorizationToken();
+            var getTokenTask = GetAuthorizationToken();
+            authenticationToken = getTokenTask.Result;
         }
         public void Dispose()
         {
             authenticationToken = null;
         }
 
-        private string GetAuthorizationToken()
+        private async Task<string> GetAuthorizationToken()
         {
             string requestMediaType = "application/json";
             using (client = server.CreateClient())
@@ -52,14 +54,14 @@ namespace ControllersTest
                 var loginUrl = "api/account/login";
                 var userCredential = new UserDTO()
                 {
-                    Email = "embe@test.com",
-                    Password = "Test123!"
+                    Email = "embe2sc@gmail.com",
+                    Password = "TestMB123!"
                 };
                 string userJson = JsonConvert.SerializeObject(userCredential);
                 var content = new StringContent(userJson, Encoding.UTF8, requestMediaType);
-                HttpResponseMessage httpResponse = client.PostAsync(loginUrl, content).Result;
-                var response = httpResponse.Content.ReadAsStringAsync();
-                return response.Result.Trim('"');
+                HttpResponseMessage httpResponse = await client.PostAsync(loginUrl, content);
+                var response = await httpResponse.Content.ReadAsStringAsync();
+                return response.Trim('"');
             }
         }
 
