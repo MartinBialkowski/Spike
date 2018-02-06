@@ -39,7 +39,6 @@ namespace ControllersTest
                 .UseStartup<Startup>());
 
             var getTokenTask = GetAuthorizationToken();
-            getTokenTask.Wait();
             authenticationToken = getTokenTask.Result;
         }
         public void Dispose()
