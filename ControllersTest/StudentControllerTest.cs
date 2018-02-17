@@ -14,7 +14,6 @@ namespace Spike.WebApi.IntegrationTest
 {
     public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {
-        //private HttpClient client;
         private ControllerFixture fixture;
         private HttpResponseMessage httpResponse;
         string actual, expected;
@@ -24,8 +23,6 @@ namespace Spike.WebApi.IntegrationTest
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
 
-        //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
-        //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
         public StudentControllerTest(ControllerFixture fixture)
         {
             this.fixture = fixture;
