@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.Core.Interface", "Spi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Types", "Spike.WebApi.Types\Spike.WebApi.Types.csproj", "{B0AD2A1D-126B-4AF6-8CBE-6B38ED1ADA7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.AuthenticationServer.IdentityServer", "Spike.AuthenticationServer.IdentityServer\Spike.AuthenticationServer.IdentityServer.csproj", "{19B19E5A-4DA6-4EC1-91E8-1C2D2F7CBFD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.IdentityServer", "Spike.AuthenticationServer.IdentityServer\Spike.AuthenticationServer.IdentityServer.csproj", "{19B19E5A-4DA6-4EC1-91E8-1C2D2F7CBFD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.AuthenticationServer.IdentityServer.IntegrationTest", "Spike.AuthenticationServer.IdentityServer.IntegrationTest\Spike.AuthenticationServer.IdentityServer.IntegrationTest.csproj", "{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{19B19E5A-4DA6-4EC1-91E8-1C2D2F7CBFD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19B19E5A-4DA6-4EC1-91E8-1C2D2F7CBFD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19B19E5A-4DA6-4EC1-91E8-1C2D2F7CBFD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
