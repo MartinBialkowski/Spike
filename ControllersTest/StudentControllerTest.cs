@@ -14,7 +14,7 @@ namespace Spike.WebApi.IntegrationTest
 {
     public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {
-        private HttpClient client;
+        //private HttpClient client;
         private ControllerFixture fixture;
         private HttpResponseMessage httpResponse;
         string actual, expected;
@@ -61,7 +61,7 @@ namespace Spike.WebApi.IntegrationTest
 
             };
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -83,7 +83,7 @@ namespace Spike.WebApi.IntegrationTest
             var request = url + queryString;
             List<Student> response;
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -123,7 +123,7 @@ namespace Spike.WebApi.IntegrationTest
 
             };
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -149,7 +149,7 @@ namespace Spike.WebApi.IntegrationTest
             var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -179,7 +179,7 @@ namespace Spike.WebApi.IntegrationTest
             StudentTestResponse response;
 
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PostAsync(request, content);
@@ -217,7 +217,7 @@ namespace Spike.WebApi.IntegrationTest
             string request = $"{url}/{studentId}";
 
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PutAsync(request, content);
@@ -236,7 +236,7 @@ namespace Spike.WebApi.IntegrationTest
             int studentId = GetOrCreateStudentForTest(updatedName);
             string request = $"{url}/{studentId}";
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.DeleteAsync(request);
