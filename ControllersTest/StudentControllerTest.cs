@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ControllersTest
+namespace Spike.WebApi.IntegrationTest
 {
     public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ControllersTest
+namespace Spike.WebApi.IntegrationTest
 {
     public class StudentTestCreateRequest
     {

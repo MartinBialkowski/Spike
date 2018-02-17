@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Spike.WebApi;
 using Spike.WebApi.Types.DTOs;
 using System;
 using System.IO;
@@ -13,7 +12,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControllersTest
+namespace Spike.WebApi.IntegrationTest
 {
     public class ControllerFixture : IDisposable
     {
@@ -44,6 +43,8 @@ namespace ControllersTest
         public void Dispose()
         {
             authenticationToken = null;
+            server.Dispose();
+            context.Dispose();
         }
 
         private async Task<string> GetAuthorizationToken()
