@@ -42,9 +42,6 @@ namespace Spike.WebApi.IntegrationTest
         }
         public void Dispose()
         {
-            authenticationToken = null;
-            server.Dispose();
-            context.Dispose();
         }
 
         private async Task<string> GetAuthorizationToken()
