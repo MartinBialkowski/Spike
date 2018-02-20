@@ -10,11 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace ControllersTest
+namespace Spike.WebApi.IntegrationTest
 {
     public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {
-        private HttpClient client;
         private ControllerFixture fixture;
         private HttpResponseMessage httpResponse;
         string actual, expected;
@@ -24,8 +23,6 @@ namespace ControllersTest
         private string updatedName = "UpdatedName";
         private string contentType = "application/json";
 
-        //https://github.com/aspnet/Mvc/issues/5562 https://github.com/aspnet/Home/issues/1558
-        //dotnet core does not support System.Net.Http.Formatting yet. It works, but shows errors. Works in progress
         public StudentControllerTest(ControllerFixture fixture)
         {
             this.fixture = fixture;
@@ -61,7 +58,7 @@ namespace ControllersTest
 
             };
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -83,7 +80,7 @@ namespace ControllersTest
             var request = url + queryString;
             List<Student> response;
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -123,7 +120,7 @@ namespace ControllersTest
 
             };
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -149,7 +146,7 @@ namespace ControllersTest
             var studentDTO = CreateResponseStudent(student);
             expected = JsonConvert.SerializeObject(studentDTO);
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.GetAsync(request);
@@ -179,7 +176,7 @@ namespace ControllersTest
             StudentTestResponse response;
 
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PostAsync(request, content);
@@ -217,7 +214,7 @@ namespace ControllersTest
             string request = $"{url}/{studentId}";
 
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.PutAsync(request, content);
@@ -236,7 +233,7 @@ namespace ControllersTest
             int studentId = GetOrCreateStudentForTest(updatedName);
             string request = $"{url}/{studentId}";
             // act
-            using (client = fixture.server.CreateClient())
+            using (var client = fixture.server.CreateClient())
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
                 httpResponse = await client.DeleteAsync(request);
