@@ -14,26 +14,33 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             this.fixture = fixture;
         }
 
-        [Fact]
-        [Trait("Category", "Integration")]
-        public async Task ShouldAuthenticateWhenUsingResourceOwnerPassword()
-        {
-            // arrange
-            var clientId = "ro.client";
-            var secret = "secret";
-            var username = "alice";
-            var password = "password";
-            var apiScope = "api1";
-            var discovery = await DiscoveryClient.GetAsync("http://localhost:53702/");
-            var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret);
-            // act
-            var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
-            // assert
-            Assert.False(tokenResponse.IsError);
-            Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
-        }
+		[Fact]
+		[Trait("Category", "Integration")]
+		public async Task ShouldAuthenticateWhenUsingResourceOwnerPassword()
+		{
+			// arrange
+			var clientId = "ro.client";
+			var secret = "secret";
+			var username = "alice";
+			var password = "password";
+			var apiScope = "api1";
+			var dupa = fixture.server.CreateHandler();
+			var test1 = fixture.server.CreateClient();
+			var test2 = await test1.GetAsync(".well-known/openid-configuration");
+			//fixture.server.BaseAddress
+			using (var test = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, dupa))
+			{
+				var discovery = await test.GetAsync();
+				var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, dupa);
+				var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+				Assert.False(tokenResponse.IsError);
+				Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
+			}
 
-        [Fact]
+			//.well - known / openid - configuration
+		}
+
+		[Fact]
         [Trait("Category", "Integration")]
         public async Task ShouldAuthenticateWhenUsingClientCredential()
         {
