@@ -8,50 +8,56 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
     public class AuthenticationTest : IClassFixture<AuthenticationFixture>
     {
         private AuthenticationFixture fixture;
-
+        private string secret = "secret";
+        private string apiScope = "api1";
         public AuthenticationTest(AuthenticationFixture fixture)
         {
             this.fixture = fixture;
         }
 
-		[Fact]
-		[Trait("Category", "Integration")]
-		public async Task ShouldAuthenticateWhenUsingResourceOwnerPassword()
-		{
-			// arrange
-			var clientId = "ro.client";
-			var secret = "secret";
-			var username = "alice";
-			var password = "password";
-			var apiScope = "api1";
-			var dupa = fixture.server.CreateHandler();
-			var test1 = fixture.server.CreateClient();
-			var test2 = await test1.GetAsync(".well-known/openid-configuration");
-			//fixture.server.BaseAddress
-			using (var test = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, dupa))
-			{
-				var discovery = await test.GetAsync();
-				var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, dupa);
-				var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
-				Assert.False(tokenResponse.IsError);
-				Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
-			}
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task ShouldAuthenticateWhenUsingResourceOwnerPassword()
+        {
+            // arrange
+            var clientId = "ro.client";
+            var username = "alice";
+            var password = "password";
+            DiscoveryResponse discovery;
+            TokenResponse tokenResponse;
+            var handler = fixture.server.CreateHandler();
+            // act
+            using (var discoveryClient = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, handler))
+            {
+                discovery = await discoveryClient.GetAsync();
+            }
+            using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
+            {
+                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+            }
+            // assert
+            Assert.False(tokenResponse.IsError);
+            Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
+        }
 
-			//.well - known / openid - configuration
-		}
-
-		[Fact]
+        [Fact]
         [Trait("Category", "Integration")]
         public async Task ShouldAuthenticateWhenUsingClientCredential()
         {
             // arrange
             var clientId = "client";
-            var secret = "secret";
-            var apiScope = "api1";
-            var discovery = await DiscoveryClient.GetAsync("http://localhost:53702/");
-            var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret);
+            DiscoveryResponse discovery;
+            TokenResponse tokenResponse;
+            var handler = fixture.server.CreateHandler();
             // act
-            var tokenResponse = await tokenClient.RequestClientCredentialsAsync(apiScope);
+            using (var discoveryClient = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, handler))
+            {
+                discovery = await discoveryClient.GetAsync();
+            }
+            using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
+            {
+                tokenResponse = await tokenClient.RequestClientCredentialsAsync(apiScope);
+            }
             // assert
             Assert.False(tokenResponse.IsError);
             Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
