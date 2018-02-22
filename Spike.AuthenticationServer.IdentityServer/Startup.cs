@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using EFCoreSpike5.Models;
 using IdentityServer4.Models;
-using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,11 +22,25 @@ namespace Spike.AuthenticationServer.IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // EF Core
+            services.AddDbContext<EFCoreSpikeContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Identity Core
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<EFCoreSpikeContext>()
+            .AddDefaultTokenProviders();
+
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
+                .AddInMemoryPersistedGrants()
                 .AddInMemoryApiResources(GetResources())
+                .AddInMemoryIdentityResources(GetIdentityResources())
                 .AddInMemoryClients(GetClients())
-                .AddTestUsers(GetUsers());
+                .AddAspNetIdentity<IdentityUser>();
 
             services.AddMvc();
         }
@@ -37,6 +53,7 @@ namespace Spike.AuthenticationServer.IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
+            //app.UseAuthentication();
             app.UseIdentityServer();
             app.UseMvc();
         }
@@ -46,7 +63,7 @@ namespace Spike.AuthenticationServer.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("api1", "My API", claimTypes: new[] { "name", "email" })
             };
         }
 
@@ -82,22 +99,21 @@ namespace Spike.AuthenticationServer.IdentityServer
             };
         }
 
-        private List<TestUser> GetUsers()
+        public IEnumerable<IdentityResource> GetIdentityResources()
         {
-            return new List<TestUser>
+            var customProfile = new IdentityResource(
+                name: "custom.profile",
+                displayName: "Custom profile",
+                claimTypes: new[] { "name", "email" });
+
+            return new List<IdentityResource>
             {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "alice",
-                    Password = "password"
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "bob",
-                    Password = "password"
-                }
+                new IdentityResources.OpenId(),
+                new IdentityResources.Email(),
+                new IdentityResources.Profile(),
+                new IdentityResources.Phone(),
+                new IdentityResources.Address(),
+                customProfile
             };
         }
     }
