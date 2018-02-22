@@ -1,5 +1,4 @@
 using IdentityModel.Client;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,8 +20,8 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
         {
             // arrange
             var clientId = "ro.client";
-            var username = "alice";
-            var password = "password";
+            var username = "embe2sc@gmail.com";
+            var password = "TestMB123!";
             DiscoveryResponse discovery;
             TokenResponse tokenResponse;
             var handler = fixture.server.CreateHandler();
