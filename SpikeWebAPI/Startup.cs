@@ -1,27 +1,21 @@
 ﻿using Autofac;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Spike.Backend.Connect.Model;
 using Spike.WebApi.Modules;
 using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Text;
 
 namespace Spike.WebApi
 {
@@ -41,39 +35,19 @@ namespace Spike.WebApi
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            // Identity Core
-            services.AddIdentity<IdentityUser, IdentityRole>(config =>
-            {
-                config.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddEntityFrameworkStores<EFCoreSpikeContext>()
-            .AddDefaultTokenProviders();
-
-            // JWT Authentication
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(cfg =>
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
                 {
-                    cfg.RequireHttpsMetadata = false;
-                    cfg.SaveToken = true;
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidIssuer = Configuration["JwtIssuer"],
-                        ValidAudience = Configuration["JwtIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero
-                    };
+                    options.Authority = "http://localhost:53702";
+                    options.RequireHttpsMetadata = false;
+
+                    options.ApiName = Configuration["JwtAudience"];
                 });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Person", policy => policy.RequireClaim(ClaimTypes.Actor));
-                options.AddPolicy("Master", policy => policy.RequireClaim(ClaimTypes.Actor, "Master"));
+                options.AddPolicy("Person", policy => policy.RequireClaim(ClaimTypes.Role));
+                options.AddPolicy("Master", policy => policy.RequireClaim(ClaimTypes.Role, "Master"));
                 options.AddPolicy("StudentDiscount", policy => policy.AddRequirements(new StudentDiscountRequirement()));
                 options.AddPolicy("GetSelf", policy => policy.AddRequirements(new SelfRequirement()));
             });
