@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using EFCoreSpike5.Models;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +35,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             .AddEntityFrameworkStores<EFCoreSpikeContext>()
             .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryApiResources(GetResources())
@@ -53,7 +54,6 @@ namespace Spike.AuthenticationServer.IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseAuthentication();
             app.UseIdentityServer();
             app.UseMvc();
         }
@@ -63,7 +63,9 @@ namespace Spike.AuthenticationServer.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API", claimTypes: new[] { "name", "email" })
+                new ApiResource(Configuration["JwtAudience"],
+                "My API",
+                claimTypes: new[] { "name", "email", ClaimTypes.Role })
             };
         }
 
@@ -81,7 +83,7 @@ namespace Spike.AuthenticationServer.IdentityServer
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { Configuration["JwtAudience"] }
                 },
 
                 // resource owner password grant client
@@ -89,12 +91,12 @@ namespace Spike.AuthenticationServer.IdentityServer
                 {
                     ClientId = "ro.client",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
+                    AccessTokenLifetime = int.Parse(Configuration["JwtExpireMinutes"]) * 60,
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(Configuration["JwtKey"].Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { Configuration["JwtAudience"]}
                 }
             };
         }
