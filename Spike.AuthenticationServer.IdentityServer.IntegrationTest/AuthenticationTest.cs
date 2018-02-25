@@ -1,4 +1,5 @@
 using IdentityModel.Client;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -7,11 +8,13 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
     public class AuthenticationTest : IClassFixture<AuthenticationFixture>
     {
         private AuthenticationFixture fixture;
-        private string secret = "secret";
-        private string apiScope = "api1";
+        private string secret;
+        private string apiScope;
         public AuthenticationTest(AuthenticationFixture fixture)
         {
             this.fixture = fixture;
+            secret = this.fixture.Configuration["SpikeSecret"];
+            apiScope = this.fixture.Configuration["SpikeAudience"];
         }
 
         [Fact]
@@ -19,17 +22,13 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
         public async Task ShouldAuthenticateWhenUsingResourceOwnerPassword()
         {
             // arrange
-            var clientId = "ro.client";
-            var username = "embe2sc@gmail.com";
-            var password = "TestMB123!";
-            DiscoveryResponse discovery;
             TokenResponse tokenResponse;
+            var clientId = fixture.Configuration["SpikeClientId"];
+            var username = fixture.Configuration["SpikeTestUsername"];
+            var password = fixture.Configuration["SpikeTestPassword"];
             var handler = fixture.server.CreateHandler();
+            DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
             // act
-            using (var discoveryClient = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, handler))
-            {
-                discovery = await discoveryClient.GetAsync();
-            }
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {
                 tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
@@ -44,15 +43,11 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
         public async Task ShouldAuthenticateWhenUsingClientCredential()
         {
             // arrange
-            var clientId = "client";
-            DiscoveryResponse discovery;
             TokenResponse tokenResponse;
+            var clientId = "client";
             var handler = fixture.server.CreateHandler();
+            DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
             // act
-            using (var discoveryClient = new DiscoveryClient(fixture.server.BaseAddress.AbsoluteUri, handler))
-            {
-                discovery = await discoveryClient.GetAsync();
-            }
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {
                 tokenResponse = await tokenClient.RequestClientCredentialsAsync(apiScope);
@@ -60,6 +55,14 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             // assert
             Assert.False(tokenResponse.IsError);
             Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
+        }
+
+        private async Task<DiscoveryResponse> GetDiscoveryResponse(HttpMessageHandler handler)
+        {
+            using (var discoveryClient = new DiscoveryClient(fixture.Configuration["JwtIssuer"], handler))
+            {
+                return await discoveryClient.GetAsync();
+            }
         }
     }
 }
