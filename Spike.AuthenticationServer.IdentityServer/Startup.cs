@@ -63,7 +63,7 @@ namespace Spike.AuthenticationServer.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource(Configuration["JwtAudience"],
+                new ApiResource(Configuration["SpikeAudience"],
                 "My API",
                 claimTypes: new[] { "name", "email", ClaimTypes.Role })
             };
@@ -81,22 +81,22 @@ namespace Spike.AuthenticationServer.IdentityServer
 
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(Configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { Configuration["JwtAudience"] }
+                    AllowedScopes = { Configuration["SpikeAudience"] }
                 },
 
                 // resource owner password grant client
                 new Client
                 {
-                    ClientId = "ro.client",
+                    ClientId = Configuration["SpikeClientId"],
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-                    AccessTokenLifetime = int.Parse(Configuration["JwtExpireMinutes"]) * 60,
+                    AccessTokenLifetime = int.Parse(Configuration["JwtExpireSeconds"]),
                     ClientSecrets =
                     {
-                        new Secret(Configuration["JwtKey"].Sha256())
+                        new Secret(Configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { Configuration["JwtAudience"]}
+                    AllowedScopes = { Configuration["SpikeAudience"] }
                 }
             };
         }
