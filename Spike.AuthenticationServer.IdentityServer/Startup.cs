@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using EFCoreSpike5.Models;
 using IdentityServer4.Models;
@@ -65,7 +66,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             {
                 new ApiResource(Configuration["SpikeAudience"],
                 "My API",
-                claimTypes: new[] { "name", "email", ClaimTypes.Role })
+                claimTypes: new[] { "name", JwtRegisteredClaimNames.Email, ClaimTypes.Role, JwtRegisteredClaimNames.Birthdate })
             };
         }
 
