@@ -38,10 +38,10 @@ namespace Spike.WebApi
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:53702";
+                    options.Authority = Configuration["JwtIssuer"];
                     options.RequireHttpsMetadata = false;
 
-                    options.ApiName = Configuration["JwtAudience"];
+                    options.ApiName = Configuration["SpikeAudience"];
                 });
 
             services.AddAuthorization(options =>
