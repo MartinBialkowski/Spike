@@ -97,7 +97,8 @@ namespace Spike.AuthenticationServer.IdentityServer
                     {
                         new Secret(Configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { Configuration["SpikeAudience"] }
+                    AllowedScopes = { Configuration["SpikeAudience"] },
+                    AllowOfflineAccess = true
                 }
             };
         }
