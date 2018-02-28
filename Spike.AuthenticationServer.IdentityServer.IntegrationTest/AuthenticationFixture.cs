@@ -9,6 +9,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
     public class AuthenticationFixture : IDisposable
     {
         public readonly TestServer server;
+        public IConfiguration Configuration;
         private string configFileName = "appsettings.json";
 
         public AuthenticationFixture()
@@ -16,10 +17,11 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             var builder = new ConfigurationBuilder()
                 .SetBasePath(GetFullPathToTestConfigFile())
                 .AddJsonFile(configFileName, optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
+            Configuration = builder.Build();
 
             server = new TestServer(new WebHostBuilder()
-                .UseConfiguration(configuration)
+                .UseUrls(Configuration["JwtIssuer"])
+                .UseConfiguration(Configuration)
                 .UseStartup<Startup>());
         }
 

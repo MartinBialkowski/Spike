@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using EFCoreSpike5.Models;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +36,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             .AddEntityFrameworkStores<EFCoreSpikeContext>()
             .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryApiResources(GetResources())
@@ -53,7 +55,6 @@ namespace Spike.AuthenticationServer.IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseAuthentication();
             app.UseIdentityServer();
             app.UseMvc();
         }
@@ -63,7 +64,9 @@ namespace Spike.AuthenticationServer.IdentityServer
         {
             return new List<ApiResource>
             {
-                new ApiResource("api1", "My API", claimTypes: new[] { "name", "email" })
+                new ApiResource(Configuration["SpikeAudience"],
+                "My API",
+                claimTypes: new[] { "name", JwtRegisteredClaimNames.Email, ClaimTypes.Role, JwtRegisteredClaimNames.Birthdate })
             };
         }
 
@@ -79,22 +82,23 @@ namespace Spike.AuthenticationServer.IdentityServer
 
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(Configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { Configuration["SpikeAudience"] }
                 },
 
                 // resource owner password grant client
                 new Client
                 {
-                    ClientId = "ro.client",
+                    ClientId = Configuration["SpikeClientId"],
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
-
+                    AccessTokenLifetime = int.Parse(Configuration["JwtExpireSeconds"]),
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(Configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = { Configuration["SpikeAudience"] },
+                    AllowOfflineAccess = true
                 }
             };
         }

@@ -1,15 +1,12 @@
 ﻿using Autofac.Extensions.DependencyInjection;
 using EFCoreSpike5.Models;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Spike.WebApi.Types.DTOs;
 using System;
 using System.IO;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Spike.WebApi.IntegrationTest
@@ -19,47 +16,49 @@ namespace Spike.WebApi.IntegrationTest
         public readonly TestServer server;
         public readonly EFCoreSpikeContext context;
         public string authenticationToken;
-        private HttpClient client;
+        public IConfiguration Configuration;
         private string configFileName = "appsettings.json";
         public ControllerFixture()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(GetFullPathToTestConfigFile())
                 .AddJsonFile(configFileName, optional: false, reloadOnChange: true);
-            var configuration = builder.Build();
+            Configuration = builder.Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<EFCoreSpikeContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             context = new EFCoreSpikeContext(optionsBuilder.Options);
 
             server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services => services.AddAutofac())
-                .UseConfiguration(configuration)
+                .UseConfiguration(Configuration)
                 .UseStartup<Startup>());
 
             var getTokenTask = GetAuthorizationToken();
-            authenticationToken = getTokenTask.Result;
+            authenticationToken = getTokenTask.Result.AccessToken;
         }
         public void Dispose()
         {
         }
 
-        private async Task<string> GetAuthorizationToken()
+        private async Task<TokenResponse> GetAuthorizationToken()
         {
-            string requestMediaType = "application/json";
-            using (client = server.CreateClient())
+            TokenResponse tokenResponse;
+            var clientId = Configuration["SpikeClientId"];
+            var username = Configuration["SpikeTestUsername"];
+            var password = Configuration["SpikeTestPassword"];
+            var secret = Configuration["SpikeSecret"];
+            var apiScope = Configuration["SpikeAudience"];
+            DiscoveryResponse discovery;
+
+            using (var discoveryClient = new DiscoveryClient(Configuration["JwtIssuer"]))
             {
-                var loginUrl = "api/account/login";
-                var userCredential = new UserDTO()
-                {
-                    Email = "embe2sc@gmail.com",
-                    Password = "TestMB123!"
-                };
-                string userJson = JsonConvert.SerializeObject(userCredential);
-                var content = new StringContent(userJson, Encoding.UTF8, requestMediaType);
-                HttpResponseMessage httpResponse = await client.PostAsync(loginUrl, content);
-                var response = await httpResponse.Content.ReadAsStringAsync();
-                return response.Trim('"');
+                discovery = await discoveryClient.GetAsync();
+            }
+
+            using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret))
+            {
+                return tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
             }
         }
 

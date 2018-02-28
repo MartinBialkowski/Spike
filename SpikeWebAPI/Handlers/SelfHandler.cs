@@ -10,7 +10,8 @@ namespace Spike.WebApi.Handlers
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SelfRequirement requirement, Student resource)
         {
-            if (context.User.FindFirst(JwtRegisteredClaimNames.Sub).Value == resource.Name)
+            // hack for show purpose I've changed student name to email
+            if (context.User.FindFirst(JwtRegisteredClaimNames.Email).Value == resource.Name)
             {
                 context.Succeed(requirement);
             }
