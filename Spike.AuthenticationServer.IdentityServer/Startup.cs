@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using EFCoreSpike5.Models;
 using IdentityServer4.Models;
@@ -35,14 +36,25 @@ namespace Spike.AuthenticationServer.IdentityServer
             })
             .AddEntityFrameworkStores<EFCoreSpikeContext>()
             .AddDefaultTokenProviders();
-
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
-                .AddInMemoryApiResources(GetResources())
-                .AddInMemoryIdentityResources(GetIdentityResources())
-                .AddInMemoryClients(GetClients())
-                .AddAspNetIdentity<IdentityUser>();
+                .AddAspNetIdentity<IdentityUser>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder =>
+                    builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = builder =>
+                        builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                        sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = int.Parse(Configuration["TokenCleanupSeconds"]);
+                });
 
             services.AddMvc();
         }
