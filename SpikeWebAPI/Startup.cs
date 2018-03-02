@@ -122,7 +122,6 @@ namespace Spike.WebApi
                         }
                     });
               });
-            app.UseAuthentication();
 
             app.UseMvc();
         }
