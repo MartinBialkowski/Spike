@@ -44,13 +44,13 @@ namespace Spike.AuthenticationServer.IdentityServer
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(Configuration.GetConnectionString("IdentityServerConfigureConnection"),
+                        builder.UseSqlServer(Configuration.GetConnectionString("IdentityServerConnectionString"),
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(Configuration.GetConnectionString("IdentityServerGrantsConnection"),
+                        builder.UseSqlServer(Configuration.GetConnectionString("IdentityServerConnectionString"),
                         sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = int.Parse(Configuration["TokenCleanupSeconds"]);
