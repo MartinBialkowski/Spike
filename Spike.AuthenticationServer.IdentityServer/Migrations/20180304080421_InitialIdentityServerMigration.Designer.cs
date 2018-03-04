@@ -11,8 +11,8 @@ using System;
 namespace Spike.AuthenticationServer.IdentityServer.Migrations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20180301191300_IdentityServerConfiguration")]
-    partial class IdentityServerConfiguration
+    [Migration("20180304080421_InitialIdentityServerMigration")]
+    partial class InitialIdentityServerMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
