@@ -10,8 +10,8 @@ using System;
 namespace Spike.AuthenticationServer.IdentityServer.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20180301192224_IdentityServerTokens")]
-    partial class IdentityServerTokens
+    [Migration("20180304080432_InitialIdentityServerMigration")]
+    partial class InitialIdentityServerMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

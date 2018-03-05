@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Spike.AuthenticationServer.IdentityServer.Migrations
 {
-    public partial class IdentityServerConfiguration : Migration
+    public partial class InitialIdentityServerMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

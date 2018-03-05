@@ -2,7 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>fdee6335-f873-442c-8e82-b568b910a438</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20180301191300_IdentityServerConfiguration.cs" />
+    <Compile Remove="Migrations\20180301191300_IdentityServerConfiguration.Designer.cs" />
+    <Compile Remove="Migrations\20180304080025_InitialIdentityServerMigration.cs" />
+    <Compile Remove="Migrations\20180304080025_InitialIdentityServerMigration.Designer.cs" />
+    <Compile Remove="Migrations\PersistedGrantDb\20180301192224_IdentityServerTokens.cs" />
+    <Compile Remove="Migrations\PersistedGrantDb\20180301192224_IdentityServerTokens.Designer.cs" />
+    <Compile Remove="Migrations\PersistedGrantDb\20180304080046_InitialIdentityServerMigration.cs" />
+    <Compile Remove="Migrations\PersistedGrantDb\20180304080046_InitialIdentityServerMigration.Designer.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />

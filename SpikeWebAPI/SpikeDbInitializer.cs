@@ -1,4 +1,5 @@
 ﻿using EFCoreSpike5.Models;
+using Microsoft.EntityFrameworkCore;
 using Spike.Core.Entity;
 using System;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Spike.WebApi
         public static void Initialize(IServiceProvider serviceProvider)
         {
             context = (EFCoreSpikeContext)serviceProvider.GetService(typeof(EFCoreSpikeContext));
-            context.Database.EnsureCreated();
+            context.Database.Migrate();
             InitilizeDatabase();
         }
 
