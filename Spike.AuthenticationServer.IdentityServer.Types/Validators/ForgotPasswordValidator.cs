@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Spike.WebApi.Types.DTOs;
+using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
-namespace Spike.WebApi.Types.Validators
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators
 {
     public class ForgotPasswordValidator : AbstractValidator<ForgotPasswordDTO>
     {

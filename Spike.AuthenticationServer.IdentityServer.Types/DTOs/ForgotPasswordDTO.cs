@@ -1,4 +1,4 @@
-﻿namespace Spike.WebApi.Types.DTOs
+﻿namespace Spike.AuthenticationServer.IdentityServer.Types.DTOs
 {
     public class ForgotPasswordDTO
     {
