@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Spike.WebApi.Controllers;
+using Spike.AuthenticationServer.IdentityServer.Controllers;
 
-namespace Spike.WebApi.Extensions
+namespace Spike.AuthenticationServer.IdentityServer.Extensions
 {
     public static class UrlExtension
     {

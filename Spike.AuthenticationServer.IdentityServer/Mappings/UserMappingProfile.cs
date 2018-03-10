@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Spike.WebApi.Types.DTOs;
+using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
-namespace Spike.WebApi.Mappings
+namespace Spike.AuthenticationServer.IdentityServer.Mappings
 {
     public class UserMappingProfile: Profile
     {

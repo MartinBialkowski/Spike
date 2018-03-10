@@ -5,8 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Spike.Backend.Interface.Contact;
-using Spike.WebApi.Extensions;
-using Spike.WebApi.Types.DTOs;
+using Spike.AuthenticationServer.IdentityServer.Extensions;
+using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spike.WebApi.Controllers
+namespace Spike.AuthenticationServer.IdentityServer.Controllers
 {
     [Authorize]
     [Produces("application/json")]

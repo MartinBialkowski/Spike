@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -34,6 +33,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
+    <ProjectReference Include="..\Infrastructure\Spike.Backend.Interface.csproj" />
+    <ProjectReference Include="..\Spike.AuthenticationServer.IdentityServer.Types\Spike.AuthenticationServer.IdentityServer.Types.csproj" />
   </ItemGroup>
 
 </Project>
