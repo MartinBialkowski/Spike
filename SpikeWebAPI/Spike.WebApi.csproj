@@ -38,10 +38,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFCoreSpike5\Spike.Core.csproj" />
-    <ProjectReference Include="..\Infrastructure\Spike.Backend.Interface.csproj" />
     <ProjectReference Include="..\Spike.Core.Interface\Spike.Core.Interface.csproj" />
     <ProjectReference Include="..\Spike.WebApi.Types\Spike.WebApi.Types.csproj" />
-    <ProjectReference Include="..\SpikeConnectProviders\Spike.Backend.Connect.csproj" />
     <ProjectReference Include="..\SpikeRepo\Spike.Infrastructure.csproj" />
   </ItemGroup>
 
