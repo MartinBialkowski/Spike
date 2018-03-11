@@ -9,4 +9,8 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.3.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Spike.AuthenticationServer.IdentityServer.Types\Spike.AuthenticationServer.IdentityServer.Types.csproj" />
+  </ItemGroup>
+
 </Project>
