@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Security.Claims;
+﻿using System.Reflection;
+using Autofac;
 using EFCoreSpike5.Models;
-using IdentityServer4.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Spike.AuthenticationServer.IdentityServer.Modules;
+using Spike.Backend.Connect.Model;
 
 namespace Spike.AuthenticationServer.IdentityServer
 {
@@ -56,10 +56,19 @@ namespace Spike.AuthenticationServer.IdentityServer
                     options.TokenCleanupInterval = int.Parse(Configuration["TokenCleanupSeconds"]);
                 });
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation();
+
+            services.Configure<SendGridOptions>(Configuration);
 
             var serviceProvider = services.BuildServiceProvider();
             IdentityServerDbInitialize.Initialize(serviceProvider, Configuration);
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ValidatorModule());
+            builder.RegisterModule(new SenderProviderModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
