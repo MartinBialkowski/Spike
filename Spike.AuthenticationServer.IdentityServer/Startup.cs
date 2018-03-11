@@ -61,8 +61,8 @@ namespace Spike.AuthenticationServer.IdentityServer
 
             services.Configure<SendGridOptions>(Configuration);
 
-            var serviceProvider = services.BuildServiceProvider();
-            IdentityServerDbInitialize.Initialize(serviceProvider, Configuration);
+            //var serviceProvider = services.BuildServiceProvider();
+            //IdentityServerDbInitialize.Initialize(serviceProvider, Configuration);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
