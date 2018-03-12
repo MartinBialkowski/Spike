@@ -14,12 +14,12 @@ namespace Spike.AuthenticationServer.IdentityServer
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .ConfigureLogging((hostingContext, builder) =>
-            {
-                var configuration = hostingContext.Configuration.GetSection("Logging");
-                builder.AddFile(configuration);
-            })
-            .ConfigureServices(services => services.AddAutofac())
+                .ConfigureLogging((hostingContext, builder) =>
+                {
+                    var configuration = hostingContext.Configuration.GetSection("Logging");
+                    builder.AddFile(configuration);
+                })
+                .ConfigureServices(services => services.AddAutofac())
                 .UseStartup<Startup>()
                 .Build();
     }
