@@ -17,10 +17,10 @@ namespace Spike.AuthenticationServer.IdentityServer
         private static ConfigurationDbContext configurationDbContext;
         public static void Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
         {
-            grantDbContext = (PersistedGrantDbContext)serviceProvider.GetService(typeof(PersistedGrantDbContext));
-            grantDbContext.Database.Migrate();
             configurationDbContext = (ConfigurationDbContext)serviceProvider.GetService(typeof(ConfigurationDbContext));
             configurationDbContext.Database.Migrate();
+            //grantDbContext = (PersistedGrantDbContext)serviceProvider.GetService(typeof(PersistedGrantDbContext));
+            //grantDbContext.Database.Migrate();
             InitilizeDatabase(configuration);
         }
 
