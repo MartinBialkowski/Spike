@@ -66,9 +66,6 @@ namespace Spike.AuthenticationServer.IdentityServer
                 .AddFluentValidation();
 
             services.Configure<SendGridOptions>(Configuration);
-
-            var serviceProvider = services.BuildServiceProvider();
-            IdentityServerDbInitialize.Initialize(serviceProvider, Configuration);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -82,6 +79,7 @@ namespace Spike.AuthenticationServer.IdentityServer
         {
             if (env.IsDevelopment())
             {
+                IdentityServerDbInitialize.Initialize(app, Configuration);
                 app.UseDeveloperExceptionPage();
             }
 
