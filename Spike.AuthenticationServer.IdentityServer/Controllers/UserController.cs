@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Spike.WebApi.Types.DTOs;
+using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
-namespace Spike.WebApi.Controllers
+namespace Spike.AuthenticationServer.IdentityServer.Controllers
 {
     [Authorize]
     [Produces("application/json")]

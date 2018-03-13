@@ -2,7 +2,7 @@
 using Spike.Backend.Interface.Contact;
 using Spike.Backend.Connect;
 
-namespace Spike.WebApi.Modules
+namespace Spike.AuthenticationServer.IdentityServer.Modules
 {
     public class SenderProviderModule : Module
     {

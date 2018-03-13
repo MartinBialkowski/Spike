@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Security.Claims;
+﻿using Autofac;
 using EFCoreSpike5.Models;
-using IdentityServer4.Models;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Spike.AuthenticationServer.IdentityServer.Modules;
+using Spike.Backend.Connect.Model;
+using Swashbuckle.AspNetCore.Swagger;
+using System.Reflection;
 
 namespace Spike.AuthenticationServer.IdentityServer
 {
@@ -56,10 +57,24 @@ namespace Spike.AuthenticationServer.IdentityServer
                     options.TokenCleanupInterval = int.Parse(Configuration["TokenCleanupSeconds"]);
                 });
 
-            services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Spike Authentication Server", Version = "v1" });
+            });
+
+            services.AddMvc()
+                .AddFluentValidation();
+
+            services.Configure<SendGridOptions>(Configuration);
 
             var serviceProvider = services.BuildServiceProvider();
             IdentityServerDbInitialize.Initialize(serviceProvider, Configuration);
+        }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ValidatorModule());
+            builder.RegisterModule(new SenderProviderModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +84,12 @@ namespace Spike.AuthenticationServer.IdentityServer
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Authentication Server");
+            });
 
             app.UseIdentityServer();
             app.UseMvc();

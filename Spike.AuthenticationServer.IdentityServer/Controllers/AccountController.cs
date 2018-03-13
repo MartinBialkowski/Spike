@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Spike.AuthenticationServer.IdentityServer.Extensions;
+using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 using Spike.Backend.Interface.Contact;
-using Spike.WebApi.Extensions;
-using Spike.WebApi.Types.DTOs;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,7 +14,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spike.WebApi.Controllers
+namespace Spike.AuthenticationServer.IdentityServer.Controllers
 {
     [Authorize]
     [Produces("application/json")]
@@ -43,32 +43,6 @@ namespace Spike.WebApi.Controllers
             this.logger = logger;
         }
 
-        // POST: account/login
-        [HttpPost("login")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(string), 400)]
-        [ProducesResponseType(typeof(void), 401)]
-        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
-        {
-            logger.LogDebug("{@User} try to login", new { User = userDTO });
-            if (!ModelState.IsValid)
-            {
-                logger.LogWarning("User sent invalid credentials");
-                return BadRequest(ModelState);
-            }
-
-            var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, false, false);
-            if (result.Succeeded)
-            {
-                var user = await userManager.FindByEmailAsync(userDTO.Email);
-                logger.LogInformation("User {userId} logged into application", new { userId = user.Id });
-                return Ok(await GenerateJwtToken(user));
-            }
-            logger.LogWarning("User unable to login");
-            return Unauthorized();
-        }
-
         // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
@@ -95,8 +69,7 @@ namespace Spike.WebApi.Controllers
                 logger.LogInformation("User {userId} registered successfully", new { userId = user.Id });
                 await SendConfirmationEmail(user);
                 await AssignBasicClaims(user);
-                var jwt = await GenerateJwtToken(user);
-                return Ok(jwt);
+                return Ok();
             }
             else
             {
@@ -104,17 +77,6 @@ namespace Spike.WebApi.Controllers
                 logger.LogDebug("Cannot register {@User}, {@errors}", new { User = user }, new { errors = result.Errors });
                 return BadRequest(result.Errors);
             }
-        }
-
-        // GET: account/refresh
-        [HttpGet("refresh")]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(void), 401)]
-        public async Task<IActionResult> RefreshToken()
-        {
-            var user = await GetUserFromClaim();
-            logger.LogInformation("user {userId}, prolonged token", new { userId = user.Id });
-            return Ok(await GenerateJwtToken(user));
         }
 
         // GET: account/confirm
@@ -205,6 +167,45 @@ namespace Spike.WebApi.Controllers
             return NoContent();
         }
 
+        // POST: account/login
+        [Obsolete("Use Identity Server 4 login implementation")]
+        [HttpPost("login")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
+        {
+            logger.LogDebug("{@User} try to login", new { User = userDTO });
+            if (!ModelState.IsValid)
+            {
+                logger.LogWarning("User sent invalid credentials");
+                return BadRequest(ModelState);
+            }
+
+            var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, false, false);
+            if (result.Succeeded)
+            {
+                var user = await userManager.FindByEmailAsync(userDTO.Email);
+                logger.LogInformation("User {userId} logged into application", new { userId = user.Id });
+                return Ok(await GenerateJwtToken(user));
+            }
+            logger.LogWarning("User unable to login");
+            return Unauthorized();
+        }
+
+        // GET: account/refresh
+        [Obsolete("Use Identity Server 4 implementation of refresh token")]
+        [HttpGet("refresh")]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(void), 401)]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var user = await GetUserFromClaim();
+            logger.LogInformation("user {userId}, prolonged token", new { userId = user.Id });
+            return Ok(await GenerateJwtToken(user));
+        }
+
         private async Task SendConfirmationEmail(IdentityUser user)
         {
             var confirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -224,6 +225,7 @@ namespace Spike.WebApi.Controllers
             return await userManager.AddClaimsAsync(user, claims);
         }
 
+        [Obsolete("Method used for old login, left for tutorial purpose")]
         private async Task<string> GenerateJwtToken(IdentityUser user)
         {
             var claims = await PrepareClaims(user);
@@ -243,6 +245,7 @@ namespace Spike.WebApi.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        [Obsolete("Method used for old login, left for tutorial purpose")]
         private async Task<IList<Claim>> PrepareClaims(IdentityUser user)
         {
             var claims = await userManager.GetClaimsAsync(user);
@@ -252,6 +255,7 @@ namespace Spike.WebApi.Controllers
             return claims;
         }
 
+        [Obsolete("Method used for old login, left for tutorial purpose")]
         private async Task<IdentityUser> GetUserFromClaim()
         {
             string email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -20,6 +21,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             Configuration = builder.Build();
 
             server = new TestServer(new WebHostBuilder()
+                .ConfigureServices(services => services.AddAutofac())
                 .UseUrls(Configuration["JwtIssuer"])
                 .UseConfiguration(Configuration)
                 .UseStartup<Startup>());

@@ -1,8 +1,8 @@
-﻿using Spike.WebApi.Types.DTOs;
-using Spike.WebApi.Types.Validators;
+﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
+using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.WebApi.Types.Validators.Test
+namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
 {
     public class ClaimValidatorTest
     {

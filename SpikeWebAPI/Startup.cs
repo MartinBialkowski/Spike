@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Spike.Backend.Connect.Model;
 using Spike.WebApi.Modules;
 using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
@@ -70,8 +69,6 @@ namespace Spike.WebApi
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
-            services.Configure<SendGridOptions>(Configuration);
-
             var serviceProvider = services.BuildServiceProvider();
             SpikeDbInitializer.Initialize(serviceProvider);
         }
@@ -80,13 +77,11 @@ namespace Spike.WebApi
         {
             builder.RegisterModule(new RepositoryModule(Configuration["AutofacConfig:RepositoryConfig"]));
             builder.RegisterModule(new AutoMapperModule());
-            builder.RegisterModule(new ValidatorModule());
-            builder.RegisterModule(new SenderProviderModule());
             builder.RegisterModule(new AuthorizationHandlerModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EFCoreSpikeContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -123,6 +118,7 @@ namespace Spike.WebApi
                     });
               });
 
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
