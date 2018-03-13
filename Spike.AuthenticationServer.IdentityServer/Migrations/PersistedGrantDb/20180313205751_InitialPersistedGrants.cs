@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Spike.AuthenticationServer.IdentityServer.Migrations.PersistedGrantDb
 {
-    public partial class InitialIdentityServerMigration : Migration
+    public partial class InitialPersistedGrants : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
