@@ -68,9 +68,6 @@ namespace Spike.WebApi
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
-
-            var serviceProvider = services.BuildServiceProvider();
-            SpikeDbInitializer.Initialize(serviceProvider);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -85,6 +82,7 @@ namespace Spike.WebApi
         {
             if (env.IsDevelopment())
             {
+                SpikeDbInitializer.Initialize(app);
                 app.UseDeveloperExceptionPage();
             }
 

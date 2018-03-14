@@ -1,8 +1,10 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,13 +17,16 @@ namespace Spike.AuthenticationServer.IdentityServer
     {
         private static PersistedGrantDbContext grantDbContext;
         private static ConfigurationDbContext configurationDbContext;
-        public static void Initialize(IServiceProvider serviceProvider, IConfiguration configuration)
+        public static void Initialize(IApplicationBuilder app, IConfiguration configuration)
         {
-            configurationDbContext = (ConfigurationDbContext)serviceProvider.GetService(typeof(ConfigurationDbContext));
-            configurationDbContext.Database.Migrate();
-            //grantDbContext = (PersistedGrantDbContext)serviceProvider.GetService(typeof(PersistedGrantDbContext));
-            //grantDbContext.Database.Migrate();
-            InitilizeDatabase(configuration);
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                configurationDbContext.Database.Migrate();
+                grantDbContext = serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();
+                grantDbContext.Database.Migrate();
+                InitilizeDatabase(configuration);
+            }
         }
 
         private static void InitilizeDatabase(IConfiguration configuration)

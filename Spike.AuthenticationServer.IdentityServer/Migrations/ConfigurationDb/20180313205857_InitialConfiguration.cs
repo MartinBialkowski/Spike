@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace Spike.AuthenticationServer.IdentityServer.Migrations
+namespace Spike.AuthenticationServer.IdentityServer.Migrations.ConfigurationDb
 {
-    public partial class InitialIdentityServerMigration : Migration
+    public partial class InitialConfiguration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,5 +1,7 @@
 ﻿using EFCoreSpike5.Models;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Spike.Core.Entity;
 using System;
 using System.Linq;
@@ -9,11 +11,15 @@ namespace Spike.WebApi
     public class SpikeDbInitializer
     {
         private static EFCoreSpikeContext context;
-        public static void Initialize(IServiceProvider serviceProvider)
+
+        public static void Initialize(IApplicationBuilder app)
         {
-            context = (EFCoreSpikeContext)serviceProvider.GetService(typeof(EFCoreSpikeContext));
-            context.Database.Migrate();
-            InitilizeDatabase();
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                context = serviceScope.ServiceProvider.GetRequiredService<EFCoreSpikeContext>();
+                context.Database.Migrate();
+                InitilizeDatabase();
+            }
         }
 
         private static void InitilizeDatabase()
