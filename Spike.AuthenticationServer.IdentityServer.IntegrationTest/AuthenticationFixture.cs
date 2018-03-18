@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
 {

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -34,14 +35,23 @@ namespace Spike.WebApi
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = Configuration["JwtIssuer"];
-                    options.RequireHttpsMetadata = false;
-
-                    options.ApiName = Configuration["SpikeAudience"];
-                });
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme,
+            options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.Authority = Configuration["JwtIssuer"];
+                options.ApiSecret = Configuration["ScopeReferenceSecret"];
+                options.ApiName = Configuration["SpikeReferenceAudience"];
+                options.EnableCaching = true;
+                options.SupportedTokens = SupportedTokens.Both;
+                options.SaveToken = true;
+                options.ClaimsIssuer = Configuration["JwtIssuer"];
+            });
 
             services.AddAuthorization(options =>
             {

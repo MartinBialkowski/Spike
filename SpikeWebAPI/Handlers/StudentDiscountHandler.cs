@@ -4,6 +4,7 @@ using Spike.WebApi.Requirements;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Spike.WebApi.Handlers
 {
