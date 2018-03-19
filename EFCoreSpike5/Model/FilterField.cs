@@ -30,7 +30,7 @@ namespace Spike.Core.Model
             }
         }
         public Type PropertyType { get; set; }
-        protected Type ModelType { get; private set; }
+        protected Type ModelType { get; }
         private string propertyName;
         private object filterValue;
 
