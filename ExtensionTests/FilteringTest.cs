@@ -1,9 +1,8 @@
-﻿using Spike.Core.Model;
-using Spike.Infrastructure.Extension;
-using System.Linq;
+﻿using System.Linq;
+using Spike.Core.Model;
 using Xunit;
 
-namespace ExtensionTests
+namespace Spike.Infrastructure.Extension.Test
 {
     public class FilteringTest
     {
@@ -38,8 +37,8 @@ namespace ExtensionTests
         public void ShouldReturnEveryElement()
         {
             // arrange
-            var propertyName = "Name";
-            var filterValue = "TestName";
+            const string propertyName = "Name";
+	        const string filterValue = "TestName";
             var filterField = new FilterField<TestModel>(propertyName, filterValue);
             var testData = ModelHelper.GetTestData().AsQueryable();
             var expectedData = testData.Where(t => t.Name.Contains(filterValue));
@@ -52,9 +51,9 @@ namespace ExtensionTests
         [Fact]
         public void ShouldReturnFilteredDataWhenNonStringFilteringFieldProvided()
         {
-            // arrange
-            var propertyName = "IsEven";
-            var filterValue = true;
+			// arrange
+	        const string propertyName = "IsEven";
+            const bool filterValue = true;
             var filterField = new FilterField<TestModel>(propertyName, filterValue);
             var testData = ModelHelper.GetTestData().AsQueryable();
             var expectedData = testData.Where(t => t.IsEven == (filterValue));
@@ -68,8 +67,8 @@ namespace ExtensionTests
         public void ShouldSupportMultipleFiltering()
         {
             // arrange
-            var isEvenFilterValue = true;
-            var nameFilterValue = "TestName_6";
+            const bool isEvenFilterValue = true;
+	        const string nameFilterValue = "TestName_6";
             var filterFields = new FilterField<TestModel>[2];
             filterFields[0] = new FilterField<TestModel>()
             {

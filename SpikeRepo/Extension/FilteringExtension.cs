@@ -12,12 +12,7 @@ namespace Spike.Infrastructure.Extension
 
         public static IQueryable<T> Filter<T>(this FilterField<T>[] filterFields, IQueryable<T> query) where T : class
         {
-            IQueryable<T> filteredData = query;
-            foreach (var filterField in filterFields)
-            {
-                filteredData = filterField.Filter(filteredData);
-            }
-            return filteredData;
+	        return filterFields.Aggregate(query, (current, filterField) => filterField.Filter(current));
         }
     }
 }

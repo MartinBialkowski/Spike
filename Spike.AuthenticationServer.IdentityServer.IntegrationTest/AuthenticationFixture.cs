@@ -9,18 +9,18 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
 {
     public class AuthenticationFixture : IDisposable
     {
-        public readonly TestServer server;
+        public readonly TestServer Server;
         public IConfiguration Configuration;
-        private string configFileName = "appsettings.json";
+	    private const string configFileName = "appsettings.json";
 
-        public AuthenticationFixture()
+	    public AuthenticationFixture()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(GetFullPathToTestConfigFile())
                 .AddJsonFile(configFileName, optional: false, reloadOnChange: true);
             Configuration = builder.Build();
 
-            server = new TestServer(new WebHostBuilder()
+            Server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services => services.AddAutofac())
                 .UseUrls(Configuration["JwtIssuer"])
                 .UseConfiguration(Configuration)
@@ -29,10 +29,10 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
 
         public void Dispose()
         {
-            server.Dispose();
+            Server.Dispose();
         }
 
-        private string GetFullPathToTestConfigFile()
+        private static string GetFullPathToTestConfigFile()
         {
             return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".."));
         }

@@ -1,13 +1,12 @@
 ﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
-using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
 {
     public class ClaimValidatorTest
     {
-        private string validClaimType = "ClaimType";
-        private string validClaimValue = "ClaimValue";
+	    private const string validClaimType = "ClaimType";
+	    private const string validClaimValue = "ClaimValue";
 
         [Theory]
         [InlineData(null)]
@@ -17,13 +16,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ClaimValidator();
-            var assignmentDTO = new ClaimDTO()
+            var assignmentDto = new ClaimDto()
             {
                 Type = claimType,
                 Value = validClaimValue
             };
             // act
-            var result = validator.Validate(assignmentDTO);
+            var result = validator.Validate(assignmentDto);
             // assert
             Assert.False(result.IsValid);
         }
@@ -36,13 +35,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ClaimValidator();
-            var assignmentDTO = new ClaimDTO()
+            var assignmentDto = new ClaimDto()
             {
                 Value = claimValue,
                 Type = validClaimType
             };
             // act
-            var result = validator.Validate(assignmentDTO);
+            var result = validator.Validate(assignmentDto);
             // assert
             Assert.False(result.IsValid);
         }
@@ -52,13 +51,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ClaimValidator();
-            var assignmentDTO = new ClaimDTO()
+            var assignmentDto = new ClaimDto()
             {
                 Type = validClaimType,
                 Value = validClaimValue
             };
             // act
-            var result = validator.Validate(assignmentDTO);
+            var result = validator.Validate(assignmentDto);
             // assert
             Assert.True(result.IsValid);
         }

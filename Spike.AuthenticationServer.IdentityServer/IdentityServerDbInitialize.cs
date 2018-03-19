@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -13,7 +12,7 @@ using System.Security.Claims;
 
 namespace Spike.AuthenticationServer.IdentityServer
 {
-    public class IdentityServerDbInitialize
+	public class IdentityServerDbInitialize
     {
         private static PersistedGrantDbContext grantDbContext;
         private static ConfigurationDbContext configurationDbContext;

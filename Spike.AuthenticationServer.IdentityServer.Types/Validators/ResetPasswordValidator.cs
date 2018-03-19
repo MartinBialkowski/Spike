@@ -3,7 +3,7 @@ using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
 namespace Spike.AuthenticationServer.IdentityServer.Types.Validators
 {
-    public class ResetPasswordValidator : AbstractValidator<ResetPasswordDTO>
+    public class ResetPasswordValidator : AbstractValidator<ResetPasswordDto>
     {
         public ResetPasswordValidator()
         {

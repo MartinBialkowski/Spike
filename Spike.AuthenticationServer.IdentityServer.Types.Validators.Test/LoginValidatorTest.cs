@@ -1,13 +1,12 @@
 ﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
-using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
 {
     public class LoginValidatorTest
     {
-        private string validEmail = "test@test.com";
-        private string validPassword = "Password123";
+	    private const string validEmail = "test@test.com";
+	    private const string validPassword = "Password123";
 
         [Theory]
         [InlineData(null)]
@@ -18,7 +17,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDTO()
+            var login = new UserDto()
             {
                 Email = email,
                 Password = validPassword
@@ -37,7 +36,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDTO()
+            var login = new UserDto()
             {
                 Email = validEmail,
                 Password = password
@@ -53,7 +52,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDTO()
+            var login = new UserDto()
             {
                 Email = validEmail,
                 Password = validPassword

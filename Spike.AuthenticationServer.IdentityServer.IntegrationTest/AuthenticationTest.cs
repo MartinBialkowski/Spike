@@ -26,7 +26,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             var clientId = fixture.Configuration["SpikeClientId"];
             var username = fixture.Configuration["SpikeTestUsername"];
             var password = fixture.Configuration["SpikeTestPassword"];
-            var handler = fixture.server.CreateHandler();
+            var handler = fixture.Server.CreateHandler();
             DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
@@ -45,7 +45,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             // arrange
             TokenResponse tokenResponse;
             var clientId = "client";
-            var handler = fixture.server.CreateHandler();
+            var handler = fixture.Server.CreateHandler();
             DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))

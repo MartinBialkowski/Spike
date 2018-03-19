@@ -1,4 +1,4 @@
-﻿namespace ExtensionTests
+﻿namespace Spike.Infrastructure.Extension.Test
 {
     public static class ModelHelper
     {

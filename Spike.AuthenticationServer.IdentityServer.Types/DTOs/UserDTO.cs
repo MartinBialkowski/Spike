@@ -1,6 +1,6 @@
 ﻿namespace Spike.AuthenticationServer.IdentityServer.Types.DTOs
 {
-    public class UserDTO
+    public class UserDto
     {
         public string Email { get; set; }
         public string Password { get; set; }

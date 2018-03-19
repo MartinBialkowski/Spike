@@ -1,10 +1,9 @@
-﻿using Spike.Core.Model;
-using Spike.Infrastructure.Extension;
-using System;
+﻿using System;
 using System.Linq;
+using Spike.Core.Model;
 using Xunit;
 
-namespace ExtensionTests
+namespace Spike.Infrastructure.Extension.Test
 {
     public class SortingTest
     {
