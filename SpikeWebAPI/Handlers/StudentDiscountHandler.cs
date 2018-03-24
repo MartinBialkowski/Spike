@@ -4,7 +4,6 @@ using Spike.WebApi.Requirements;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace Spike.WebApi.Handlers
 {
@@ -19,7 +18,7 @@ namespace Spike.WebApi.Handlers
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, StudentDiscountRequirement requirement)
         {
-            if (!context.User.HasClaim(c => c.Issuer == configuration["JwtIssuer"] && c.Type == JwtRegisteredClaimNames.Birthdate))
+            if (!context.User.HasClaim(c => c.Type == JwtRegisteredClaimNames.Birthdate))
             {
                 return Task.CompletedTask;
             }
