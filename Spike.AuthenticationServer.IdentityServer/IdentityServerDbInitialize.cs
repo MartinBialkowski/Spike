@@ -113,7 +113,9 @@ namespace Spike.AuthenticationServer.IdentityServer
                     {
                         configuration["SpikeAudience"]
                     },
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    UpdateAccessTokenClaimsOnRefresh = true
                 },
 
                 // hybrid flow client
