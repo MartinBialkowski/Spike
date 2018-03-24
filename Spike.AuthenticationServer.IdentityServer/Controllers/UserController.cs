@@ -31,7 +31,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
             this.logger = logger;
         }
 
-        // POST: api/admin/claim
+        // POST: api/users/5/claim
         [HttpPost("{userId}/claim")]
         public async Task<IActionResult> AssignClaim(string userId, [FromBody] ClaimDTO claimDTO)
         {
