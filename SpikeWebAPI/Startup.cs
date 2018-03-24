@@ -14,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 using Spike.WebApi.Modules;
 using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 
@@ -35,22 +36,27 @@ namespace Spike.WebApi
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
                 o.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
             })
             .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme,
-            options =>
+            jwtOptions =>
             {
-                options.RequireHttpsMetadata = false;
-                options.Authority = Configuration["JwtIssuer"];
-                options.ApiSecret = Configuration["ScopeReferenceSecret"];
-                options.ApiName = Configuration["SpikeReferenceAudience"];
-                options.EnableCaching = true;
-                options.SupportedTokens = SupportedTokens.Both;
-                options.SaveToken = true;
-                options.ClaimsIssuer = Configuration["JwtIssuer"];
+                jwtOptions.Authority = Configuration["JwtIssuer"];
+                jwtOptions.Audience = Configuration["SpikeAudience"];
+                jwtOptions.RequireHttpsMetadata = false;
+                jwtOptions.SaveToken = true;
+            },
+            referenceOptions =>
+            {
+                referenceOptions.Authority = Configuration["JwtIssuer"];
+                referenceOptions.ClientId = Configuration["SpikeReferenceAudience"];
+                referenceOptions.ClientSecret = Configuration["ScopeReferenceSecret"];
+                referenceOptions.SaveToken = true;
             });
 
             services.AddAuthorization(options =>
