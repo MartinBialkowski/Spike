@@ -68,6 +68,7 @@ namespace Spike.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> GetStudent([FromRoute] int id)
         {
             if (!ModelState.IsValid)
