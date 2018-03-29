@@ -22,8 +22,8 @@ namespace Spike.WebApi.Handlers
             {
                 return Task.CompletedTask;
             }
-            DateTime birthDate = GetBirthDate(context);
-            int age = CalculateAge(birthDate);
+            var birthDate = GetBirthDate(context);
+            var age = CalculateAge(birthDate);
 
             if (age <= requirement.MaxAge)
             {
@@ -33,15 +33,15 @@ namespace Spike.WebApi.Handlers
             return Task.CompletedTask;
         }
 
-        private DateTime GetBirthDate(AuthorizationHandlerContext context)
+        private static DateTime GetBirthDate(AuthorizationHandlerContext context)
         {
             var birthClaim = context.User.FindFirst(c => c.Type == JwtRegisteredClaimNames.Birthdate);
             return Convert.ToDateTime(birthClaim.Value);
         }
 
-        private int CalculateAge(DateTime birthDate)
+        private static int CalculateAge(DateTime birthDate)
         {
-            int age = DateTime.Today.Year - birthDate.Year;
+            var age = DateTime.Today.Year - birthDate.Year;
             if (birthDate > DateTime.Today.AddYears(-age))
             {
                 age--;

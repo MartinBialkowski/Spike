@@ -7,9 +7,9 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
 {
     public class AuthenticationTest : IClassFixture<AuthenticationFixture>
     {
-        private AuthenticationFixture fixture;
-        private string secret;
-        private string apiScope;
+        private readonly AuthenticationFixture fixture;
+        private readonly string secret;
+        private readonly string apiScope;
         public AuthenticationTest(AuthenticationFixture fixture)
         {
             this.fixture = fixture;
@@ -27,7 +27,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             var username = fixture.Configuration["SpikeTestUsername"];
             var password = fixture.Configuration["SpikeTestPassword"];
             var handler = fixture.Server.CreateHandler();
-            DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
+            var discovery = await GetDiscoveryResponse(handler);
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {
@@ -44,9 +44,9 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
         {
             // arrange
             TokenResponse tokenResponse;
-            var clientId = "client";
+            const string clientId = "client";
             var handler = fixture.Server.CreateHandler();
-            DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
+            var discovery = await GetDiscoveryResponse(handler);
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {

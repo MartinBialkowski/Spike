@@ -19,7 +19,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDto()
+            var dto = new ResetPasswordDto
             {
                 Email = email,
                 Token = validToken,
@@ -40,7 +40,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDto()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = token,
@@ -61,7 +61,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDto()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,
@@ -79,7 +79,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDto()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,
@@ -97,7 +97,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDto()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,

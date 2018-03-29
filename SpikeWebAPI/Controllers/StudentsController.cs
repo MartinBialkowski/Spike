@@ -38,14 +38,14 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<IActionResult> GetStudents(PagingDTO pagingDto, StudentFilterDTO filterDto, string sort = "Id")
+        public async Task<IActionResult> GetStudents(PagingDto pagingDto, StudentFilterDto filterDto, string sort = "Id")
         {
             SortField<Student>[] sortFields;
             FilterField<Student>[] filterFields;
             try
             {
                 sortFields = mapper.Map<string, SortField<Student>[]>(sort);
-                filterFields = mapper.Map<StudentFilterDTO, FilterField<Student>[]>(filterDto);
+                filterFields = mapper.Map<StudentFilterDto, FilterField<Student>[]>(filterDto);
             }
             catch (Exception ex) when (ex is ArgumentException)
             {
@@ -59,7 +59,7 @@ namespace Spike.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var paging = mapper.Map<PagingDTO, Paging>(pagingDto);
+            var paging = mapper.Map<PagingDto, Paging>(pagingDto);
             var pagedResult = await studentRepository.GetAsync(paging, sortFields, filterFields);
             return Ok(CreatePagedResultDto<Student, StudentResponseDataTransferObject>(pagedResult, paging, sort, filterDto));
         }
@@ -87,14 +87,11 @@ namespace Spike.WebApi.Controllers
             {
                 return Ok(mapper.Map<Student, StudentResponseDataTransferObject>(student));
             }
-            else if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 return Forbid();
             }
-            else
-            {
-                return Challenge();
-            }
+            return Challenge();
 
 
         }
@@ -130,10 +127,7 @@ namespace Spike.WebApi.Controllers
                 {
                     return NotFound($"Student by id: {id} not exist.");
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
             return NoContent();
@@ -182,7 +176,7 @@ namespace Spike.WebApi.Controllers
             return NoContent();
         }
 
-        private PagedResultDataTransferObject<TReturn> CreatePagedResultDto<T, TReturn>(PagedResult<T> result, Paging paging, string sort, StudentFilterDTO filterDTO)
+        private PagedResultDataTransferObject<TReturn> CreatePagedResultDto<T, TReturn>(PagedResult<T> result, Paging paging, string sort, StudentFilterDto filterDto)
         {
             const int firstPage = 1;
             return new PagedResultDataTransferObject<TReturn>()
@@ -192,14 +186,14 @@ namespace Spike.WebApi.Controllers
                 TotalNumberOfPages = result.TotalNumberOfPages,
                 TotalNumberOfRecords = result.TotalNumberOfRecords,
                 Results = mapper.Map<List<T>, List<TReturn>>(result.Results),
-                FirstPageUrl = PrepareUrlPage(firstPage, paging.PageLimit, sort, filterDTO),
-                LastPageUrl = PrepareUrlPage(result.TotalNumberOfPages, paging.PageLimit, sort, filterDTO),
-                NextPageUrl = paging.PageNumber < result.TotalNumberOfPages ? PrepareUrlPage(paging.PageNumber + 1, paging.PageLimit, sort, filterDTO) : null,
-                PreviousPageUrl = paging.PageNumber > firstPage ? PrepareUrlPage(paging.PageNumber - 1, paging.PageLimit, sort, filterDTO) : null
+                FirstPageUrl = PrepareUrlPage(firstPage, paging.PageLimit, sort, filterDto),
+                LastPageUrl = PrepareUrlPage(result.TotalNumberOfPages, paging.PageLimit, sort, filterDto),
+                NextPageUrl = paging.PageNumber < result.TotalNumberOfPages ? PrepareUrlPage(paging.PageNumber + 1, paging.PageLimit, sort, filterDto) : null,
+                PreviousPageUrl = paging.PageNumber > firstPage ? PrepareUrlPage(paging.PageNumber - 1, paging.PageLimit, sort, filterDto) : null
             };
         }
 
-        private string PrepareUrlPage(int pageNumber, int pageLimit, string sortFields, StudentFilterDTO filterDto)
+        private string PrepareUrlPage(int pageNumber, int pageLimit, string sortFields, StudentFilterDto filterDto)
         {
             return Url.Action("GetStudents", new
             {

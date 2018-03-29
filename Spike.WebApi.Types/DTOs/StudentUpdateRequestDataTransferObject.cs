@@ -13,7 +13,7 @@ namespace Spike.WebApi.Types.DTOs
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var validator = new StudentUpdateRequestDTOValidator();
+            var validator = new StudentUpdateRequestDtoValidator();
             var result = validator.Validate(this);
             return result.Errors.Select(item => new ValidationResult(item.ErrorMessage, new[] { item.PropertyName }));
 

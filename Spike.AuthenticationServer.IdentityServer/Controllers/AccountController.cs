@@ -46,7 +46,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 204)]
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
@@ -69,7 +69,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
                 logger.LogInformation("User {userId} registered successfully", new { userId = user.Id });
                 await SendConfirmationEmail(user);
                 await AssignBasicClaims(user);
-                return Ok();
+                return NoContent();
             }
             else
             {
@@ -258,7 +258,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [Obsolete("Method used for old login, left for tutorial purpose")]
         private async Task<IdentityUser> GetUserFromClaim()
         {
-            string email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             return await userManager.FindByEmailAsync(email);
         }
     }

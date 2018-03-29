@@ -8,22 +8,22 @@ namespace Spike.WebApi.Mappings
     {
         public PagingMappingProfile()
         {
-            CreateMap<PagingDTO, Paging>()
+            CreateMap<PagingDto, Paging>()
                 .ConvertUsing(new PagingConverter());
         }
     }
 
-    public class PagingConverter : ITypeConverter<PagingDTO, Paging>
+    public class PagingConverter : ITypeConverter<PagingDto, Paging>
     {
-        public Paging Convert(PagingDTO source, Paging destination, ResolutionContext context)
+        public Paging Convert(PagingDto source, Paging destination, ResolutionContext context)
         {
-            destination = new Paging
+            var result = new Paging
             {
                 PageLimit = source.PageLimit.Value,
                 PageNumber = source.PageNumber.Value
             };
 
-            return destination;
+            return result;
         }
     }
 }

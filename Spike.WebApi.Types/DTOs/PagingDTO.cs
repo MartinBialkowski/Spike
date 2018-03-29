@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace Spike.WebApi.Types.DTOs
 {
-    public class PagingDTO: IValidatableObject
+    public class PagingDto: IValidatableObject
     {
         public int? PageNumber { get; set; }
         public int? PageLimit { get; set; }
 
-        public PagingDTO()
+        public PagingDto()
         {
         }
 

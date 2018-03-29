@@ -1,4 +1,4 @@
-﻿namespace ConvertersTest
+﻿namespace Spike.WebApi.Converters.Test
 {
     public class TestModel
     {
@@ -6,7 +6,7 @@
         public string FieldName { get; set; }
     }
 
-    public class TestModelDTO
+    public class TestModelDto
     {
         public int Id { get; set; }
         public string FieldName { get; set; }

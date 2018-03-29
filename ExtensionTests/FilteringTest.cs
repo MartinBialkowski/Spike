@@ -22,8 +22,8 @@ namespace Spike.Infrastructure.Extension.Test
         public void ShouldReturnFilteredDataWhenStringFullNameFilteringFieldProvided()
         {
             // arrange
-            var propertyName = "Name";
-            var filterValue = "TestName_6";
+            const string propertyName = "Name";
+            const string filterValue = "TestName_6";
             var filterField = new FilterField<TestModel>(propertyName, filterValue);
             var testData = ModelHelper.GetTestData().AsQueryable();
             var expectedData = testData.Where(t => t.Name == filterValue);
@@ -70,12 +70,12 @@ namespace Spike.Infrastructure.Extension.Test
             const bool isEvenFilterValue = true;
 	        const string nameFilterValue = "TestName_6";
             var filterFields = new FilterField<TestModel>[2];
-            filterFields[0] = new FilterField<TestModel>()
+            filterFields[0] = new FilterField<TestModel>
             {
                 PropertyName = "IsEven",
                 FilterValue = isEvenFilterValue
             };
-            filterFields[1] = new FilterField<TestModel>()
+            filterFields[1] = new FilterField<TestModel>
             {
                 PropertyName = "Name",
                 FilterValue = nameFilterValue

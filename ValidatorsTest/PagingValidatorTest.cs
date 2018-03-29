@@ -1,8 +1,7 @@
 ﻿using Spike.WebApi.Types.DTOs;
-using Spike.WebApi.Types.Validators;
 using Xunit;
 
-namespace ValidatorsTest
+namespace Spike.WebApi.Types.Validators.Test
 {
     public class PagingValidatorTest
     {
@@ -14,7 +13,7 @@ namespace ValidatorsTest
         {
             // arrange
             var validator = new PagingValidator();
-            var paging = new PagingDTO()
+            var paging = new PagingDto
             {
                 PageNumber = 1,
                 PageLimit = pageSize
@@ -33,7 +32,7 @@ namespace ValidatorsTest
         {
             // arrange
             var validator = new PagingValidator();
-            var paging = new PagingDTO()
+            var paging = new PagingDto
             {
                 PageNumber = pageNumber,
                 PageLimit = 1
@@ -49,7 +48,7 @@ namespace ValidatorsTest
         {
             // arrange
             var validator = new PagingValidator();
-            var paging = new PagingDTO()
+            var paging = new PagingDto
             {
                 PageNumber = 1,
                 PageLimit = 5

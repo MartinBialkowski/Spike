@@ -16,7 +16,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ForgotPasswordValidator();
-            var dto = new ForgotPasswordDto()
+            var dto = new ForgotPasswordDto
             {
                 Email = email
             };
@@ -31,7 +31,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new ForgotPasswordValidator();
-            var login = new ForgotPasswordDto()
+            var login = new ForgotPasswordDto
             {
                 Email = validEmail
             };

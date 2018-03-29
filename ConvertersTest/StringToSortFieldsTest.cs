@@ -1,9 +1,9 @@
-using Spike.Core.Model;
 using Newtonsoft.Json;
+using Spike.Core.Model;
 using Spike.WebApi.Mappings;
 using Xunit;
 
-namespace ConvertersTest
+namespace Spike.WebApi.Converters.Test
 {
     public class StringToSortFieldsTest
     {
@@ -11,17 +11,17 @@ namespace ConvertersTest
         public void ShouldReturnSortFieldsAscending()
         {
             // assign
-            var expectedLength = 2;
-            var source = "Id,FieldName";
+            const int expectedLength = 2;
+            const string source = "Id,FieldName";
             var converter = new StringToSortFieldsConverter<TestModel>();
-            SortField<TestModel>[] result = new SortField<TestModel>[0];
+            var result = new SortField<TestModel>[0];
             var expected = new SortField<TestModel>[expectedLength];
-            expected[0] = new SortField<TestModel>()
+            expected[0] = new SortField<TestModel>
             {
                 PropertyName = "Id",
                 SortOrder = SortOrder.Ascending
             };
-            expected[1] = new SortField<TestModel>()
+            expected[1] = new SortField<TestModel>
             {
                 PropertyName = "FieldName",
                 SortOrder = SortOrder.Ascending
@@ -36,17 +36,17 @@ namespace ConvertersTest
         public void ShouldReturnSortFieldsDescending()
         {
             // assign
-            var expectedLength = 2;
-            var source = "Id-,FieldName-";
+            const int expectedLength = 2;
+            const string source = "Id-,FieldName-";
             var converter = new StringToSortFieldsConverter<TestModel>();
-            SortField<TestModel>[] result = new SortField<TestModel>[0];
+            var result = new SortField<TestModel>[0];
             var expected = new SortField<TestModel>[expectedLength];
-            expected[0] = new SortField<TestModel>()
+            expected[0] = new SortField<TestModel>
             {
                 PropertyName = "Id",
                 SortOrder = SortOrder.Descending
             };
-            expected[1] = new SortField<TestModel>()
+            expected[1] = new SortField<TestModel>
             {
                 PropertyName = "FieldName",
                 SortOrder = SortOrder.Descending
@@ -65,7 +65,7 @@ namespace ConvertersTest
         {
             // assign
             var converter = new StringToSortFieldsConverter<TestModel>();
-            SortField<TestModel>[] result = new SortField<TestModel>[0];
+            var result = new SortField<TestModel>[0];
             // act
             var exception = Record.Exception(() => converter.Convert(source, result, null));
             // assert

@@ -39,7 +39,7 @@ namespace Spike.Backend.Connect.Services
         public Task Execute(string apiKey, string receiverEmail, string subject, string message)
         {
             var client = new SendGridClient(apiKey);
-            var sendGridMessage = new SendGridMessage()
+            var sendGridMessage = new SendGridMessage
             {
                 From = new EmailAddress(Options.SenderEmail, Options.SenderName),
                 Subject = subject,

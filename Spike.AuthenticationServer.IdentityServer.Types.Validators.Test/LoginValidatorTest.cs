@@ -17,7 +17,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDto()
+            var login = new UserDto
             {
                 Email = email,
                 Password = validPassword
@@ -36,7 +36,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDto()
+            var login = new UserDto
             {
                 Email = validEmail,
                 Password = password
@@ -52,7 +52,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
         {
             // arrange
             var validator = new UserValidator();
-            var login = new UserDto()
+            var login = new UserDto
             {
                 Email = validEmail,
                 Password = validPassword
