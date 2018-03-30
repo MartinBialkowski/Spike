@@ -57,6 +57,34 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
         }
 
+        [Fact]
+        [Trait("Category", "Integration")]
+        public async Task ShouldAuthenticateWhenUsingResourceOwnerFlowReferenceToken()
+        {
+            // arrange
+            TokenResponse tokenResponse;
+            IntrospectionResponse introspectionResponse;
+            var referenceScopeName = fixture.Configuration["SpikeReferenceAudience"];
+            var clientId = fixture.Configuration["SpikeReferenceClient"];
+            var username = fixture.Configuration["SpikeTestUsername"];
+            var password = fixture.Configuration["SpikeTestPassword"];
+            var scopeSecret = fixture.Configuration["ScopeReferenceSecret"];
+            var handler = fixture.server.CreateHandler();
+            DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
+            // act
+            using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
+            {
+                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+            }
+            using (var introspectionClient = new IntrospectionClient(discovery.IntrospectionEndpoint, referenceScopeName, scopeSecret, handler))
+            {
+                introspectionResponse = await introspectionClient.SendAsync(new IntrospectionRequest() { Token = tokenResponse.AccessToken });
+            }
+            // assert
+            Assert.False(introspectionResponse.IsError);
+            Assert.False(string.IsNullOrEmpty(introspectionResponse.Raw));
+        }
+
         private async Task<DiscoveryResponse> GetDiscoveryResponse(HttpMessageHandler handler)
         {
             using (var discoveryClient = new DiscoveryClient(fixture.Configuration["JwtIssuer"], handler))

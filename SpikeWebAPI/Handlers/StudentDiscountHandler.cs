@@ -18,7 +18,7 @@ namespace Spike.WebApi.Handlers
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, StudentDiscountRequirement requirement)
         {
-            if (!context.User.HasClaim(c => c.Issuer == configuration["JwtIssuer"] && c.Type == JwtRegisteredClaimNames.Birthdate))
+            if (!context.User.HasClaim(c => c.Type == JwtRegisteredClaimNames.Birthdate))
             {
                 return Task.CompletedTask;
             }

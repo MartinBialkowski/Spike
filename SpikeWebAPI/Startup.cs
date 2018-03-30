@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using EFCoreSpike5.Models;
 using FluentValidation.AspNetCore;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 using Spike.WebApi.Modules;
 using Spike.WebApi.Requirements;
 using Swashbuckle.AspNetCore.Swagger;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 
@@ -34,14 +36,28 @@ namespace Spike.WebApi
             services.AddDbContext<EFCoreSpikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = Configuration["JwtIssuer"];
-                    options.RequireHttpsMetadata = false;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-                    options.ApiName = Configuration["SpikeAudience"];
-                });
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme,
+            jwtOptions =>
+            {
+                jwtOptions.Authority = Configuration["JwtIssuer"];
+                jwtOptions.Audience = Configuration["SpikeAudience"];
+                jwtOptions.RequireHttpsMetadata = false;
+                jwtOptions.SaveToken = true;
+            },
+            referenceOptions =>
+            {
+                referenceOptions.Authority = Configuration["JwtIssuer"];
+                referenceOptions.ClientId = Configuration["SpikeReferenceAudience"];
+                referenceOptions.ClientSecret = Configuration["ScopeReferenceSecret"];
+                referenceOptions.SaveToken = true;
+            });
 
             services.AddAuthorization(options =>
             {

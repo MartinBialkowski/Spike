@@ -1,4 +1,5 @@
-﻿using IdentityServer4.EntityFramework.DbContexts;
+﻿using IdentityServer4;
+using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
@@ -30,15 +31,6 @@ namespace Spike.AuthenticationServer.IdentityServer
 
         private static void InitilizeDatabase(IConfiguration configuration)
         {
-            if (!configurationDbContext.Clients.Any())
-            {
-                foreach (var client in GetClients(configuration))
-                {
-                    configurationDbContext.Clients.Add(client.ToEntity());
-                }
-                configurationDbContext.SaveChanges();
-            }
-
             if (!configurationDbContext.IdentityResources.Any())
             {
                 foreach (var resource in GetIdentityResources())
@@ -56,15 +48,33 @@ namespace Spike.AuthenticationServer.IdentityServer
                 }
                 configurationDbContext.SaveChanges();
             }
+
+            if (!configurationDbContext.Clients.Any())
+            {
+                foreach (var client in GetClients(configuration))
+                {
+                    configurationDbContext.Clients.Add(client.ToEntity());
+                }
+                configurationDbContext.SaveChanges();
+            }
         }
 
         private static IEnumerable<ApiResource> GetApiResources(IConfiguration configuration)
         {
             return new List<ApiResource>
             {
-                new ApiResource(configuration["SpikeAudience"],
-                "My API",
-                claimTypes: new[] { "name", JwtRegisteredClaimNames.Email, ClaimTypes.Role, JwtRegisteredClaimNames.Birthdate })
+                new ApiResource(configuration["SpikeAudience"], "My API")
+                {
+                    UserClaims = new[] { "name", JwtRegisteredClaimNames.Email, ClaimTypes.Role, JwtRegisteredClaimNames.Birthdate }
+                },
+                new ApiResource(configuration["SpikeReferenceAudience"], "My API")
+                {
+                    UserClaims = new[] { "name", JwtRegisteredClaimNames.Email, ClaimTypes.Role, JwtRegisteredClaimNames.Birthdate },
+                    ApiSecrets = new List<Secret>
+                    {
+                        new Secret(configuration["ScopeReferenceSecret"].Sha256())
+                    }
+                },
             };
         }
 
@@ -77,13 +87,16 @@ namespace Spike.AuthenticationServer.IdentityServer
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-
                     ClientSecrets =
                     {
                         new Secret(configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { configuration["SpikeAudience"] }
+                    AllowedScopes =
+                    {
+                        configuration["SpikeAudience"],
+                    }
                 },
+
 
                 // resource owner password grant client
                 new Client
@@ -95,9 +108,56 @@ namespace Spike.AuthenticationServer.IdentityServer
                     {
                         new Secret(configuration["SpikeSecret"].Sha256())
                     },
-                    AllowedScopes = { configuration["SpikeAudience"] },
+                    AllowedScopes =
+                    {
+                        configuration["SpikeAudience"]
+                    },
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    UpdateAccessTokenClaimsOnRefresh = true
+                },
+
+                // hybrid flow client
+                new Client
+                {
+                    ClientId = "mvc",
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+
+                    RedirectUris           = { "http://localhost:5002/signin-oidc" },
+                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        configuration["SpikeAudience"]
+                    },
                     AllowOfflineAccess = true
-                }
+                },
+
+                // reference token client
+                new Client
+                {
+                    ClientId = configuration["SpikeReferenceClient"],
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                    AccessTokenLifetime = int.Parse(configuration["JwtExpireSeconds"]),
+                    AccessTokenType = AccessTokenType.Reference,
+                    ClientSecrets =
+                    {
+                        new Secret(configuration["SpikeSecret"].Sha256())
+                    },
+                    AllowedScopes =
+                    {
+                        configuration["SpikeAudience"],
+                        configuration["SpikeReferenceAudience"]
+                    },
+                    AllowOfflineAccess = true
+                },
             };
         }
 
