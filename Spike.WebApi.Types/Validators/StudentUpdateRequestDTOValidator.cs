@@ -3,9 +3,9 @@ using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Types.Validators
 {
-    public class StudentUpdateRequestDTOValidator : AbstractValidator<StudentUpdateRequestDataTransferObject>
+    public class StudentUpdateRequestDtoValidator : AbstractValidator<StudentUpdateRequestDataTransferObject>
     {
-        public StudentUpdateRequestDTOValidator()
+        public StudentUpdateRequestDtoValidator()
         {
             RuleFor(student => student.Id).NotNull().WithMessage("Student Id cannot be null");
             RuleFor(student => student.Id).GreaterThan(0).WithMessage("Student Id value must be greater than 0");

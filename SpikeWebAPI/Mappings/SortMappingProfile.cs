@@ -18,24 +18,24 @@ namespace Spike.WebApi.Mappings
         public SortField<T>[] Convert(string source, SortField<T>[] destination, ResolutionContext context)
         {
             var sortData = source.Split(',');
-            destination = new SortField<T>[sortData.Length];
-            for (int i = 0; i < sortData.Length; i++)
+	        var result = new SortField<T>[sortData.Length];
+	        for (var i = 0; i < sortData.Length; i++)
             {
-                destination[i] = ConvertToSortField(sortData[i]);
+	            result[i] = ConvertToSortField(sortData[i]);
             }
 
-            return destination;
+            return result;
         }
 
-        private SortField<T> ConvertToSortField(string sortData)
+        private static SortField<T> ConvertToSortField(string sortData)
         {
-            SortField<T> SortField = new SortField<T>()
+            var sortField = new SortField<T>
             {
                 SortOrder = sortData.EndsWith('-') ? SortOrder.Descending : SortOrder.Ascending,
                 PropertyName = sortData.Trim('-', '+')
             };
 
-            return SortField;
+            return sortField;
         }
     }
 }

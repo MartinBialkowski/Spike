@@ -1,6 +1,6 @@
 ﻿namespace Spike.AuthenticationServer.IdentityServer.Types.DTOs
 {
-    public class AccountConfirmationDTO
+    public class AccountConfirmationDto
     {
         public string UserId { get; set; }
         public string Code { get; set; }

@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using Microsoft.Extensions.Options;
-using Spike.Backend.Interface.Contact;
-using System.Text.Encodings.Web;
 using Spike.Backend.Connect.Model;
+using Spike.Backend.Interface.Contact;
 
-namespace Spike.Backend.Connect
+namespace Spike.Backend.Connect.Services
 {
     public class SendGridEmailSender : IEmailSender
     {
@@ -19,15 +19,15 @@ namespace Spike.Backend.Connect
 
         public Task SendConfirmationEmail(string email, string link)
         {
-            string subject = "Confirm your email";
-            string message = $"Click this <a href='{HtmlEncoder.Default.Encode(link)}'>link</a> to confirm your email";
+            const string subject = "Confirm your email";
+            var message = $"Click this <a href='{HtmlEncoder.Default.Encode(link)}'>link</a> to confirm your email";
             return SendEmailAsync(email, subject, message);
         }
 
         public Task SendResetPasswordEmail(string email, string code)
         {
-            string subject = "Reset password";
-            string message = $"Use token below to reset password \n{code}";
+	        const string subject = "Reset password";
+            var message = $"Use token below to reset password \n{code}";
             return SendEmailAsync(email, subject, message);
         }
 
@@ -39,7 +39,7 @@ namespace Spike.Backend.Connect
         public Task Execute(string apiKey, string receiverEmail, string subject, string message)
         {
             var client = new SendGridClient(apiKey);
-            var sendGridMessage = new SendGridMessage()
+            var sendGridMessage = new SendGridMessage
             {
                 From = new EmailAddress(Options.SenderEmail, Options.SenderName),
                 Subject = subject,

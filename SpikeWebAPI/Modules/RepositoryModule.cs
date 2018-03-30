@@ -7,7 +7,7 @@ namespace Spike.WebApi.Modules
 {
     public class RepositoryModule: Module
     {
-        private string configAbsolutePath;
+        private readonly string configAbsolutePath;
 
         public RepositoryModule(string configPath)
         {

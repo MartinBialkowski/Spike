@@ -4,7 +4,7 @@ namespace Spike.WebApi.Requirements
 {
     public class StudentDiscountRequirement : IAuthorizationRequirement
     {
-        public int MaxAge { get; private set; }
+        public int MaxAge { get; }
 
         public StudentDiscountRequirement(int maxAge = 26)
         {

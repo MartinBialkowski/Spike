@@ -1,13 +1,12 @@
 ﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
-using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
 {
     public class ConfirmationValidatorTest
     {
-        string validUserId = "TestUser";
-        string validCode = "TestCode";
+	    private const string validUserId = "TestUser";
+	    private const string validCode = "TestCode";
 
         [Theory]
         [InlineData(null)]
@@ -17,13 +16,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ConfirmationValidator();
-            var confirmationDTO = new AccountConfirmationDTO()
+            var confirmationDto = new AccountConfirmationDto()
             {
                 UserId = userId,
                 Code = validCode
             };
             // act
-            var result = validator.Validate(confirmationDTO);
+            var result = validator.Validate(confirmationDto);
             // assert
             Assert.False(result.IsValid);
         }
@@ -36,13 +35,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ConfirmationValidator();
-            var confirmationDTO = new AccountConfirmationDTO()
+            var confirmationDto = new AccountConfirmationDto()
             {
                 UserId = validUserId,
                 Code = code
             };
             // act
-            var result = validator.Validate(confirmationDTO);
+            var result = validator.Validate(confirmationDto);
             // assert
             Assert.False(result.IsValid);
         }
@@ -52,13 +51,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ConfirmationValidator();
-            var confirmationDTO = new AccountConfirmationDTO()
+            var confirmationDto = new AccountConfirmationDto()
             {
                 UserId = validUserId,
                 Code = validCode
             };
             // act
-            var result = validator.Validate(confirmationDTO);
+            var result = validator.Validate(confirmationDto);
             // assert
             Assert.True(result.IsValid);
         }

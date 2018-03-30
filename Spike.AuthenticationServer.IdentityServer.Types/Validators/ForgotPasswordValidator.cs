@@ -3,7 +3,7 @@ using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
 namespace Spike.AuthenticationServer.IdentityServer.Types.Validators
 {
-    public class ForgotPasswordValidator : AbstractValidator<ForgotPasswordDTO>
+    public class ForgotPasswordValidator : AbstractValidator<ForgotPasswordDto>
     {
         public ForgotPasswordValidator()
         {

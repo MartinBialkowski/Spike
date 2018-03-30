@@ -2,7 +2,7 @@
 using Spike.Core.Entity;
 using Spike.Core.Model;
 using Spike.WebApi.Types.DTOs;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Spike.WebApi.Mappings
 {
@@ -10,8 +10,8 @@ namespace Spike.WebApi.Mappings
     {
         public FilterMappingProfile()
         {
-            CreateMap<StudentFilterDTO, FilterField<Student>[]>()
-                .ConvertUsing(new FilterDtoToFilterField<StudentFilterDTO, Student>());
+            CreateMap<StudentFilterDto, FilterField<Student>[]>()
+                .ConvertUsing(new FilterDtoToFilterField<StudentFilterDto, Student>());
         }
     }
 
@@ -19,22 +19,14 @@ namespace Spike.WebApi.Mappings
     {
         public FilterField<TResult>[] Convert(TSource source, FilterField<TResult>[] destination, ResolutionContext context)
         {
-            var filtersList = new List<FilterField<TResult>>();
-            foreach (var property in typeof(TSource).GetProperties())
-            {
-                var propertyValue = property.GetValue(source);
-                if (propertyValue != null)
-                {
-                    var filterField = new FilterField<TResult>()
-                    {
-                        PropertyName = property.Name,
-                        FilterValue = propertyValue
-                    };
-                    filtersList.Add(filterField);
-                }
-
-            }
-            return filtersList.ToArray();
+	        return (from property in typeof(TSource).GetProperties()
+		        let propertyValue = property.GetValue(source)
+		        where propertyValue != null
+		        select new FilterField<TResult>
+		        {
+			        PropertyName = property.Name,
+			        FilterValue = propertyValue
+		        }).ToArray();
         }
     }
 }

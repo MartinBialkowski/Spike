@@ -3,7 +3,7 @@ using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
 namespace Spike.AuthenticationServer.IdentityServer.Types.Validators
 {
-    public class ConfirmationValidator: AbstractValidator<AccountConfirmationDTO>
+    public class ConfirmationValidator: AbstractValidator<AccountConfirmationDto>
     {
         public ConfirmationValidator()
         {

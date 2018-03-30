@@ -3,25 +3,25 @@ using Spike.Core.Model;
 using Spike.WebApi.Mappings;
 using Xunit;
 
-namespace ConvertersTest
+namespace Spike.WebApi.Converters.Test
 {
     public class FilterToFilterFieldsTest
     {
         [Fact]
         public void ShouldConvertOnlyNotNullProperties()
         {
-            var converter = new FilterDtoToFilterField<TestModelDTO, TestModel>();
+            var converter = new FilterDtoToFilterField<TestModelDto, TestModel>();
 
             // assign
-            var expectedLength = 1;
-            var source = new TestModelDTO()
+            const int expectedLength = 1;
+            var source = new TestModelDto
             {
                 FieldName = null,
                 Id = 1
             };
-            FilterField<TestModel>[] result = new FilterField<TestModel>[0];
+            var result = new FilterField<TestModel>[0];
             var expected = new FilterField<TestModel>[expectedLength];
-            expected[0] = new FilterField<TestModel>()
+            expected[0] = new FilterField<TestModel>
             {
                 PropertyName = "Id",
                 FilterValue = 1

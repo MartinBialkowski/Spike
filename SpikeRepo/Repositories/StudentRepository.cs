@@ -19,14 +19,14 @@ namespace Spike.Infrastructure.Repositories
 
         public override async Task<Student> GetByIdAsync(int id)
         {
-            return await context.Students
+            return await Context.Students
                 .Include(s => s.Course)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
         public async Task<PagedResult<Student>> GetAsync(Paging paging, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
-            IQueryable<Student> query = context.Students.Include(s => s.Course);
+            IQueryable<Student> query = Context.Students.Include(s => s.Course);
             query = GetStudents(query, sortFields, filterFields);
             var result = new PagedResult<Student>()
             {
@@ -42,13 +42,13 @@ namespace Spike.Infrastructure.Repositories
 
         public IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
-            IQueryable<Student> query = context.Students;
+            IQueryable<Student> query = Context.Students;
             query = GetStudents(query, sortFields, filterFields);
 
             return query.ToAsyncEnumerable();
         }
 
-        private IQueryable<Student> GetStudents(IQueryable<Student> query, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
+        private static IQueryable<Student> GetStudents(IQueryable<Student> query, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
             if (filterFields != null)
             {
@@ -57,7 +57,7 @@ namespace Spike.Infrastructure.Repositories
 
             if (sortFields != null)
             {
-                return query = sortFields.Sort(query);
+				query = sortFields.Sort(query);
             }
             return query;
         }
