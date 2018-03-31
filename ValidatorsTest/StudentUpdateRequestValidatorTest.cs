@@ -1,8 +1,7 @@
 ﻿using Spike.WebApi.Types.DTOs;
-using Spike.WebApi.Types.Validators;
 using Xunit;
 
-namespace ValidatorsTest
+namespace Spike.WebApi.Types.Validators.Test
 {
     public class StudentUpdateRequestValidatorTest
     {
@@ -11,15 +10,18 @@ namespace ValidatorsTest
         [InlineData(0)]
         public void InvalidWhenStudentIdIsNotValid(int id)
         {
-            string name = "SomeName";
-            int courseId = 1;
-            var validator = new StudentUpdateRequestDTOValidator();
+			//arrange
+            const string name = "SomeName";
+            const int courseId = 1;
+            var validator = new StudentUpdateRequestDtoValidator();
+			//act
             var result = validator.Validate(new StudentUpdateRequestDataTransferObject
             {
                 Id = id,
                 CourseId = courseId,
                 Name = name
             });
+			//assert
             Assert.False(result.IsValid);
         }
 
@@ -29,15 +31,18 @@ namespace ValidatorsTest
         [InlineData("")]
         public void InvalidWhenNameIsNotValid(string name)
         {
-            var id = 1;
-            var validator = new StudentUpdateRequestDTOValidator();
-            var result = validator.Validate(new StudentUpdateRequestDataTransferObject
+	        //arrange
+			const int id = 1;
+            var validator = new StudentUpdateRequestDtoValidator();
+	        //act
+			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
             {
                 Id = id,
                 CourseId = id,
                 Name = name
             });
-            Assert.False(result.IsValid);
+	        //assert
+			Assert.False(result.IsValid);
         }
 
         [Theory]
@@ -45,31 +50,37 @@ namespace ValidatorsTest
         [InlineData(0)]
         public void InvalidWhenCourseIdIsNotValid(int id)
         {
-            var studentId = 1;
-            var name = "SomeName";
-            var validator = new StudentUpdateRequestDTOValidator();
-            var result = validator.Validate(new StudentUpdateRequestDataTransferObject
+	        //arrange
+			const int studentId = 1;
+            const string name = "SomeName";
+            var validator = new StudentUpdateRequestDtoValidator();
+	        //act
+			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
             {
                 Id = studentId,
                 CourseId = id,
                 Name = name
             });
-            Assert.False(result.IsValid);
+	        //assert
+			Assert.False(result.IsValid);
         }
 
         [Fact]
         public void ValidWhenValidDataIsProvided()
         {
-            var name = "SomeName";
-            var id = 1;
-            var validator = new StudentUpdateRequestDTOValidator();
-            var result = validator.Validate(new StudentUpdateRequestDataTransferObject
+	        //arrange
+			const string name = "SomeName";
+            const int id = 1;
+            var validator = new StudentUpdateRequestDtoValidator();
+	        //act
+			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
             {
                 Id = id,
                 CourseId = id,
                 Name = name
             });
-            Assert.True(result.IsValid);
+	        //assert
+			Assert.True(result.IsValid);
         }
     }
 }

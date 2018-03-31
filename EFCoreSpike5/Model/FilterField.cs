@@ -6,11 +6,8 @@ namespace Spike.Core.Model
     {
         public string PropertyName
         {
-            get
-            {
-                return propertyName;
-            }
-            set
+            get => propertyName;
+	        set
             {
                 if (value != propertyName)
                 {
@@ -20,13 +17,10 @@ namespace Spike.Core.Model
                 }
             }
         }
-        public Object FilterValue
+        public object FilterValue
         {
-            get
-            {
-                return filterValue;
-            }
-            set
+            get => filterValue;
+	        set
             {
                 if (value != filterValue)
                 {
@@ -36,7 +30,7 @@ namespace Spike.Core.Model
             }
         }
         public Type PropertyType { get; set; }
-        protected Type ModelType { get; private set; }
+        protected Type ModelType { get; }
         private string propertyName;
         private object filterValue;
 
@@ -56,7 +50,7 @@ namespace Spike.Core.Model
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
             if (ModelType.GetProperty(propertyName) == null)
             {
@@ -68,7 +62,7 @@ namespace Spike.Core.Model
         {
             if (filterValue == null)
             {
-                throw new ArgumentNullException("filterValue");
+                throw new ArgumentNullException(nameof(filterValue));
             }
             if (filterValue.GetType() != PropertyType)
             {

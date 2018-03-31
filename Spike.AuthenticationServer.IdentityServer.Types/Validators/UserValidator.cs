@@ -3,7 +3,7 @@ using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
 
 namespace Spike.AuthenticationServer.IdentityServer.Types.Validators
 {
-    public class UserValidator : AbstractValidator<UserDTO>
+    public class UserValidator : AbstractValidator<UserDto>
     {
         public UserValidator()
         {

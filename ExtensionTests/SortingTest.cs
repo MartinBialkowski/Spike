@@ -1,10 +1,9 @@
-﻿using Spike.Core.Model;
-using Spike.Infrastructure.Extension;
-using System;
+﻿using System;
 using System.Linq;
+using Spike.Core.Model;
 using Xunit;
 
-namespace ExtensionTests
+namespace Spike.Infrastructure.Extension.Test
 {
     public class SortingTest
     {
@@ -14,7 +13,7 @@ namespace ExtensionTests
             // arrange
             var testData = ModelHelper.GetTestData().AsQueryable();
             var exptectedData = testData.OrderBy(x => x.Name);
-            var sortField = new SortField<TestModel>()
+            var sortField = new SortField<TestModel>
             {
                 PropertyName = "Name",
                 SortOrder = SortOrder.Ascending
@@ -31,7 +30,7 @@ namespace ExtensionTests
             // arrange
             var testData = ModelHelper.GetTestData().AsQueryable();
             var exptectedData = testData.OrderByDescending(x => x.Name);
-            var sortField = new SortField<TestModel>()
+            var sortField = new SortField<TestModel>
             {
                 PropertyName = "Name",
                 SortOrder = SortOrder.Descending
@@ -49,12 +48,12 @@ namespace ExtensionTests
             var testData = ModelHelper.GetTestData().AsQueryable();
             var exptectedData = testData.OrderBy(x => x.IsEven).ThenByDescending(x => x.Name);
             var sortFields = new SortField<TestModel>[2];
-            sortFields[0] = new SortField<TestModel>()
+            sortFields[0] = new SortField<TestModel>
             {
                 PropertyName = "IsEven",
                 SortOrder = SortOrder.Ascending
             };
-            sortFields[1] = new SortField<TestModel>()
+            sortFields[1] = new SortField<TestModel>
             {
                 PropertyName = "Name",
                 SortOrder = SortOrder.Descending
@@ -69,10 +68,9 @@ namespace ExtensionTests
         public void ShouldThrowExceptionWhenSortFieldNull()
         {
             // arrange
-            SortField<TestModel>[] sortFields = null;
             var testData = ModelHelper.GetTestData().AsQueryable();
             // act
-            var exception = Record.Exception(() => sortFields.Sort(testData));
+            var exception = Record.Exception(() => ((SortField<TestModel>[]) null).Sort(testData));
             // assert
             Assert.NotNull(exception);
             Assert.IsType<ArgumentNullException>(exception);

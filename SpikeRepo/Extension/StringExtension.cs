@@ -20,7 +20,7 @@ namespace Spike.Infrastructure.Extension
         {
             MethodInfo containsMethod;
             Expression argument;
-            if (filterValue.GetType() == typeof(string))
+            if (filterValue is string)
             {
                 containsMethod = typeof(string).GetMethod("Contains");
                 argument = Expression.Constant(filterValue);

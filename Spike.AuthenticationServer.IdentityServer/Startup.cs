@@ -37,6 +37,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             })
             .AddEntityFrameworkStores<EFCoreSpikeContext>()
             .AddDefaultTokenProviders();
+
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
                 .AddDeveloperSigningCredential()

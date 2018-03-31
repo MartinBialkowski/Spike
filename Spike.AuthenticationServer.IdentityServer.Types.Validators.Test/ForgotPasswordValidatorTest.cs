@@ -1,12 +1,11 @@
 ﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
-using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
 {
     public class ForgotPasswordValidatorTest
     {
-        private string validEmail = "test@test.com";
+	    private const string validEmail = "test@test.com";
 
         [Theory]
         [InlineData(null)]
@@ -17,7 +16,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ForgotPasswordValidator();
-            var dto = new ForgotPasswordDTO()
+            var dto = new ForgotPasswordDto
             {
                 Email = email
             };
@@ -32,7 +31,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ForgotPasswordValidator();
-            var login = new ForgotPasswordDTO()
+            var login = new ForgotPasswordDto
             {
                 Email = validEmail
             };

@@ -15,25 +15,22 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
     [Route("api/users")]
     public class UserController : Controller
     {
-        private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
         private readonly ILogger<UserController> logger;
 
         public UserController
         (
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
             ILogger<UserController> logger
         )
         {
             this.userManager = userManager;
-            this.signInManager = signInManager;
             this.logger = logger;
         }
 
-        // POST: api/users/5/claim
+        // POST: api/users/{userId/claim
         [HttpPost("{userId}/claim")]
-        public async Task<IActionResult> AssignClaim(string userId, [FromBody] ClaimDTO claimDTO)
+        public async Task<IActionResult> AssignClaim(string userId, [FromBody] ClaimDto claimDto)
         {
             logger.LogInformation($"POST: api/users/{0}/claim", userId);
             if (!ModelState.IsValid)
@@ -49,7 +46,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
                 return NotFound($"User with provided id {userId} not exist");
             }
 
-            Claim claim = new Claim(claimDTO.Type, claimDTO.Value);
+            var claim = new Claim(claimDto.Type, claimDto.Value);
             if (await IsClaimDuplicate(user, claim))
             {
                 logger.LogWarning($"User {user.Id} already has claim with type {claim.ValueType} and value {claim.Value}");
@@ -57,17 +54,18 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
             }
 
             var result = await userManager.AddClaimAsync(user, claim);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                logger.LogError($"Cannot add claim: {result.Errors}");
-                return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
-            }
+				return NoContent();
+			}
 
-            return NoContent();
+	        logger.LogError($"Cannot add claim: {result.Errors}");
+	        return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
         }
 
-        [HttpDelete("{userid}/claim")]
-        public async Task<IActionResult> RemoveClaim(string userId, [FromBody] ClaimDTO claimDTO)
+		// Delete api/users/{userId/claim
+		[HttpDelete("{userid}/claim")]
+        public async Task<IActionResult> RemoveClaim(string userId, [FromBody] ClaimDto claimDto)
         {
             logger.LogInformation($"DELETE: api/users/{0}/claim", userId);
             if (!ModelState.IsValid)
@@ -83,15 +81,16 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
                 return NotFound($"User with provided id {userId} not exist");
             }
 
-            Claim claim = new Claim(claimDTO.Type, claimDTO.Value);
+            var claim = new Claim(claimDto.Type, claimDto.Value);
             var result = await userManager.RemoveClaimAsync(user, claim);
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                logger.LogError($"Cannot add claim: {result.Errors}");
-                return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
-            }
+				return NoContent();
+			}
 
-            return NoContent();
+	        logger.LogError($"Cannot add claim: {result.Errors}");
+	        return StatusCode(StatusCodes.Status500InternalServerError, result.Errors);
+			
         }
 
         private async Task<bool> IsClaimDuplicate(IdentityUser user, Claim claim)

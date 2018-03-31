@@ -1,15 +1,14 @@
 ﻿using Spike.AuthenticationServer.IdentityServer.Types.DTOs;
-using Spike.AuthenticationServer.IdentityServer.Types.Validators;
 using Xunit;
 
-namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
+namespace Spike.AuthenticationServer.IdentityServer.Types.Validators.Test
 {
     public class ResetPasswordValidatorTest
     {
-        private string validPassword = "test123";
-        private string differentPassword = "SomethingElse";
-        private string validToken = "123Test";
-        private string validEmail = "test@test.com";
+	    private const string validPassword = "test123";
+	    private const string differentPassword = "SomethingElse";
+	    private const string validToken = "123Test";
+	    private const string validEmail = "test@test.com";
 
         [Theory]
         [InlineData(null)]
@@ -20,7 +19,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDTO()
+            var dto = new ResetPasswordDto
             {
                 Email = email,
                 Token = validToken,
@@ -41,7 +40,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDTO()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = token,
@@ -62,7 +61,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDTO()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,
@@ -80,7 +79,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDTO()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,
@@ -98,7 +97,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Validators.Tests
         {
             // arrange
             var validator = new ResetPasswordValidator();
-            var dto = new ResetPasswordDTO()
+            var dto = new ResetPasswordDto
             {
                 Email = validEmail,
                 Token = validToken,

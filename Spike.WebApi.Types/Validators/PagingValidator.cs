@@ -3,7 +3,7 @@ using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Types.Validators
 {
-    public class PagingValidator : AbstractValidator<PagingDTO>
+    public class PagingValidator : AbstractValidator<PagingDto>
     {
         public PagingValidator()
         {

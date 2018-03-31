@@ -1,14 +1,13 @@
-using Spike.Core.Model;
-using Spike.Infrastructure.Extension;
 using System.Linq;
+using Spike.Core.Model;
 using Xunit;
 
-namespace ExtensionTests
+namespace Spike.Infrastructure.Extension.Test
 {
     public class PagingTest
     {
-        int pageNumber;
-        int pageSize;
+	    private int pageNumber;
+        private int pageSize;
         [Fact]
         public void ShouldReturnWholeDataWhenPageSizeGreaterThanDataLength()
         {
@@ -20,7 +19,7 @@ namespace ExtensionTests
             // act
             var result = paging.Page(testData.AsQueryable()).ToList();
             // assert
-            Assert.Equal(testData.Count(), result.Result.Count());
+            Assert.Equal(testData.Length, result.Result.Count);
         }
 
         [Fact]

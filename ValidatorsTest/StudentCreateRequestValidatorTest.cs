@@ -1,7 +1,7 @@
 using Spike.WebApi.Types.DTOs;
-using Spike.WebApi.Types.Validators;
 using Xunit;
-namespace ValidatorsTest
+
+namespace Spike.WebApi.Types.Validators.Test
 {
     public class StudentCreateRequestValidatorTest
     {
@@ -11,8 +11,8 @@ namespace ValidatorsTest
         [InlineData("")]
         public void InvalidWhenNameIsNotValid(string name)
         {
-            var id = 1;
-            var validator = new StudentCreateRequestDTOValidator();
+            const int id = 1;
+            var validator = new StudentCreateRequestDtoValidator();
             var result = validator.Validate(new StudentCreateRequestDataTransferObject
             {
                 CourseId = id,
@@ -26,8 +26,8 @@ namespace ValidatorsTest
         [InlineData(0)]
         public void InvalidWhenCourseIdIsNotValid(int id)
         {
-            var name = "SomeName";
-            var validator = new StudentCreateRequestDTOValidator();
+            const string name = "SomeName";
+            var validator = new StudentCreateRequestDtoValidator();
             var result = validator.Validate(new StudentCreateRequestDataTransferObject
             {
                 CourseId = id,
@@ -39,9 +39,9 @@ namespace ValidatorsTest
         [Fact]
         public void ValidWhenCourseIdAndNameAreProvided()
         {
-            var name = "SomeName";
-            var id = 1;
-            var validator = new StudentCreateRequestDTOValidator();
+            const string name = "SomeName";
+            const int id = 1;
+            var validator = new StudentCreateRequestDtoValidator();
             var result = validator.Validate(new StudentCreateRequestDataTransferObject
             {
                 CourseId = id,

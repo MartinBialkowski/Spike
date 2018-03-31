@@ -46,11 +46,11 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         // POST: account/register
         [HttpPost("register")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 204)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
-            logger.LogDebug("{@User} try to login", new { User = userDTO });
+            logger.LogDebug("{@User} try to login", new { User = userDto });
             if (!ModelState.IsValid)
             {
                 logger.LogWarning("User sent invalid credentials");
@@ -59,17 +59,17 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
 
             var user = new IdentityUser
             {
-                UserName = userDTO.Email,
-                Email = userDTO.Email
+                UserName = userDto.Email,
+                Email = userDto.Email
             };
-            var result = await userManager.CreateAsync(user, userDTO.Password);
+            var result = await userManager.CreateAsync(user, userDto.Password);
 
             if (result.Succeeded)
             {
                 logger.LogInformation("User {userId} registered successfully", new { userId = user.Id });
                 await SendConfirmationEmail(user);
                 await AssignBasicClaims(user);
-                return Ok();
+                return NoContent();
             }
             else
             {
@@ -87,18 +87,18 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 403)]
         [ProducesResponseType(typeof(string), 404)]
-        public async Task<IActionResult> ConfirmEmail(AccountConfirmationDTO confirmationDTO)
+        public async Task<IActionResult> ConfirmEmail(AccountConfirmationDto confirmationDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await userManager.FindByIdAsync(confirmationDTO.UserId);
+            var user = await userManager.FindByIdAsync(confirmationDto.UserId);
             if (user == null)
             {
                 return NotFound("User not exist");
             }
-            var result = await userManager.ConfirmEmailAsync(user, confirmationDTO.Code);
+            var result = await userManager.ConfirmEmailAsync(user, confirmationDto.Code);
             if (result.Succeeded)
             {
                 return NoContent();
@@ -114,13 +114,13 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO forgotPasswordDTO)
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await userManager.FindByEmailAsync(forgotPasswordDTO.Email);
+            var user = await userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
             {
                 return Forbid();
@@ -135,18 +135,18 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var user = await userManager.FindByEmailAsync(resetPasswordDTO.Email);
+            var user = await userManager.FindByEmailAsync(resetPasswordDto.Email);
             if (user == null)
             {
                 return Forbid();
             }
-            var result = await userManager.ResetPasswordAsync(user, resetPasswordDTO.Token, resetPasswordDTO.Password);
+            var result = await userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.Password);
             if (result.Succeeded)
             {
                 return NoContent();
@@ -174,19 +174,19 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 401)]
-        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Login([FromBody] UserDto userDto)
         {
-            logger.LogDebug("{@User} try to login", new { User = userDTO });
+            logger.LogDebug("{@User} try to login", new { User = userDto });
             if (!ModelState.IsValid)
             {
                 logger.LogWarning("User sent invalid credentials");
                 return BadRequest(ModelState);
             }
 
-            var result = await signInManager.PasswordSignInAsync(userDTO.Email, userDTO.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(userDto.Email, userDto.Password, false, false);
             if (result.Succeeded)
             {
-                var user = await userManager.FindByEmailAsync(userDTO.Email);
+                var user = await userManager.FindByEmailAsync(userDto.Email);
                 logger.LogInformation("User {userId} logged into application", new { userId = user.Id });
                 return Ok(await GenerateJwtToken(user));
             }
@@ -258,7 +258,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [Obsolete("Method used for old login, left for tutorial purpose")]
         private async Task<IdentityUser> GetUserFromClaim()
         {
-            string email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var email = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             return await userManager.FindByEmailAsync(email);
         }
     }

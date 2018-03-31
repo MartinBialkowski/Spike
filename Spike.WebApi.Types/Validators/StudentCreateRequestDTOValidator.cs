@@ -3,9 +3,9 @@ using Spike.WebApi.Types.DTOs;
 
 namespace Spike.WebApi.Types.Validators
 {
-    public class StudentCreateRequestDTOValidator: AbstractValidator<StudentCreateRequestDataTransferObject>
+    public class StudentCreateRequestDtoValidator: AbstractValidator<StudentCreateRequestDataTransferObject>
     {
-        public StudentCreateRequestDTOValidator()
+        public StudentCreateRequestDtoValidator()
         {
             RuleFor(student => student.Name).NotEmpty().WithMessage("Name cannot be empty");
             RuleFor(student => student.CourseId).NotNull().WithMessage("CourseId cannot be null");

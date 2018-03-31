@@ -14,14 +14,14 @@ namespace Spike.WebApi.IntegrationTest
 {
     public class StudentControllerTest : IDisposable, IClassFixture<ControllerFixture>
     {
-        private ControllerFixture fixture;
+        private readonly ControllerFixture fixture;
         private HttpResponseMessage httpResponse;
-        string actual, expected;
+	    private string actual, expected;
 
-        private string url = "api/students";
-        private string studentName = "TestName";
-        private string updatedName = "UpdatedName";
-        private string contentType = "application/json";
+	    private const string url = "api/students";
+	    private const string studentName = "TestName";
+	    private const string updatedName = "UpdatedName";
+        private const string contentType = "application/json";
 
         public StudentControllerTest(ControllerFixture fixture)
         {
@@ -39,12 +39,12 @@ namespace Spike.WebApi.IntegrationTest
         public async Task ShouldGetTwoElementsSortedByName()
         {
             // arrange
-            int pageSize = 2;
+            const int pageSize = 2;
             var queryString = $"?pageNumber=1&pageLimit={pageSize}&sort=Name";
             var request = url + queryString;
             var students = PrepareStudentsResponse(pageSize);
             TestPagedResult<StudentTestResponse> response;
-            TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
+            var expectedPagedResult = new TestPagedResult<StudentTestResponse>()
             {
                 PageNumber = 1,
                 PageSize = 2,
@@ -58,9 +58,9 @@ namespace Spike.WebApi.IntegrationTest
 
             };
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
@@ -80,14 +80,14 @@ namespace Spike.WebApi.IntegrationTest
             var request = url + queryString;
             List<Student> response;
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<List<Student>>();
             }
 
-            var students = fixture.context.Students.OrderBy(s => s.Name).ToList();
+            var students = fixture.Context.Students.OrderBy(s => s.Name).ToList();
             actual = JsonConvert.SerializeObject(response);
             expected = JsonConvert.SerializeObject(students);
             // assert
@@ -100,13 +100,13 @@ namespace Spike.WebApi.IntegrationTest
         public async Task ShouldGetFilteredStudentSortedByName()
         {
             // arrange
-            var pageSize = 3;
-            var filterValue = "Witalian";
+            const int pageSize = 3;
+            const string filterValue = "Witalian";
             var queryString = $"?pageNumber=1&pageLimit={pageSize}&Name={filterValue}&sort=Name";
             var request = url + queryString;
             var students = PrepareStudentsResponse(pageSize, filterValue);
             TestPagedResult<StudentTestResponse> response;
-            TestPagedResult<StudentTestResponse> expectedPagedResult = new TestPagedResult<StudentTestResponse>()
+            var expectedPagedResult = new TestPagedResult<StudentTestResponse>()
             {
                 PageNumber = 1,
                 PageSize = pageSize,
@@ -120,9 +120,9 @@ namespace Spike.WebApi.IntegrationTest
 
             };
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
@@ -138,17 +138,17 @@ namespace Spike.WebApi.IntegrationTest
         public async Task ShouldGetSingleStudent()
         {
             // arrange
-            int studentId = 1;
+            const int studentId = 1;
             var request = $"{url}/{studentId}";
             StudentTestResponse response;
 
-            var student = fixture.context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
-            var studentDTO = CreateResponseStudent(student);
-            expected = JsonConvert.SerializeObject(studentDTO);
+            var student = fixture.Context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
+            var studentDto = CreateResponseStudent(student);
+            expected = JsonConvert.SerializeObject(studentDto);
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
@@ -169,28 +169,28 @@ namespace Spike.WebApi.IntegrationTest
                 Name = studentName
             };
 
-            string request = url;
-            string studentJson = JsonConvert.SerializeObject(newStudent);
+            const string request = url;
+            var studentJson = JsonConvert.SerializeObject(newStudent);
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
 
             StudentTestResponse response;
 
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
             actual = JsonConvert.SerializeObject(response);
             var student = await GetStudentByName(studentName);
-            var studentDTO = new StudentTestResponse()
+            var studentDto = new StudentTestResponse()
             {
                 Id = student.Id,
                 Name = student.Name,
                 Course = null
             };
-            expected = JsonConvert.SerializeObject(studentDTO);
+            expected = JsonConvert.SerializeObject(studentDto);
             // assert
             httpResponse.EnsureSuccessStatusCode();
             Assert.Equal(expected, actual);
@@ -201,7 +201,7 @@ namespace Spike.WebApi.IntegrationTest
         public async Task ShouldUpdateStudent()
         {
             // arrange
-            int studentId = GetOrCreateStudentForTest(studentName);
+            var studentId = GetOrCreateStudentForTest(studentName);
             var newStudent = new StudentTestUpdateRequest()
             {
                 Id = studentId,
@@ -211,12 +211,12 @@ namespace Spike.WebApi.IntegrationTest
 
             var studentJson = JsonConvert.SerializeObject(newStudent);
             var content = new StringContent(studentJson, Encoding.UTF8, contentType);
-            string request = $"{url}/{studentId}";
+            var request = $"{url}/{studentId}";
 
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.PutAsync(request, content);
             }
             var student = await GetStudentByName(updatedName);
@@ -230,12 +230,12 @@ namespace Spike.WebApi.IntegrationTest
         public async Task ShouldDeleteStudent()
         {
             // arrange
-            int studentId = GetOrCreateStudentForTest(updatedName);
-            string request = $"{url}/{studentId}";
+            var studentId = GetOrCreateStudentForTest(updatedName);
+            var request = $"{url}/{studentId}";
             // act
-            using (var client = fixture.server.CreateClient())
+            using (var client = fixture.Server.CreateClient())
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.authenticationToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", fixture.AuthenticationToken);
                 httpResponse = await client.DeleteAsync(request);
             }
             var expectedStudent = await GetStudentByName(updatedName);
@@ -246,7 +246,7 @@ namespace Spike.WebApi.IntegrationTest
 
         private async Task<Student> GetStudentByName(string name)
         {
-            return await fixture.context.Students
+            return await fixture.Context.Students
                 .Include(s => s.Course)
                 .FirstOrDefaultAsync(x => x.Name == name);
         }
@@ -254,7 +254,7 @@ namespace Spike.WebApi.IntegrationTest
         private int GetOrCreateStudentForTest(string name)
         {
             Student result;
-            if ((result = fixture.context.Students.FirstOrDefault(x => x.Name == name)) != null)
+            if ((result = fixture.Context.Students.FirstOrDefault(x => x.Name == name)) != null)
             {
                 return result.Id;
             }
@@ -265,8 +265,8 @@ namespace Spike.WebApi.IntegrationTest
                 CourseId = 1
             };
 
-            fixture.context.Add(student);
-            fixture.context.SaveChanges();
+            fixture.Context.Add(student);
+            fixture.Context.SaveChanges();
 
             return student.Id;
         }
@@ -274,52 +274,46 @@ namespace Spike.WebApi.IntegrationTest
         private void CleanupCreatedStudent(string name)
         {
             Student result;
-            if ((result = fixture.context.Students.FirstOrDefault(x => x.Name == name)) != null)
+            if ((result = fixture.Context.Students.FirstOrDefault(x => x.Name == name)) != null)
             {
-                fixture.context.Remove(result);
-                fixture.context.SaveChanges();
+                fixture.Context.Remove(result);
+                fixture.Context.SaveChanges();
             }
         }
 
         private List<StudentTestResponse> PrepareStudentsResponse(int pageSize, string filterValue = "")
         {
-            List<StudentTestResponse> studentsResult = new List<StudentTestResponse>();
+	        var students = LoadStudents(pageSize, filterValue);
 
-            var students = LoadStudents(pageSize, filterValue);
-            foreach (var item in students)
-            {
-                studentsResult.Add(CreateResponseStudent(item));
-            }
-
-            return studentsResult;
+	        return students.Select(CreateResponseStudent).ToList();
         }
 
-        private List<Student> LoadStudents(int pageSize, string filterValue)
+        private IEnumerable<Student> LoadStudents(int pageSize, string filterValue)
         {
-            return fixture.context.Students.Include(s => s.Course)
+            return fixture.Context.Students.Include(s => s.Course)
                 .Where(s => s.Name.Contains(filterValue))
                 .OrderBy(s => s.Name)
                 .Skip(0).Take(pageSize).ToList();
         }
 
-        private StudentTestResponse CreateResponseStudent(Student student)
+        private static StudentTestResponse CreateResponseStudent(Student student)
         {
-            CourseTestResponse courseDTO = null;
+            CourseTestResponse courseDto = null;
             if (student.Course != null)
             {
-                courseDTO = new CourseTestResponse()
+                courseDto = new CourseTestResponse
                 {
                     Name = student.Course.Name
                 };
             }
-            var studentDTO = new StudentTestResponse()
+            var studentDto = new StudentTestResponse
             {
                 Id = student.Id,
                 Name = student.Name,
-                Course = courseDTO
+                Course = courseDto
             };
 
-            return studentDTO;
+            return studentDto;
         }
     }
 }

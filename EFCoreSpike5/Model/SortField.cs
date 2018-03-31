@@ -8,11 +8,8 @@ namespace Spike.Core.Model
         public SortOrder SortOrder { get; set; }
         public string PropertyName
         {
-            get
-            {
-                return propertyName;
-            }
-            set
+            get => propertyName;
+	        set
             {
                 if (value != propertyName)
                 {
@@ -40,7 +37,7 @@ namespace Spike.Core.Model
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
             if (ModelType.GetProperty(propertyName) == null)
             {

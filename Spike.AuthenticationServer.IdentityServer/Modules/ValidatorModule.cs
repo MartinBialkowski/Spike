@@ -9,10 +9,10 @@ namespace Spike.AuthenticationServer.IdentityServer.Modules
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<UserValidator>().As<IValidator<UserDTO>>();
-            builder.RegisterType<ConfirmationValidator>().As<IValidator<AccountConfirmationDTO>>();
-            builder.RegisterType<ResetPasswordValidator>().As<IValidator<ResetPasswordDTO>>();
-            builder.RegisterType<ClaimValidator>().As<IValidator<ClaimDTO>>();
+            builder.RegisterType<UserValidator>().As<IValidator<UserDto>>();
+            builder.RegisterType<ConfirmationValidator>().As<IValidator<AccountConfirmationDto>>();
+            builder.RegisterType<ResetPasswordValidator>().As<IValidator<ResetPasswordDto>>();
+            builder.RegisterType<ClaimValidator>().As<IValidator<ClaimDto>>();
             builder.RegisterType<ValidatorFactory>().As<IValidatorFactory>().SingleInstance();
         }
     }

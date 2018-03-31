@@ -12,9 +12,9 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
     {
         public readonly TestServer Server;
         public IConfiguration Configuration;
-        private string configFileName = "appsettings.json";
+	    private const string configFileName = "appsettings.json";
 
-        public AuthenticationFixture()
+	    public AuthenticationFixture()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(GetFullPathToTestConfigFile())
@@ -33,7 +33,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             Server.Dispose();
         }
 
-        private string GetFullPathToTestConfigFile()
+        private static string GetFullPathToTestConfigFile()
         {
             return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".."));
         }

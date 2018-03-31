@@ -13,12 +13,12 @@ namespace Spike.WebApi.IntegrationTest
 {
     public class ControllerFixture : IDisposable
     {
-        public readonly TestServer server;
-        public readonly EFCoreSpikeContext context;
-        public string authenticationToken;
+        public readonly TestServer Server;
+        public readonly EFCoreSpikeContext Context;
+        public string AuthenticationToken;
         public IConfiguration Configuration;
-        private string configFileName = "appsettings.json";
-        public ControllerFixture()
+	    private const string configFileName = "appsettings.json";
+	    public ControllerFixture()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(GetFullPathToTestConfigFile())
@@ -27,15 +27,15 @@ namespace Spike.WebApi.IntegrationTest
 
             var optionsBuilder = new DbContextOptionsBuilder<EFCoreSpikeContext>();
             optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            context = new EFCoreSpikeContext(optionsBuilder.Options);
+            Context = new EFCoreSpikeContext(optionsBuilder.Options);
 
-            server = new TestServer(new WebHostBuilder()
+            Server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services => services.AddAutofac())
                 .UseConfiguration(Configuration)
                 .UseStartup<Startup>());
 
             var getTokenTask = GetAuthorizationToken();
-            authenticationToken = getTokenTask.Result.AccessToken;
+            AuthenticationToken = getTokenTask.Result.AccessToken;
         }
         public void Dispose()
         {
@@ -43,8 +43,7 @@ namespace Spike.WebApi.IntegrationTest
 
         private async Task<TokenResponse> GetAuthorizationToken()
         {
-            TokenResponse tokenResponse;
-            var clientId = Configuration["SpikeClientId"];
+	        var clientId = Configuration["SpikeClientId"];
             var username = Configuration["SpikeTestUsername"];
             var password = Configuration["SpikeTestPassword"];
             var secret = Configuration["SpikeSecret"];
@@ -58,11 +57,11 @@ namespace Spike.WebApi.IntegrationTest
 
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret))
             {
-                return tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
-            }
+				return await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+			}
         }
 
-        private string GetFullPathToTestConfigFile()
+        private static string GetFullPathToTestConfigFile()
         {
             return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".."));
         }
