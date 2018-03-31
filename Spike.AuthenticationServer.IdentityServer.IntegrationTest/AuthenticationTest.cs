@@ -69,7 +69,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             var username = fixture.Configuration["SpikeTestUsername"];
             var password = fixture.Configuration["SpikeTestPassword"];
             var scopeSecret = fixture.Configuration["ScopeReferenceSecret"];
-            var handler = fixture.server.CreateHandler();
+            var handler = fixture.Server.CreateHandler();
             DiscoveryResponse discovery = await GetDiscoveryResponse(handler);
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))

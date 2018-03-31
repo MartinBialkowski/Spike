@@ -41,7 +41,6 @@ namespace Spike.AuthenticationServer.IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
                 .AddDeveloperSigningCredential()
-                .AddInMemoryPersistedGrants()
                 .AddAspNetIdentity<IdentityUser>()
                 .AddConfigurationStore(options =>
                 {
