@@ -16,6 +16,7 @@ namespace Spike.WebApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/students")]
+    [ApiController]
     public class StudentsController : Controller
     {
         private readonly IStudentRepository studentRepository;
@@ -38,7 +39,7 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<IActionResult> GetStudents(PagingDto pagingDto, StudentFilterDto filterDto, string sort = "Id")
+        public async Task<ActionResult<PagedResultDataTransferObject<StudentResponseDataTransferObject>>> GetStudents(PagingDto pagingDto, StudentFilterDto filterDto, string sort = "Id")
         {
             SortField<Student>[] sortFields;
             FilterField<Student>[] filterFields;
@@ -69,13 +70,8 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<IActionResult> GetStudent([FromRoute] int id)
+        public async Task<ActionResult<StudentResponseDataTransferObject>> GetStudent([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var student = await studentRepository.GetByIdAsync(id);
 
             if (student == null)
@@ -105,11 +101,6 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject studentDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != studentDto.Id)
             {
                 return BadRequest($"Provided student Id: {studentDto.Id} not match id from url {id}.");
@@ -138,13 +129,8 @@ namespace Spike.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 201)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDto)
+        public async Task<ActionResult<StudentResponseDataTransferObject>> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var student = mapper.Map<StudentCreateRequestDataTransferObject, Student>(studentDto);
             studentRepository.Add(student);
             await studentRepository.CommitAsync();
@@ -160,11 +146,6 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> DeleteStudent([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var student = await studentRepository.GetByIdAsync(id);
             if (student == null)
             {
