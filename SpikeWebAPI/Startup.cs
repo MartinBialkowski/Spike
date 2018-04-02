@@ -103,6 +103,10 @@ namespace Spike.WebApi
                 SpikeDbInitializer.Initialize(app);
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseSwagger();
 
@@ -134,6 +138,7 @@ namespace Spike.WebApi
                     });
               });
 
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
         }
