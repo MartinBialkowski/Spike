@@ -39,7 +39,7 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<ActionResult<PagedResultDataTransferObject<StudentResponseDataTransferObject>>> GetStudents(PagingDto pagingDto, StudentFilterDto filterDto, string sort = "Id")
+        public async Task<ActionResult<PagedResultDataTransferObject<StudentResponseDataTransferObject>>> GetStudents([FromQuery] PagingDto pagingDto, [FromQuery] StudentFilterDto filterDto, [FromQuery] string sort = "Id")
         {
             SortField<Student>[] sortFields;
             FilterField<Student>[] filterFields;
@@ -70,7 +70,7 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 403)]
-        public async Task<ActionResult<StudentResponseDataTransferObject>> GetStudent([FromRoute] int id)
+        public async Task<ActionResult<StudentResponseDataTransferObject>> GetStudent(int id)
         {
             var student = await studentRepository.GetByIdAsync(id);
 
@@ -99,7 +99,7 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
-        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] StudentUpdateRequestDataTransferObject studentDto)
+        public async Task<IActionResult> PutStudent(int id, StudentUpdateRequestDataTransferObject studentDto)
         {
             if (id != studentDto.Id)
             {
@@ -129,7 +129,7 @@ namespace Spike.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(StudentResponseDataTransferObject), 201)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<ActionResult<StudentResponseDataTransferObject>> PostStudent([FromBody] StudentCreateRequestDataTransferObject studentDto)
+        public async Task<ActionResult<StudentResponseDataTransferObject>> PostStudent(StudentCreateRequestDataTransferObject studentDto)
         {
             var student = mapper.Map<StudentCreateRequestDataTransferObject, Student>(studentDto);
             studentRepository.Add(student);
@@ -144,7 +144,7 @@ namespace Spike.WebApi.Controllers
         [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
-        public async Task<IActionResult> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> DeleteStudent(int id)
         {
             var student = await studentRepository.GetByIdAsync(id);
             if (student == null)
