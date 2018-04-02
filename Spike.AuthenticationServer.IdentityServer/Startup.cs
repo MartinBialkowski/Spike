@@ -40,7 +40,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             .AddDefaultTokenProviders();
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
+            services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<IdentityUser>()
                 .AddConfigurationStore(options =>
@@ -84,6 +84,10 @@ namespace Spike.AuthenticationServer.IdentityServer
                 IdentityServerDbInitialize.Initialize(app, Configuration);
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -91,6 +95,7 @@ namespace Spike.AuthenticationServer.IdentityServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Authentication Server");
             });
 
+            app.UseHttpsRedirection();
             app.UseIdentityServer();
             app.UseMvc();
         }
