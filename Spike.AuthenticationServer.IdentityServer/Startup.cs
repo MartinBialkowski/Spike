@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +40,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             .AddDefaultTokenProviders();
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            services.AddIdentityServer(s => s.IssuerUri = Configuration["JwtIssuer"])
+            services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<IdentityUser>()
                 .AddConfigurationStore(options =>
@@ -63,6 +64,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             });
 
             services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_0)
                 .AddFluentValidation();
 
             services.Configure<SendGridOptions>(Configuration);
@@ -82,6 +84,10 @@ namespace Spike.AuthenticationServer.IdentityServer
                 IdentityServerDbInitialize.Initialize(app, Configuration);
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -89,6 +95,7 @@ namespace Spike.AuthenticationServer.IdentityServer
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spike Authentication Server");
             });
 
+            app.UseHttpsRedirection();
             app.UseIdentityServer();
             app.UseMvc();
         }
