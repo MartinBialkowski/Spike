@@ -32,7 +32,10 @@ namespace Spike.WebApi.IntegrationTest
             Server = new TestServer(new WebHostBuilder()
                 .ConfigureServices(services => services.AddAutofac())
                 .UseConfiguration(Configuration)
-                .UseStartup<Startup>());
+                .UseStartup<Startup>())
+            {
+                BaseAddress = new Uri("https://localhost/")
+            };
 
             var getTokenTask = GetAuthorizationToken();
             AuthenticationToken = getTokenTask.Result.AccessToken;
