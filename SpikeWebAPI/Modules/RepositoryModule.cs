@@ -21,7 +21,6 @@ namespace Spike.WebApi.Modules
             var repositoryModule = new ConfigurationModule(autofacConfig.Build());
 
             builder.RegisterModule(repositoryModule);
-            base.Load(builder);
         }
     }
 }
