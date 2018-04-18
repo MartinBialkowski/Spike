@@ -34,12 +34,11 @@ namespace Spike.WebApi.Controllers
 
         // GET: /api/students?sort=CourseId,Name-
         [Authorize]
-        [HttpGet]
+        [HttpGet("all")]
         [ProducesResponseType(typeof(Student), 200)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 401)]
         [ProducesResponseType(typeof(void), 403)]
-        [QueryStringConstraint("PageNumber", false)]
         public async Task<ActionResult<Student>> GetAllStudents([FromQuery] StudentFilterDto filterDto, [FromQuery] string sort = "Id")
         {
             SortField<Student>[] sortFields;
@@ -49,7 +48,7 @@ namespace Spike.WebApi.Controllers
                 sortFields = mapper.Map<string, SortField<Student>[]>(sort);
                 filterFields = mapper.Map<StudentFilterDto, FilterField<Student>[]>(filterDto);
             }
-            catch (Exception ex) when (ex is ArgumentException)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }

@@ -71,13 +71,13 @@ namespace Spike.WebApi.IntegrationTest
             Assert.Equal(expected, actual);
         }
 
-        [Fact(Skip = "Get all unsupported, net core 2.1 changes calls vallidators at start, need to split get all/get page0")]
+        [Fact]
         [Trait("Category", "Integration")]
         public async Task ShouldGetAllElementsSortedByName()
         {
             // arrange
             var queryString = "?sort=Name";
-            var request = url + queryString;
+            var request = $"{url}/all{queryString}";
             List<Student> response;
             // act
             using (var client = fixture.Server.CreateClient())
