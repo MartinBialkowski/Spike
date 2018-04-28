@@ -1,28 +1,29 @@
-﻿using Spike.WebApi.Types.DTOs;
+﻿using FluentValidation.TestHelper;
 using Xunit;
 
 namespace Spike.WebApi.Types.Validators.Test
 {
     public class StudentUpdateRequestValidatorTest
     {
+        private readonly StudentUpdateRequestDtoValidator validator;
+        public StudentUpdateRequestValidatorTest()
+        {
+            validator = new StudentUpdateRequestDtoValidator();
+        }
+
         [Theory]
         [InlineData(-1)]
         [InlineData(0)]
         public void InvalidWhenStudentIdIsNotValid(int id)
         {
-			//arrange
-            const string name = "SomeName";
-            const int courseId = 1;
-            var validator = new StudentUpdateRequestDtoValidator();
-			//act
-            var result = validator.Validate(new StudentUpdateRequestDataTransferObject
-            {
-                Id = id,
-                CourseId = courseId,
-                Name = name
-            });
-			//assert
-            Assert.False(result.IsValid);
+            validator.ShouldHaveValidationErrorFor(x => x.Id, id);
+        }
+
+        [Fact]
+        public void ValidWhenStudentIdProvided()
+        {
+            const int validId = 1;
+            validator.ShouldNotHaveValidationErrorFor(x => x.Id, validId);
         }
 
         [Theory]
@@ -31,18 +32,14 @@ namespace Spike.WebApi.Types.Validators.Test
         [InlineData("")]
         public void InvalidWhenNameIsNotValid(string name)
         {
-	        //arrange
-			const int id = 1;
-            var validator = new StudentUpdateRequestDtoValidator();
-	        //act
-			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
-            {
-                Id = id,
-                CourseId = id,
-                Name = name
-            });
-	        //assert
-			Assert.False(result.IsValid);
+            validator.ShouldHaveValidationErrorFor(x => x.Name, name);
+        }
+
+        [Fact]
+        public void ValidWhenNameProvided()
+        {
+            const string validName = "Name";
+            validator.ShouldNotHaveValidationErrorFor(x => x.Name, validName);
         }
 
         [Theory]
@@ -50,37 +47,14 @@ namespace Spike.WebApi.Types.Validators.Test
         [InlineData(0)]
         public void InvalidWhenCourseIdIsNotValid(int id)
         {
-	        //arrange
-			const int studentId = 1;
-            const string name = "SomeName";
-            var validator = new StudentUpdateRequestDtoValidator();
-	        //act
-			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
-            {
-                Id = studentId,
-                CourseId = id,
-                Name = name
-            });
-	        //assert
-			Assert.False(result.IsValid);
+            validator.ShouldHaveValidationErrorFor(x => x.CourseId, id);
         }
 
         [Fact]
         public void ValidWhenValidDataIsProvided()
         {
-	        //arrange
-			const string name = "SomeName";
-            const int id = 1;
-            var validator = new StudentUpdateRequestDtoValidator();
-	        //act
-			var result = validator.Validate(new StudentUpdateRequestDataTransferObject
-            {
-                Id = id,
-                CourseId = id,
-                Name = name
-            });
-	        //assert
-			Assert.True(result.IsValid);
+            const int validCourseId = 1;
+            validator.ShouldNotHaveValidationErrorFor(x => x.CourseId, validCourseId);
         }
     }
 }
