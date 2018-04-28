@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using Spike.Core.Model;
 using Xunit;
 
@@ -7,12 +8,17 @@ namespace Spike.Infrastructure.Extension.Test
 {
     public class SortingTest
     {
+        private readonly IQueryable<TestModel> testData;
+
+        public SortingTest()
+        {
+            testData = ModelHelper.GetTestData().AsQueryable();
+        }
+
         [Fact]
         public void ShouldReturnAscendingSortedData()
         {
             // arrange
-            var testData = ModelHelper.GetTestData().AsQueryable();
-            var exptectedData = testData.OrderBy(x => x.Name);
             var sortField = new SortField<TestModel>
             {
                 PropertyName = "Name",
@@ -21,15 +27,13 @@ namespace Spike.Infrastructure.Extension.Test
             // act
             var result = sortField.SortBy(testData);
             // assert
-            Assert.Equal(exptectedData, result);
+            result.Should().BeInAscendingOrder(x => x.Name);
         }
 
         [Fact]
         public void ShouldReturnDescendingSortedData()
         {
             // arrange
-            var testData = ModelHelper.GetTestData().AsQueryable();
-            var exptectedData = testData.OrderByDescending(x => x.Name);
             var sortField = new SortField<TestModel>
             {
                 PropertyName = "Name",
@@ -38,14 +42,13 @@ namespace Spike.Infrastructure.Extension.Test
             // act
             var result = sortField.SortBy(testData);
             // assert
-            Assert.Equal(exptectedData, result);
+            result.Should().BeInDescendingOrder(x => x.Name);
         }
 
         [Fact]
         public void ShouldReturnSortedDataWhenArraySortFieldsProvided()
         {
             // arrange
-            var testData = ModelHelper.GetTestData().AsQueryable();
             var exptectedData = testData.OrderBy(x => x.IsEven).ThenByDescending(x => x.Name);
             var sortFields = new SortField<TestModel>[2];
             sortFields[0] = new SortField<TestModel>
@@ -61,19 +64,16 @@ namespace Spike.Infrastructure.Extension.Test
             // act
             var result = sortFields.Sort(testData);
             // assert
-            Assert.Equal(exptectedData, result);
+            result.Should().BeEquivalentTo(exptectedData, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public void ShouldThrowExceptionWhenSortFieldNull()
         {
-            // arrange
-            var testData = ModelHelper.GetTestData().AsQueryable();
             // act
-            var exception = Record.Exception(() => ((SortField<TestModel>[]) null).Sort(testData));
+            Action act = () => (null as SortField<TestModel>[]).Sort(testData);
             // assert
-            Assert.NotNull(exception);
-            Assert.IsType<ArgumentNullException>(exception);
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -81,12 +81,10 @@ namespace Spike.Infrastructure.Extension.Test
         {
             // arrange
             var sortFields = new SortField<TestModel>[0];
-            var testData = ModelHelper.GetTestData().AsQueryable();
             // act
-            var exception = Record.Exception(() => sortFields.Sort(testData));
+            Action act = () => sortFields.Sort(testData);
             // assert
-            Assert.NotNull(exception);
-            Assert.IsType<ArgumentException>(exception);
+            act.Should().Throw<ArgumentException>();
         }
     }
 }
