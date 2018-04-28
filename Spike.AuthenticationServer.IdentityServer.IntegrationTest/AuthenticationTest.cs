@@ -31,7 +31,7 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {
-                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, $"{apiScope} offline_access");
             }
             // assert
             Assert.False(tokenResponse.IsError);
