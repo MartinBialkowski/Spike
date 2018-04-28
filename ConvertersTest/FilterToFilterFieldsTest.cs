@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
 using Spike.Core.Model;
 using Spike.WebApi.Mappings;
 using Xunit;
@@ -29,7 +29,7 @@ namespace Spike.WebApi.Converters.Test
             // act
             result = converter.Convert(source, result, null);
             // assert
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(result));
+            result[0].Should().BeEquivalentTo(expected[0]);
         }
     }
 }
