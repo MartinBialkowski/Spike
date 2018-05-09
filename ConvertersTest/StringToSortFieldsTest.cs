@@ -1,21 +1,30 @@
-using Newtonsoft.Json;
+using FluentAssertions;
 using Spike.Core.Model;
 using Spike.WebApi.Mappings;
+using System;
 using Xunit;
 
 namespace Spike.WebApi.Converters.Test
 {
     public class StringToSortFieldsTest
     {
+        private readonly StringToSortFieldsConverter<TestModel> converter;
+        private readonly int expectedLength = 2;
+        private readonly SortField<TestModel>[] expected;
+        private SortField<TestModel>[] result;
+        
+        public StringToSortFieldsTest()
+        {
+            converter = new StringToSortFieldsConverter<TestModel>();
+            result = new SortField<TestModel>[0];
+            expected = new SortField<TestModel>[expectedLength];
+        }
+
         [Fact]
         public void ShouldReturnSortFieldsAscending()
         {
             // assign
-            const int expectedLength = 2;
             const string source = "Id,FieldName";
-            var converter = new StringToSortFieldsConverter<TestModel>();
-            var result = new SortField<TestModel>[0];
-            var expected = new SortField<TestModel>[expectedLength];
             expected[0] = new SortField<TestModel>
             {
                 PropertyName = "Id",
@@ -29,18 +38,14 @@ namespace Spike.WebApi.Converters.Test
             // act
             result = converter.Convert(source, result, null);
             // assert
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(result));
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public void ShouldReturnSortFieldsDescending()
         {
             // assign
-            const int expectedLength = 2;
             const string source = "Id-,FieldName-";
-            var converter = new StringToSortFieldsConverter<TestModel>();
-            var result = new SortField<TestModel>[0];
-            var expected = new SortField<TestModel>[expectedLength];
             expected[0] = new SortField<TestModel>
             {
                 PropertyName = "Id",
@@ -54,22 +59,18 @@ namespace Spike.WebApi.Converters.Test
             // act
             result = converter.Convert(source, result, null);
             // assert
-            Assert.Equal(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(result));
+            result.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData("")]
         [InlineData("NotAField")]
         public void ShouldFailWhenNotValidDataProvided(string source)
         {
-            // assign
-            var converter = new StringToSortFieldsConverter<TestModel>();
-            var result = new SortField<TestModel>[0];
             // act
-            var exception = Record.Exception(() => converter.Convert(source, result, null));
+            Action act = () => converter.Convert(source, result, null);
             // assert
-            Assert.NotNull(exception);
+            act.Should().Throw<ArgumentException>();
         }
     }
 }

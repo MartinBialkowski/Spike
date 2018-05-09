@@ -1,24 +1,31 @@
-using Spike.WebApi.Types.DTOs;
+using FluentValidation.TestHelper;
 using Xunit;
 
 namespace Spike.WebApi.Types.Validators.Test
 {
     public class StudentCreateRequestValidatorTest
     {
+        private readonly StudentCreateRequestDtoValidator validator;
+
+        public StudentCreateRequestValidatorTest()
+        {
+            validator = new StudentCreateRequestDtoValidator();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("  ")]
         [InlineData("")]
         public void InvalidWhenNameIsNotValid(string name)
         {
-            const int id = 1;
-            var validator = new StudentCreateRequestDtoValidator();
-            var result = validator.Validate(new StudentCreateRequestDataTransferObject
-            {
-                CourseId = id,
-                Name = name
-            });
-            Assert.False(result.IsValid);
+            validator.ShouldHaveValidationErrorFor(x => x.Name, name);
+        }
+
+        [Fact]
+        public void ValidWhenNameProvided()
+        {
+            const string validName = "Name";
+            validator.ShouldNotHaveValidationErrorFor(x => x.Name, validName);
         }
 
         [Theory]
@@ -26,28 +33,15 @@ namespace Spike.WebApi.Types.Validators.Test
         [InlineData(0)]
         public void InvalidWhenCourseIdIsNotValid(int id)
         {
-            const string name = "SomeName";
-            var validator = new StudentCreateRequestDtoValidator();
-            var result = validator.Validate(new StudentCreateRequestDataTransferObject
-            {
-                CourseId = id,
-                Name = name
-            });
-            Assert.False(result.IsValid);
+            validator.ShouldHaveValidationErrorFor(x => x.CourseId, id);
         }
 
         [Fact]
-        public void ValidWhenCourseIdAndNameAreProvided()
+        public void ValidWhenCourseIdProvided()
         {
-            const string name = "SomeName";
-            const int id = 1;
-            var validator = new StudentCreateRequestDtoValidator();
-            var result = validator.Validate(new StudentCreateRequestDataTransferObject
-            {
-                CourseId = id,
-                Name = name
-            });
-            Assert.True(result.IsValid);
+            const int validCourseId = 1;
+            validator.ShouldNotHaveValidationErrorFor(x => x.CourseId, validCourseId);
+
         }
     }
 }
