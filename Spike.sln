@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test", "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test\Spike.AuthenticationServer.IdentityServer.Types.Validators.Test.csproj", "{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Controllers.Tests", "Spike.WebApi.Controllers.Tests\Spike.WebApi.Controllers.Tests.csproj", "{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.WebApi.Handlers.Test", "Spike.WebApi.Handlers.Test\Spike.WebApi.Handlers.Test.csproj", "{B5B3F973-61E9-47CE-AC05-9082E117EE0A}"
 EndProject
 Global
@@ -101,6 +103,10 @@ Global
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
