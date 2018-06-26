@@ -32,6 +32,29 @@ namespace Spike.WebApi.Controllers
             this.authorizationService = authorizationService;
         }
 
+        // GET: /api/students?sort=CourseId,Name-
+        [Authorize]
+        [HttpGet("all")]
+        [ProducesResponseType(typeof(Student), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(void), 401)]
+        [ProducesResponseType(typeof(void), 403)]
+        public async Task<ActionResult<Student>> GetAllStudents([FromQuery] StudentFilterDto filterDto, [FromQuery] string sort = "Id")
+        {
+            SortField<Student>[] sortFields;
+            FilterField<Student>[] filterFields;
+            try
+            {
+                sortFields = mapper.Map<string, SortField<Student>[]>(sort);
+                filterFields = mapper.Map<StudentFilterDto, FilterField<Student>[]>(filterDto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(await studentRepository.GetAsync(sortFields, filterFields).ToList());
+        }
+
         // GET: /api/students?pageNumber=1&pageLimit=3&Name=Martin&sort=CourseId,Name-
         [Authorize(Policy = "StudentDiscount")]
         [HttpGet]
@@ -51,14 +74,6 @@ namespace Spike.WebApi.Controllers
             catch (Exception ex) when (ex is ArgumentException)
             {
                 return BadRequest(ex.Message);
-            }
-            if (pagingDto.PageNumber == null && pagingDto.PageLimit == null)
-            {
-                return Ok(await studentRepository.GetAsync(sortFields, filterFields).ToList());
-            }
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
             }
             var paging = mapper.Map<PagingDto, Paging>(pagingDto);
             var pagedResult = await studentRepository.GetAsync(paging, sortFields, filterFields);

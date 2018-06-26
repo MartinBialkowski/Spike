@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Spike.Core.Model;
 using Xunit;
 
@@ -6,48 +8,53 @@ namespace Spike.Infrastructure.Extension.Test
 {
     public class PagingTest
     {
-	    private int pageNumber;
+        private int pageNumber;
         private int pageSize;
+        private readonly TestModel[] testData;
+
+        public PagingTest()
+        {
+            testData = ModelHelper.GetTestData();
+        }
+
         [Fact]
-        public void ShouldReturnWholeDataWhenPageSizeGreaterThanDataLength()
+        public async Task ShouldReturnWholeDataWhenPageSizeGreaterThanDataLength()
         {
             // arrange
             pageNumber = 1;
             pageSize = 20;
-            var testData = ModelHelper.GetTestData();
             var paging = new Paging(pageNumber, pageSize);
             // act
-            var result = paging.Page(testData.AsQueryable()).ToList();
+            var result = await paging.Page(testData.AsQueryable()).ToList();
             // assert
-            Assert.Equal(testData.Length, result.Result.Count);
+            result.Should().HaveSameCount(testData);
         }
 
         [Fact]
-        public void ShouldReturnNothingWhenOffsetGreaterThanDataLength()
+        public async Task ShouldReturnNothingWhenOffsetGreaterThanDataLength()
         {
             // arrange
-            pageNumber = 2;
-            pageSize = 20;
-            var testData = ModelHelper.GetTestData();
+            pageNumber = 20;
+            pageSize = 1;
             var paging = new Paging(pageNumber, pageSize);
             // act
-            var result = paging.Page(testData.AsQueryable()).ToList();
+            var result = await paging.Page(testData.AsQueryable()).ToList();
             // assert
-            Assert.Empty(result.Result);
+            result.Should().BeEmpty();
         }
 
         [Fact]
-        public void ShouldReturnDemandedPage()
+        public async Task ShouldReturnDemandedPage()
         {
             // arrange
             pageNumber = 2;
             pageSize = 5;
-            var testData = ModelHelper.GetTestData();
             var paging = new Paging(pageNumber, pageSize);
+            var expected = testData.Skip(pageSize);
             // act
-            var result = paging.Page(testData.AsQueryable()).ToList();
+            var result = await paging.Page(testData.AsQueryable()).ToList();
             // assert
-            Assert.Equal(testData.Skip(pageSize), result.Result);
+            result.Should().HaveSameCount(expected);
         }
     }
 }

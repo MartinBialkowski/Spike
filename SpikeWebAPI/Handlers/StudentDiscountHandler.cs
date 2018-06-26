@@ -9,13 +9,6 @@ namespace Spike.WebApi.Handlers
 {
     public class StudentDiscountHandler : AuthorizationHandler<StudentDiscountRequirement>
     {
-        private readonly IConfiguration configuration;
-
-        public StudentDiscountHandler(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, StudentDiscountRequirement requirement)
         {
             if (!context.User.HasClaim(c => c.Type == JwtRegisteredClaimNames.Birthdate))

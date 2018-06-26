@@ -1,3 +1,4 @@
+using FluentAssertions;
 using IdentityModel.Client;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -31,11 +32,12 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
             // act
             using (var tokenClient = new TokenClient(discovery.TokenEndpoint, clientId, secret, handler))
             {
-                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, apiScope);
+                tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(username, password, $"{apiScope} offline_access");
             }
             // assert
-            Assert.False(tokenResponse.IsError);
-            Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
+            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.AccessToken.Should().NotBeNullOrWhiteSpace();
+            tokenResponse.RefreshToken.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -53,8 +55,8 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
                 tokenResponse = await tokenClient.RequestClientCredentialsAsync(apiScope);
             }
             // assert
-            Assert.False(tokenResponse.IsError);
-            Assert.False(string.IsNullOrEmpty(tokenResponse.AccessToken));
+            tokenResponse.IsError.Should().BeFalse();
+            tokenResponse.AccessToken.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -81,8 +83,8 @@ namespace Spike.AuthenticationServer.IdentityServer.IntegrationTest
                 introspectionResponse = await introspectionClient.SendAsync(new IntrospectionRequest() { Token = tokenResponse.AccessToken });
             }
             // assert
-            Assert.False(introspectionResponse.IsError);
-            Assert.False(string.IsNullOrEmpty(introspectionResponse.Raw));
+            introspectionResponse.IsError.Should().BeFalse();
+            introspectionResponse.Raw.Should().NotBeNullOrWhiteSpace();
         }
 
         private async Task<DiscoveryResponse> GetDiscoveryResponse(HttpMessageHandler handler)
