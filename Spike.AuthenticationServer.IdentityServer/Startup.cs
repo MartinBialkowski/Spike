@@ -64,7 +64,7 @@ namespace Spike.AuthenticationServer.IdentityServer
             });
 
             services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_0)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation();
 
             services.Configure<SendGridOptions>(Configuration);

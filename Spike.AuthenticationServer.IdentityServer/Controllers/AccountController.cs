@@ -52,13 +52,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             logger.LogDebug("{@User} try to register", new { User = userDto });
-            // Fluent Validator is not working with Net Core 2.1 yet, work in progress
-            // https://github.com/JeremySkinner/FluentValidation/issues/698
-            if (!ModelState.IsValid)
-            {
-                logger.LogWarning("User sent invalid credentials");
-                return BadRequest(ModelState);
-            }
 
             var user = new IdentityUser
             {
@@ -92,11 +85,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> ConfirmEmail(AccountConfirmationDto confirmationDto)
         {
-            // Remove when FV 7.6 version
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
             var user = await userManager.FindByIdAsync(confirmationDto.UserId);
             if (user == null)
             {
@@ -120,11 +108,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
-            // Remove when FV 7.6 version
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
             var user = await userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
             {
@@ -142,11 +125,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
-            // Remove when FV 7.6 version
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
             var user = await userManager.FindByEmailAsync(resetPasswordDto.Email);
             if (user == null)
             {
