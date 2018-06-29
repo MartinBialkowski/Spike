@@ -34,14 +34,14 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers.Tests
         }
 
         [Fact]
-        public void ShouldReturnBadRequestWhenInvalidModelState()
+        public void ShouldBeDecoratedWithApiControllerAttribute()
         {
             // assert
             typeof(AccountController).Should().BeDecoratedWith<ApiControllerAttribute>();
         }
 
         [Fact]
-        public void ShouldReturnAuthErrorWhenUserNotSignedIn()
+        public void ShouldBeDecoratedWithAuthorizeAttribute()
         {
             // assert
             typeof(AccountController).Should().BeDecoratedWith<AuthorizeAttribute>();
