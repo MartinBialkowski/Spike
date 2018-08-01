@@ -6,11 +6,6 @@ namespace Spike.Infrastructure.Extension
 {
     public static class SortingExtension
     {
-        public static IOrderedQueryable<T> SortBy<T>(this SortField<T> sortField, IQueryable<T> query) where T : class
-        {
-	        return sortField.SortOrder == SortOrder.Ascending ? query.OrderBy(sortField.PropertyName.ToExpression<T>()) : query.OrderByDescending(sortField.PropertyName.ToExpression<T>());
-        }
-
         public static IOrderedQueryable<T> Sort<T>(this SortField<T>[] sortFields, IQueryable<T> query) where T : class
         {
             if(sortFields == null)
@@ -24,16 +19,19 @@ namespace Spike.Infrastructure.Extension
             IOrderedQueryable<T> sortedData = null;
             foreach (var sortField in sortFields)
             {
-                if (sortedData == null)
-                {
-                    sortedData = sortField.SortBy(query);
-                }
-                else
-                {
-	                sortedData = sortField.SortOrder == SortOrder.Ascending ? sortedData.ThenBy(sortField.PropertyName.ToExpression<T>()) : sortedData.ThenByDescending(sortField.PropertyName.ToExpression<T>());
-                }
+                sortedData = sortedData == null ? sortField.SortBy(query) : sortField.SortThenBy(sortedData);
             }
             return sortedData;
+        }
+
+        public static IOrderedQueryable<T> SortBy<T>(this SortField<T> sortField, IQueryable<T> query) where T : class
+        {
+            return sortField.SortOrder == SortOrder.Ascending ? query.OrderBy(sortField.PropertyName.ToExpression<T>()) : query.OrderByDescending(sortField.PropertyName.ToExpression<T>());
+        }
+
+        private static IOrderedQueryable<T> SortThenBy<T>(this SortField<T> sortField, IOrderedQueryable<T> query) where T : class
+        {
+            return sortField.SortOrder == SortOrder.Ascending ? query.ThenBy(sortField.PropertyName.ToExpression<T>()) : query.ThenByDescending(sortField.PropertyName.ToExpression<T>());
         }
     }
 }
