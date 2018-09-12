@@ -22,3 +22,20 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Spike.AuthenticationServer.IdentityServer.dll"]
+
+ARG VCS_REF
+ARG BUILD_VERSION
+
+# Labels
+LABEL com.embe-projects.name="AuthService"
+LABEL com.embe-projects.description="Image for auth service used for embe's projects"
+LABEL com.embe-projects.url="TO DO as blog post or wiki documentation"
+LABEL com.embe-projects.vcs-url="https://embeprojects.visualstudio.com/HeroesManager/_git/Spike?path=%2FSpike.AuthenticationServer.IdentityServer&version=GBdevelop"
+LABEL com.embe-projects.vcs-ref=$VCS_REF
+LABEL com.embe-projects.version=$BUILD_VERSION
+LABEL com.embe-projects.version="1.0-test"
+LABEL com.embe-projects.schema-version="1.0"
+LABEL com.embe-projects.docker.cmd="docker run --rm -p 53702:80 -p 44307:443 spikeauthenticationserveridentityserver --name myapp"
+LABEL com.embe-projects.docker.cmd.devel="TODO run in developer mode"
+LABEL com.embe-projects.docker.cmd.test="TODO run only tests"
+LABEL com.embe-projects.docker.params="TODO environmental parameters"
