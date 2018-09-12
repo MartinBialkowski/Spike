@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  authenticationserver:
+    image: embe2/authenticationserver:0.1
+    build:
+      context: .
+      dockerfile: Spike.AuthenticationServer.IdentityServer/Dockerfile
+      args:
+        VCS_REF: 31849378
+        BUILD_VERSION: 0.1
