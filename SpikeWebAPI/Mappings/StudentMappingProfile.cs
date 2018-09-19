@@ -8,9 +8,9 @@ namespace Spike.WebApi.Mappings
     {
         public StudentMappingProfile()
         {
-            CreateMap<StudentCreateRequestDataTransferObject, Student>();
-            CreateMap<StudentUpdateRequestDataTransferObject, Student>();
-            CreateMap<Student, StudentResponseDataTransferObject>();
+            CreateMap<StudentCreateRequestDataTransferObject, Student>(MemberList.Source);
+            CreateMap<StudentUpdateRequestDataTransferObject, Student>(MemberList.Source);
+            CreateMap<Student, StudentResponseDataTransferObject>(MemberList.Destination);
         }
     }
 }

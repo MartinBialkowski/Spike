@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Spike.Core.Entity;
@@ -16,7 +17,6 @@ namespace Spike.WebApi.IntegrationTest
     {
         private readonly ControllerFixture fixture;
         private HttpResponseMessage httpResponse;
-	    private string actual, expected;
 
 	    private const string url = "api/students";
 	    private const string studentName = "TestName";
@@ -64,11 +64,9 @@ namespace Spike.WebApi.IntegrationTest
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
-            actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(expectedPagedResult);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expected, actual);
+            response.Should().BeEquivalentTo(expectedPagedResult);
         }
 
         [Fact]
@@ -77,7 +75,7 @@ namespace Spike.WebApi.IntegrationTest
         {
             // arrange
             var queryString = "?sort=Name";
-            var request = url + queryString;
+            var request = $"{url}/all{queryString}";
             List<Student> response;
             // act
             using (var client = fixture.Server.CreateClient())
@@ -88,11 +86,9 @@ namespace Spike.WebApi.IntegrationTest
             }
 
             var students = fixture.Context.Students.OrderBy(s => s.Name).ToList();
-            actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(students);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expected, actual);
+            response.Should().BeEquivalentTo(students);
         }
 
         [Fact]
@@ -126,11 +122,9 @@ namespace Spike.WebApi.IntegrationTest
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<TestPagedResult<StudentTestResponse>>();
             }
-            actual = JsonConvert.SerializeObject(response);
-            expected = JsonConvert.SerializeObject(expectedPagedResult);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expected, actual);
+            response.Should().BeEquivalentTo(expectedPagedResult);
         }
 
         [Fact]
@@ -144,7 +138,6 @@ namespace Spike.WebApi.IntegrationTest
 
             var student = fixture.Context.Students.Include(s => s.Course).FirstOrDefault(s => s.Id == studentId);
             var studentDto = CreateResponseStudent(student);
-            expected = JsonConvert.SerializeObject(studentDto);
             // act
             using (var client = fixture.Server.CreateClient())
             {
@@ -152,10 +145,9 @@ namespace Spike.WebApi.IntegrationTest
                 httpResponse = await client.GetAsync(request);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
-            actual = JsonConvert.SerializeObject(response);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expected, actual);
+            response.Should().BeEquivalentTo(studentDto);
         }
 
         [Fact]
@@ -182,7 +174,6 @@ namespace Spike.WebApi.IntegrationTest
                 httpResponse = await client.PostAsync(request, content);
                 response = await httpResponse.Content.ReadAsAsync<StudentTestResponse>();
             }
-            actual = JsonConvert.SerializeObject(response);
             var student = await GetStudentByName(studentName);
             var studentDto = new StudentTestResponse()
             {
@@ -190,10 +181,9 @@ namespace Spike.WebApi.IntegrationTest
                 Name = student.Name,
                 Course = null
             };
-            expected = JsonConvert.SerializeObject(studentDto);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Equal(expected, actual);
+            response.Should().BeEquivalentTo(studentDto);
         }
 
         [Fact]
@@ -222,7 +212,7 @@ namespace Spike.WebApi.IntegrationTest
             var student = await GetStudentByName(updatedName);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.True(student != null);
+            student.Should().BeOfType<Student>().And.NotBeNull();
         }
 
         [Fact]
@@ -241,7 +231,7 @@ namespace Spike.WebApi.IntegrationTest
             var expectedStudent = await GetStudentByName(updatedName);
             // assert
             httpResponse.EnsureSuccessStatusCode();
-            Assert.Null(expectedStudent);
+            expectedStudent.Should().BeNull();
         }
 
         private async Task<Student> GetStudentByName(string name)

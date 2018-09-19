@@ -22,7 +22,9 @@ namespace Spike.Infrastructure.Extension
             Expression argument;
             if (filterValue is string)
             {
-                containsMethod = typeof(string).GetMethod("Contains");
+                // After Net Core 2.1 release possible bug
+                // containsMethod = typeof(string).GetMethod("Contains");
+                containsMethod = typeof(string).GetMethods().First(x => x.Name == "Contains");
                 argument = Expression.Constant(filterValue);
             }
             else

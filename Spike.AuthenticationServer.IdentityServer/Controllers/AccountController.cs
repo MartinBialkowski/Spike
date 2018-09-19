@@ -19,6 +19,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
     [Authorize]
     [Produces("application/json")]
     [Route("api/account")]
+    [ApiController]
     public class AccountController : Controller
     {
         private readonly SignInManager<IdentityUser> signInManager;
@@ -50,12 +51,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
-            logger.LogDebug("{@User} try to login", new { User = userDto });
-            if (!ModelState.IsValid)
-            {
-                logger.LogWarning("User sent invalid credentials");
-                return BadRequest(ModelState);
-            }
+            logger.LogDebug("{@User} try to register", new { User = userDto });
 
             var user = new IdentityUser
             {
@@ -89,10 +85,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(string), 404)]
         public async Task<IActionResult> ConfirmEmail(AccountConfirmationDto confirmationDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var user = await userManager.FindByIdAsync(confirmationDto.UserId);
             if (user == null)
             {
@@ -111,15 +103,11 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
 
         [HttpPost("forgot-password")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(void), 204)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var user = await userManager.FindByEmailAsync(forgotPasswordDto.Email);
             if (user == null || !(await userManager.IsEmailConfirmedAsync(user)))
             {
@@ -127,7 +115,7 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
             }
             var code = await userManager.GeneratePasswordResetTokenAsync(user);
             await emailSender.SendResetPasswordEmail(user.Email, code);
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("reset-password")]
@@ -137,10 +125,6 @@ namespace Spike.AuthenticationServer.IdentityServer.Controllers
         [ProducesResponseType(typeof(void), 403)]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var user = await userManager.FindByEmailAsync(resetPasswordDto.Email);
             if (user == null)
             {

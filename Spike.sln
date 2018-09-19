@@ -29,9 +29,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.IdentityServer.IntegrationTest", "Spike.AuthenticationServer.IdentityServer.IntegrationTest\Spike.AuthenticationServer.IdentityServer.IntegrationTest.csproj", "{75027B6B-E7A2-463C-B9B3-BE6C8F24BE8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.AuthenticationServer.IdentityServer.Types", "Spike.AuthenticationServer.IdentityServer.Types\Spike.AuthenticationServer.IdentityServer.Types.csproj", "{AAB5DEAB-E411-47BF-825E-DCDF8E4BA348}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.IdentityServer.Types", "Spike.AuthenticationServer.IdentityServer.Types\Spike.AuthenticationServer.IdentityServer.Types.csproj", "{AAB5DEAB-E411-47BF-825E-DCDF8E4BA348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test", "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test\Spike.AuthenticationServer.IdentityServer.Types.Validators.Test.csproj", "{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test", "Spike.AuthenticationServer.IdentityServer.Types.Validators.Test\Spike.AuthenticationServer.IdentityServer.Types.Validators.Test.csproj", "{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Controllers.Tests", "Spike.WebApi.Controllers.Tests\Spike.WebApi.Controllers.Tests.csproj", "{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Handlers.Test", "Spike.WebApi.Handlers.Test\Spike.WebApi.Handlers.Test.csproj", "{B5B3F973-61E9-47CE-AC05-9082E117EE0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spike.WebApi.Mappings.Test", "Spike.WebApi.Mappings.Test\Spike.WebApi.Mappings.Test.csproj", "{D1FD840D-4617-4856-96F7-6E3E88A44E0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spike.AuthenticationServer.IdentityServer.Controllers.Tests", "Spike.AuthenticationServer.IdentityServer.Controllers.Tests\Spike.AuthenticationServer.IdentityServer.Controllers.Tests.csproj", "{D95E96C1-D688-4640-8271-A2ADFA6599CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +107,22 @@ Global
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CF70DB7-1F92-4DCB-9210-D38A43DD1C3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDC2821F-4CA0-4CFA-A8A4-368BE5724E25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B3F973-61E9-47CE-AC05-9082E117EE0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1FD840D-4617-4856-96F7-6E3E88A44E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1FD840D-4617-4856-96F7-6E3E88A44E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1FD840D-4617-4856-96F7-6E3E88A44E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1FD840D-4617-4856-96F7-6E3E88A44E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D95E96C1-D688-4640-8271-A2ADFA6599CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D95E96C1-D688-4640-8271-A2ADFA6599CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D95E96C1-D688-4640-8271-A2ADFA6599CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D95E96C1-D688-4640-8271-A2ADFA6599CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

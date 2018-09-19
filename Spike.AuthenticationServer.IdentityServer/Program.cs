@@ -9,10 +9,10 @@ namespace Spike.AuthenticationServer.IdentityServer
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureLogging((hostingContext, builder) =>
                 {
@@ -20,7 +20,6 @@ namespace Spike.AuthenticationServer.IdentityServer
                     builder.AddFile(configuration);
                 })
                 .ConfigureServices(services => services.AddAutofac())
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }

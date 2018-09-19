@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,6 +79,7 @@ namespace Spike.WebApi
 
             services
                 .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddFluentValidation()
                 .AddJsonOptions(options =>
                 {
@@ -100,6 +102,10 @@ namespace Spike.WebApi
             {
                 SpikeDbInitializer.Initialize(app);
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             app.UseSwagger();
@@ -132,6 +138,7 @@ namespace Spike.WebApi
                     });
               });
 
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
         }
