@@ -9,3 +9,33 @@ services:
       args:
         VCS_REF: 31849378
         BUILD_VERSION: 0.1
+  ms-sql:
+    image: microsoft/mssql-server-linux
+    container_name: spikemssql-database
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123!"
+      MYSQL_DATABASE: "spikemssql"
+    ports:
+      - "1433:1433"
+    volumes:
+      - type: volume
+        source: spike-database
+        target: /var/opt/mssql
+    restart: always
+    networks:
+      - spikemssql-net
+  spikemssql:
+    image: spikemssql
+    build:
+      context: ./EFCoreSpike5
+      dockerfile: Dockerfile
+    depends_on:
+      - ms-sql
+    networks:
+      - spikemssql-net
+volumes:
+  spike-database:
+networks:
+  spikemssql-net:
+    driver: bridge
