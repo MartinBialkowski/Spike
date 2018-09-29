@@ -9,6 +9,7 @@
     <DockerServiceName>spike.authenticationserver.identityserver</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="docker-compose-prod-db-update.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
