@@ -1,11 +1,41 @@
 version: '3.4'
 
 services:
-  authenticationserver:
-    image: embe2/authenticationserver:0.1
+  #authenticationserver:
+  #  image: embe2/authenticationserver:0.1
+  #  build:
+  #    context: ./Spike.AuthenticationServer.IdentityServer
+  #    dockerfile: Dockerfile
+  #    args:
+  #      VCS_REF: 31849378
+  #      BUILD_VERSION: 0.1
+  ms-sql:
+    image: microsoft/mssql-server-linux
+    container_name: spike-db1
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - type: volume
+        source: spike-database
+        target: /var/opt/mssql
+    restart: always
+    networks:
+      - spikemssql-net
+  spike.webapi:
+    image: embe2/spikewebapi:0.1
     build:
-      context: ./Spike.AuthenticationServer.IdentityServer
-      dockerfile: Dockerfile
-      args:
-        VCS_REF: 31849378
-        BUILD_VERSION: 0.1
+      context: .
+      dockerfile: SpikeWebAPI/Dockerfile
+    depends_on:
+      - ms-sql
+    networks:
+      - spikemssql-net
+
+volumes:
+  spike-database:
+networks:
+  spikemssql-net:
+    driver: bridge
