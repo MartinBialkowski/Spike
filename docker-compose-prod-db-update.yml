@@ -22,7 +22,7 @@ services:
       - type: volume
         source: spike-database
         target: /var/opt/mssql
-    restart: always
+    restart: no
     networks:
       - spikemssql-net
 volumes:

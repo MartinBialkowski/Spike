@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Spike.Core.Entity;
-using System;
 using System.Linq;
 
 namespace Spike.WebApi
