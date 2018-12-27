@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using AutoSFaP.Models;
 using Spike.Core.Entity;
-using Spike.Core.Model;
 using Spike.WebApi.Types.DTOs;
 using System.Linq;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Spike.Core.Model
+namespace AutoSFaP.Models
 {
     public class FilterField<T> where T : class
     {

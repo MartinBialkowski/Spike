@@ -11,6 +11,7 @@ using Spike.Core.Model;
 using Spike.Core.Entity;
 using Spike.WebApi.Types.DTOs;
 using Microsoft.Extensions.Logging;
+using AutoSFaP.Models;
 
 namespace Spike.WebApi.Controllers
 {

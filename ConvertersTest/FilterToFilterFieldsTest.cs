@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Spike.Core.Model;
+﻿using AutoSFaP.Models;
+using FluentAssertions;
 using Spike.WebApi.Mappings;
 using Xunit;
 

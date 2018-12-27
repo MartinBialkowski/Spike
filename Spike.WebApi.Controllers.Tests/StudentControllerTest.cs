@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Security.Claims;
+using AutoSFaP.Models;
 
 namespace Spike.WebApi.Controllers.Tests
 {
