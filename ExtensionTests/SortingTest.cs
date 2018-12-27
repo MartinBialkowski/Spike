@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using AutoSFaP.Models;
 using FluentAssertions;
-using Spike.Core.Model;
 using Xunit;
 
 namespace Spike.Infrastructure.Extension.Test

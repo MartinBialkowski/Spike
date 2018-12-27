@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Spike.Core.Model;
 using Spike.Core.Entity;
+using AutoSFaP.Models;
 
 namespace Spike.WebApi.Mappings
 {

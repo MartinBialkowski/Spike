@@ -4,7 +4,6 @@ using Moq;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
-using Spike.Core.Model;
 using Spike.Core.Entity;
 using Spike.WebApi.Types.DTOs;
 using System.Collections.Generic;
