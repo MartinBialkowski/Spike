@@ -1,3 +1,4 @@
+using AutoSFaP.Converters;
 using AutoSFaP.Models;
 using FluentAssertions;
 using Spike.WebApi.Mappings;
@@ -8,14 +9,14 @@ namespace Spike.WebApi.Converters.Test
 {
     public class StringToSortFieldsTest
     {
-        private readonly StringToSortFieldsConverter<TestModel> converter;
+        private readonly SortFieldsConverter<TestModel> converter;
         private readonly int expectedLength = 2;
         private readonly SortField<TestModel>[] expected;
         private SortField<TestModel>[] result;
         
         public StringToSortFieldsTest()
         {
-            converter = new StringToSortFieldsConverter<TestModel>();
+            converter = new SortFieldsConverter<TestModel>();
             result = new SortField<TestModel>[0];
             expected = new SortField<TestModel>[expectedLength];
         }
