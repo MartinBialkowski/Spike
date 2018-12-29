@@ -1,4 +1,5 @@
 ﻿using AutoSFaP.Models;
+using AutoSFaP.Converters;
 using FluentAssertions;
 using Spike.WebApi.Mappings;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Spike.WebApi.Converters.Test
         [Fact]
         public void ShouldConvertOnlyNotNullProperties()
         {
-            var converter = new FilterDtoToFilterField<TestModelDto, TestModel>();
+            var converter = new FilterFieldsConverter<TestModelDto, TestModel>();
 
             // assign
             const int expectedLength = 1;
