@@ -1,7 +1,7 @@
 ﻿using AutoSFaP.Models;
 using System.Linq;
 
-namespace Spike.Infrastructure.Extension
+namespace AutoSFaP.Extension
 {
     public static class FilteringExtension
     {

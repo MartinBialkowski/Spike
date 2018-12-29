@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Spike.Infrastructure.Extension
+namespace AutoSFaP.Extension
 {
     public static class PagingExtension
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Spike.Infrastructure.Extension
+namespace AutoSFaP.Extension
 {
     public static class StringExtension
     {

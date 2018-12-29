@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoSFaP.Models;
+using AutoSFaP.Extension;
 using FluentAssertions;
 using Xunit;
 

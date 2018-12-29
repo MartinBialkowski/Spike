@@ -2,7 +2,7 @@
 using System;
 using AutoSFaP.Models;
 
-namespace Spike.Infrastructure.Extension
+namespace AutoSFaP.Extension
 {
     public static class SortingExtension
     {

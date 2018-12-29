@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Spike.Infrastructure.Extension;
 using System;
 using Spike.Core.Entity;
 using AutoSFaP.Models;
+using AutoSFaP.Extension;
 
 namespace Spike.Infrastructure.Repositories
 {
