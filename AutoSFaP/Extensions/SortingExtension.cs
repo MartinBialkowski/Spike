@@ -2,7 +2,7 @@
 using System;
 using AutoSFaP.Models;
 
-namespace AutoSFaP.Extension
+namespace AutoSFaP.Extensions
 {
     public static class SortingExtension
     {

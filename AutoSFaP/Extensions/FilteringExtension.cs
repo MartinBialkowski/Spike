@@ -1,7 +1,7 @@
 ﻿using AutoSFaP.Models;
 using System.Linq;
 
-namespace AutoSFaP.Extension
+namespace AutoSFaP.Extensions
 {
     public static class FilteringExtension
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AutoSFaP.Extension
+namespace AutoSFaP.Extensions
 {
     public static class PagingExtension
     {

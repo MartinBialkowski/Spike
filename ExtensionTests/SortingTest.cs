@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AutoSFaP.Models;
-using AutoSFaP.Extension;
+using AutoSFaP.Extensions;
 using FluentAssertions;
 using Xunit;
 

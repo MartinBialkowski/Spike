@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using Spike.Core.Entity;
 using AutoSFaP.Models;
-using AutoSFaP.Extension;
+using AutoSFaP.Extensions;
 
 namespace Spike.Infrastructure.Repositories
 {
