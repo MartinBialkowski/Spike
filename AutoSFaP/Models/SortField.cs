@@ -1,7 +1,6 @@
-﻿using Spike.Core.Model;
-using System;
+﻿using System;
 
-namespace Spike.Core.Model
+namespace AutoSFaP.Models
 {
     public class SortField<T> where T : class
     {

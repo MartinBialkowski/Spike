@@ -1,20 +1,21 @@
-﻿using EFCoreSpike5.Models;
+﻿using AutoSFaP;
+using AutoSFaP.Models;
+using EFCoreSpike5.Models;
+using Microsoft.EntityFrameworkCore;
+using Spike.Core.Entity;
 using Spike.Core.Interface;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Spike.Infrastructure.Extension;
-using System;
-using Spike.Core.Entity;
-using Spike.Core.Model;
+using System.Threading.Tasks;
 
 namespace Spike.Infrastructure.Repositories
 {
     public class StudentRepository : BaseRepository<Student>, IStudentRepository
     {
-        public StudentRepository(EFCoreSpikeContext context) : base(context)
+        private readonly IDataLimiter<Student> dataLimiter;
+        public StudentRepository(EFCoreSpikeContext context, IDataLimiter<Student> dataLimiter) : base(context)
         {
+            this.dataLimiter = dataLimiter;
         }
 
         public override async Task<Student> GetByIdAsync(int id)
@@ -27,39 +28,15 @@ namespace Spike.Infrastructure.Repositories
         public async Task<PagedResult<Student>> GetAsync(Paging paging, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
             IQueryable<Student> query = Context.Students.Include(s => s.Course);
-            query = GetStudents(query, sortFields, filterFields);
-            var result = new PagedResult<Student>()
-            {
-                Results = await paging.Page(query).ToList(),
-                PageNumber = paging.PageNumber,
-                PageSize = paging.PageLimit,
-                TotalNumberOfRecords = query.Count(),
-                TotalNumberOfPages = (int)Math.Ceiling(query.Count() / (double)paging.PageLimit)
-            };
-
-            return result;
+            return await dataLimiter.LimitDataAsync(query, sortFields, filterFields, paging);
         }
 
         public IAsyncEnumerable<Student> GetAsync(SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
         {
             IQueryable<Student> query = Context.Students;
-            query = GetStudents(query, sortFields, filterFields);
+            query = dataLimiter.LimitData(query, sortFields, filterFields);
 
             return query.ToAsyncEnumerable();
-        }
-
-        private static IQueryable<Student> GetStudents(IQueryable<Student> query, SortField<Student>[] sortFields, FilterField<Student>[] filterFields)
-        {
-            if (filterFields != null)
-            {
-                query = filterFields.Filter(query);
-            }
-
-            if (sortFields != null)
-            {
-				query = sortFields.Sort(query);
-            }
-            return query;
         }
     }
 }

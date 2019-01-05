@@ -1,8 +1,8 @@
-﻿using Spike.Core.Model;
-using System.Linq;
+﻿using System.Linq;
 using System;
+using AutoSFaP.Models;
 
-namespace Spike.Infrastructure.Extension
+namespace AutoSFaP.Extensions
 {
     public static class SortingExtension
     {

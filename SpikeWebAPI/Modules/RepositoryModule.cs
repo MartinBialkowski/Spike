@@ -1,11 +1,13 @@
 ﻿using Autofac;
 using Autofac.Configuration;
+using AutoSFaP;
 using Microsoft.Extensions.Configuration;
+using Spike.Core.Entity;
 using System.IO;
 
 namespace Spike.WebApi.Modules
 {
-    public class RepositoryModule: Module
+    public class RepositoryModule : Module
     {
         private readonly string configPath;
 
@@ -22,6 +24,7 @@ namespace Spike.WebApi.Modules
             var repositoryModule = new ConfigurationModule(autofacConfig.Build());
 
             builder.RegisterModule(repositoryModule);
+            builder.RegisterType<DataLimiter<Student>>().As<IDataLimiter<Student>>();
         }
     }
 }
