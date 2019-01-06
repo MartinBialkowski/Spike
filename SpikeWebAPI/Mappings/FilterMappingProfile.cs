@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using AutoSFaP.Models;
+using AutoSFaP.Converters;
 using Spike.Core.Entity;
-using Spike.Core.Model;
 using Spike.WebApi.Types.DTOs;
-using System.Linq;
 
 namespace Spike.WebApi.Mappings
 {
@@ -11,22 +11,7 @@ namespace Spike.WebApi.Mappings
         public FilterMappingProfile()
         {
             CreateMap<StudentFilterDto, FilterField<Student>[]>()
-                .ConvertUsing(new FilterDtoToFilterField<StudentFilterDto, Student>());
-        }
-    }
-
-    public class FilterDtoToFilterField<TSource, TResult> : ITypeConverter<TSource, FilterField<TResult>[]> where TResult : class
-    {
-        public FilterField<TResult>[] Convert(TSource source, FilterField<TResult>[] destination, ResolutionContext context)
-        {
-	        return (from property in typeof(TSource).GetProperties()
-		        let propertyValue = property.GetValue(source)
-		        where propertyValue != null
-		        select new FilterField<TResult>
-		        {
-			        PropertyName = property.Name,
-			        FilterValue = propertyValue
-		        }).ToArray();
+                .ConvertUsing(new FilterFieldsConverter<StudentFilterDto, Student>());
         }
     }
 }

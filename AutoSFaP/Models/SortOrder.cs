@@ -1,4 +1,4 @@
-﻿namespace Spike.Core.Model
+﻿namespace AutoSFaP.Models
 {
     public enum SortOrder
     {
