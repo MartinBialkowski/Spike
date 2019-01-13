@@ -79,7 +79,7 @@ namespace Spike.WebApi
 
             services
                 .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation()
                 .AddJsonOptions(options =>
                 {
