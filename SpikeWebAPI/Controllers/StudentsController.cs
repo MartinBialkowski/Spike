@@ -33,7 +33,7 @@ namespace Spike.WebApi.Controllers
         }
 
         // GET: /api/students?sort=CourseId,Name-
-        //[Authorize]
+        [Authorize]
         [HttpGet("all")]
         [ProducesResponseType(typeof(Student), 200)]
         [ProducesResponseType(typeof(string), 400)]
