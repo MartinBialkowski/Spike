@@ -11,7 +11,7 @@ namespace Spike.WebApi.Mappings
         public FilterMappingProfile()
         {
             CreateMap<StudentFilterDto, FilterField<Student>[]>()
-                .ConvertUsing(new FilterFieldsConverter<StudentFilterDto, Student>());
+                .ConvertUsing(s => FilterFieldsConverter<StudentFilterDto, Student>.Convert(s));
         }
     }
 }
