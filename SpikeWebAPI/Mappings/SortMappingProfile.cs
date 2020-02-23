@@ -10,7 +10,7 @@ namespace Spike.WebApi.Mappings
         public SortMappingProfile()
         {
             CreateMap<string, SortField<Student>[]>()
-                .ConvertUsing(new SortFieldsConverter<Student>());
+                .ConvertUsing(s => SortFieldsConverter<Student>.Convert(s));
         }
     }
 }
